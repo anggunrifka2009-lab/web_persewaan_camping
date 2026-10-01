@@ -48,6 +48,9 @@ class KategoriController extends Controller
 
     public function destroy(Kategori $kategori)
     {
-        //
+        $kategori->delete();
+
+        return redirect()->route('kategori.index');
+
     }
 }
