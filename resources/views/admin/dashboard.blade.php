@@ -30,7 +30,7 @@
             <p>Kelola kategori alat camping.</p>
         </a>
 
-        <a href="#">
+        <a href="{{ route('barang.index') }}">
             <h3>Barang</h3>
             <p>Kelola data alat camping.</p>
         </a>
