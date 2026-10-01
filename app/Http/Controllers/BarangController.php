@@ -8,11 +8,21 @@ use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $barang = Barang::with('kategori')->get();
+        $cari = $request->cari;
 
-        return view('admin.barang.index', compact('barang'));
+        $barang = Barang::with('kategori')
+            ->when($cari, function ($query, $cari) {
+                $query->where(function ($q) use ($cari) {
+                    $q->where('kode_barang', 'like', "%{$cari}%")
+                        ->orWhere('nama_barang', 'like', "%{$cari}%");
+                });
+            })
+            ->paginate(5)
+            ->withQueryString();
+
+        return view('admin.barang.index', compact('barang', 'cari'));
     }
 
     public function create()
@@ -37,15 +47,38 @@ class BarangController extends Controller
             'status' => 'required|in:tersedia,tidak tersedia',
         ]);
 
-        $barangTerakhir = Barang::orderByDesc('id_barang')->first();
-        
-        if ($barangTerakhir) {
-            $nomor = $barangTerakhir->id_barang + 1;
-        } else {
-            $nomor = 1;
-        }
-        
-        $data['kode_barang'] = 'B' . str_pad($nomor, 3, '0', STR_PAD_LEFT);
+        $kategoriDipilih = Kategori::findOrFail($data['id_kategori']);
+
+        $namaKategori = strtolower(trim($kategoriDipilih->nama_kategori));
+
+        $prefixKategori = [
+            'tenda' => 'TEN',
+            'sleeping bag' => 'SB',
+            'kompor' => 'KM',
+            'carrier' => 'CR',
+        ];
+
+        $prefix = $prefixKategori[$namaKategori]
+            ?? substr(
+                preg_replace(
+                    '/[^A-Z0-9]/',
+                    '',
+                    strtoupper($kategoriDipilih->nama_kategori)
+                ),
+                0,
+                3
+            );
+
+        $kodeTerakhir = Barang::where('kode_barang', 'like', $prefix . '%')
+            ->pluck('kode_barang');
+
+        $nomor = $kodeTerakhir
+            ->map(function ($kode) use ($prefix) {
+                return (int) substr($kode, strlen($prefix));
+            })
+            ->max() + 1;
+
+        $data['kode_barang'] = $prefix . str_pad($nomor, 3, '0', STR_PAD_LEFT);
 
         Barang::create($data);
 
