@@ -35,7 +35,7 @@
             <p>Kelola data alat camping.</p>
         </a>
 
-        <a href="#">
+        <a href="{{ route('admin.penyewaan.index') }}">
             <h3>Penyewaan</h3>
             <p>Kelola transaksi penyewaan.</p>
         </a>

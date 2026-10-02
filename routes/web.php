@@ -3,11 +3,11 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\PenyewaanController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
@@ -28,5 +28,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/admin/kategori', KategoriController::class);
 
     Route::resource('/admin/barang', BarangController::class)->except(['show']);
+
+    Route::get('/admin/penyewaan', [PenyewaanController::class, 'index'])
+    ->name('admin.penyewaan.index');
 
 });
