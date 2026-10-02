@@ -65,7 +65,7 @@
                         <td>
                             @auth
                                 @if (Auth::user()->role === 'pelanggan')
-                                    <a href="{{ route('login') }}">Sewa</a>
+                                    <a href="{{ route('penyewaan.create', $item->id_barang) }}">Sewa</a>
                                 @else
                                     -
                                 @endif
