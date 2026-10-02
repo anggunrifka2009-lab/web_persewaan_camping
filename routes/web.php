@@ -41,4 +41,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/sewa/{id_barang}', [PenyewaanPelangganController::class, 'store'])
         ->name('penyewaan.store');
+    Route::get('/riwayat-penyewaan', [PenyewaanPelangganController::class, 'riwayat'])
+    ->name('penyewaan.riwayat');
 });

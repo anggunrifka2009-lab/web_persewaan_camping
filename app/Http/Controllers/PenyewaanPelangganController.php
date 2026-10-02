@@ -87,4 +87,16 @@ class PenyewaanPelangganController extends Controller
             ->route('home')
             ->with('success', 'Penyewaan berhasil diajukan dan menunggu persetujuan admin.');
     }
+
+    public function riwayat()
+    {
+        abort_unless(auth()->user()->role === 'pelanggan', 403);
+        
+        $penyewaan = Penyewaan::where('id_user', auth()->id())
+            ->latest('id_penyewaan')
+            ->paginate(5);
+            
+        return view('pelanggan.penyewaan.riwayat', compact('penyewaan'));
+        
+    }
 }

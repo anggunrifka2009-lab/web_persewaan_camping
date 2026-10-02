@@ -14,6 +14,10 @@
         @auth
             <span>Halo, {{ Auth::user()->nama }}</span>
 
+            @if (Auth::user()->role === 'pelanggan')
+                <a href="{{ route('penyewaan.riwayat') }}">Riwayat Penyewaan</a>
+            @endif
+
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit">Logout</button>
