@@ -29,4 +29,32 @@ class PenyewaanController extends Controller
             compact('penyewaan', 'cari')
         );
     }
+
+    public function setujui($id)
+    {
+        $penyewaan = Penyewaan::findOrFail($id);
+
+        if ($penyewaan->status !== 'menunggu') {
+            return back()->with('error', 'Penyewaan ini sudah diproses.');
+        }
+
+        $penyewaan->status = 'disetujui';
+        $penyewaan->save();
+
+        return back()->with('success', 'Penyewaan berhasil disetujui.');
+    }
+
+    public function tolak($id)
+    {
+        $penyewaan = Penyewaan::findOrFail($id);
+
+        if ($penyewaan->status !== 'menunggu') {
+            return back()->with('error', 'Penyewaan ini sudah diproses.');
+        }
+
+        $penyewaan->status = 'ditolak';
+        $penyewaan->save();
+
+        return back()->with('success', 'Penyewaan berhasil ditolak.');
+    }
 }

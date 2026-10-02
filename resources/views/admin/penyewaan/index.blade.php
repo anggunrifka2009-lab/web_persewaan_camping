@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,6 +7,14 @@
 </head>
 <body>
     <h1>Data Penyewaan</h1>
+
+    @if (session('success'))
+        <p>{{ session('success') }}</p>
+    @endif
+
+    @if (session('error'))
+        <p>{{ session('error') }}</p>
+    @endif
 
     <form action="{{ route('admin.penyewaan.index') }}" method="GET" id="form-pencarian">
         <input
@@ -35,8 +42,10 @@
                 <th>Total Harga</th>
                 <th>Pengambilan</th>
                 <th>Status</th>
+                <th>Aksi</th>
             </tr>
         </thead>
+
         <tbody id="hasil-penyewaan">
             @forelse ($penyewaan as $item)
                 <tr>
@@ -48,10 +57,27 @@
                     <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
                     <td>{{ ucfirst($item->jenis_pengambilan) }}</td>
                     <td>{{ ucfirst($item->status) }}</td>
+                    <td>
+                        @if ($item->status === 'menunggu')
+                            <form action="{{ route('admin.penyewaan.setujui', $item->id_penyewaan) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit">Setujui</button>
+                            </form>
+
+                            <form action="{{ route('admin.penyewaan.tolak', $item->id_penyewaan) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit">Tolak</button>
+                            </form>
+                        @else
+                            -
+                        @endif
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8">Data penyewaan tidak ditemukan.</td>
+                    <td colspan="9">Data penyewaan tidak ditemukan.</td>
                 </tr>
             @endforelse
         </tbody>
@@ -103,6 +129,7 @@
 
             input.addEventListener('input', function () {
                 clearTimeout(timer);
+
                 timer = setTimeout(function () {
                     muatPenyewaan(new URL(form.action, window.location.origin));
                 }, 300);

@@ -33,6 +33,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/penyewaan', [PenyewaanController::class, 'index'])
     ->name('admin.penyewaan.index');
 
+    Route::patch('/admin/penyewaan/{id}/setujui', [PenyewaanController::class, 'setujui'])
+    ->name('admin.penyewaan.setujui');
+    
+    Route::patch('/admin/penyewaan/{id}/tolak', [PenyewaanController::class, 'tolak'])
+    ->name('admin.penyewaan.tolak');
+
 });
 
 Route::middleware('auth')->group(function () {
