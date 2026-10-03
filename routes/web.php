@@ -21,24 +21,26 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 Route::middleware(['auth', 'admin'])->group(function () {
-
     Route::get('/admin', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
     Route::resource('/admin/kategori', KategoriController::class);
 
-    Route::resource('/admin/barang', BarangController::class)->except(['show']);
+    Route::resource('/admin/barang', BarangController::class)
+        ->except(['show']);
 
     Route::get('/admin/penyewaan', [PenyewaanController::class, 'index'])
-    ->name('admin.penyewaan.index');
+        ->name('admin.penyewaan.index');
 
     Route::patch('/admin/penyewaan/{id}/setujui', [PenyewaanController::class, 'setujui'])
-    ->name('admin.penyewaan.setujui');
-    
-    Route::patch('/admin/penyewaan/{id}/tolak', [PenyewaanController::class, 'tolak'])
-    ->name('admin.penyewaan.tolak');
+        ->name('admin.penyewaan.setujui');
 
+    Route::patch('/admin/penyewaan/{id}/tolak', [PenyewaanController::class, 'tolak'])
+        ->name('admin.penyewaan.tolak');
+
+    Route::patch('/admin/penyewaan/{id}/konfirmasi-pembayaran', [PenyewaanController::class, 'konfirmasiPembayaran'])
+        ->name('admin.penyewaan.konfirmasiPembayaran');
 });
 
 Route::middleware('auth')->group(function () {
@@ -47,6 +49,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/sewa/{id_barang}', [PenyewaanPelangganController::class, 'store'])
         ->name('penyewaan.store');
+
     Route::get('/riwayat-penyewaan', [PenyewaanPelangganController::class, 'riwayat'])
-    ->name('penyewaan.riwayat');
+        ->name('penyewaan.riwayat');
 });

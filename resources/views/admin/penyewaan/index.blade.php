@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -42,7 +41,6 @@
                 <th>Tanggal Sewa</th>
                 <th>Rencana Kembali</th>
                 <th>Total Harga</th>
-                <th>Pengambilan</th>
                 <th>Status</th>
                 <th>Aksi</th>
             </tr>
@@ -68,7 +66,6 @@
                     <td>{{ $item->tanggal_sewa->format('d-m-Y') }}</td>
                     <td>{{ $item->tanggal_rencana_kembali->format('d-m-Y') }}</td>
                     <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
-                    <td>{{ ucfirst($item->jenis_pengambilan) }}</td>
                     <td>{{ ucfirst($item->status) }}</td>
                     <td>
                         @if ($item->status === 'menunggu')
@@ -83,6 +80,14 @@
                                 @method('PATCH')
                                 <button type="submit">Tolak</button>
                             </form>
+                        @elseif ($item->status === 'disetujui')
+                            <form action="{{ route('admin.penyewaan.konfirmasiPembayaran', $item->id_penyewaan) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" onclick="return confirm('Pastikan pembayaran sudah diterima. Konfirmasi pembayaran ini?')">
+                                    Konfirmasi Pembayaran
+                                </button>
+                            </form>
                         @else
                             -
                         @endif
@@ -90,7 +95,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="10">Data penyewaan tidak ditemukan.</td>
+                    <td colspan="9">Data penyewaan tidak ditemukan.</td>
                 </tr>
             @endforelse
         </tbody>

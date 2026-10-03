@@ -32,7 +32,6 @@ class PenyewaanPelangganController extends Controller
             'jumlah' => 'required|integer|min:1',
             'tanggal_sewa' => 'required|date|after_or_equal:today',
             'tanggal_rencana_kembali' => 'required|date|after:tanggal_sewa',
-            'jenis_pengambilan' => 'required|in:diambil,dikirim',
         ]);
 
         $tanggalSewa = Carbon::parse($request->tanggal_sewa);
@@ -74,7 +73,6 @@ class PenyewaanPelangganController extends Controller
             $penyewaan->tanggal_sewa = $tanggalSewa;
             $penyewaan->tanggal_rencana_kembali = $tanggalKembali;
             $penyewaan->total_harga = $totalHarga;
-            $penyewaan->jenis_pengambilan = $request->jenis_pengambilan;
             $penyewaan->status = 'menunggu';
             $penyewaan->save();
 

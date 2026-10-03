@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,6 +7,7 @@
 </head>
 <body>
     <h1>Form Penyewaan Alat Camping</h1>
+
     <a href="{{ route('home') }}">Kembali ke Beranda</a>
 
     <h2>{{ $barang->nama_barang }}</h2>
@@ -64,19 +64,6 @@
             >
         </div>
 
-        <div>
-            <label for="jenis_pengambilan">Jenis Pengambilan</label>
-            <select id="jenis_pengambilan" name="jenis_pengambilan" required>
-                <option value="">Pilih pengambilan</option>
-                <option value="diambil" {{ old('jenis_pengambilan') == 'diambil' ? 'selected' : '' }}>
-                    Diambil sendiri
-                </option>
-                <option value="dikirim" {{ old('jenis_pengambilan') == 'dikirim' ? 'selected' : '' }}>
-                    Diantar
-                </option>
-            </select>
-        </div>
-
         <button type="submit">Ajukan Penyewaan</button>
     </form>
 
@@ -129,7 +116,12 @@
         function hitungTotalHarga() {
             const jumlah = parseInt(jumlahBarang.value) || 0;
 
-            if (!tanggalSewa.value || !tanggalKembali.value) {
+            if (
+                !tanggalSewa.value ||
+                !tanggalKembali.value ||
+                jumlah < 1 ||
+                jumlah > Number(jumlahBarang.max)
+            ) {
                 totalHarga.textContent = 'Rp 0';
                 return;
             }

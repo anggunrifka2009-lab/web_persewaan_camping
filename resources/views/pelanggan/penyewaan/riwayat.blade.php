@@ -21,7 +21,6 @@
                 <th>Tanggal Sewa</th>
                 <th>Rencana Kembali</th>
                 <th>Total Harga</th>
-                <th>Pengambilan</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -35,6 +34,7 @@
                         @forelse ($item->detailPenyewaan as $detail)
                             {{ $detail->barang->nama_barang ?? 'Barang tidak ditemukan' }}
                             ({{ $detail->jumlah }} unit)
+
                             @if (!$loop->last)
                                 <br>
                             @endif
@@ -45,12 +45,11 @@
                     <td>{{ $item->tanggal_sewa->format('d-m-Y') }}</td>
                     <td>{{ $item->tanggal_rencana_kembali->format('d-m-Y') }}</td>
                     <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
-                    <td>{{ ucfirst($item->jenis_pengambilan) }}</td>
                     <td>{{ ucfirst($item->status) }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8">Kamu belum memiliki riwayat penyewaan.</td>
+                    <td colspan="7">Kamu belum memiliki riwayat penyewaan.</td>
                 </tr>
             @endforelse
         </tbody>
