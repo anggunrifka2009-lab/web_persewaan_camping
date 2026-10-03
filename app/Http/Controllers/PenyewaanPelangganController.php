@@ -41,7 +41,9 @@ class PenyewaanPelangganController extends Controller
 
         if ($lamaSewa > 7) {
             return back()
-                ->withErrors(['tanggal_rencana_kembali' => 'Maksimal penyewaan 7 hari.'])
+                ->withErrors([
+                    'tanggal_rencana_kembali' => 'Maksimal penyewaan 7 hari.'
+                ])
                 ->withInput();
         }
 
@@ -51,7 +53,9 @@ class PenyewaanPelangganController extends Controller
 
         if ($request->jumlah > $barang->stok) {
             return back()
-                ->withErrors(['jumlah' => 'Jumlah barang melebihi stok yang tersedia.'])
+                ->withErrors([
+                    'jumlah' => 'Jumlah barang melebihi stok yang tersedia.'
+                ])
                 ->withInput();
         }
 
@@ -91,12 +95,12 @@ class PenyewaanPelangganController extends Controller
     public function riwayat()
     {
         abort_unless(auth()->user()->role === 'pelanggan', 403);
-        
-        $penyewaan = Penyewaan::where('id_user', auth()->id())
+
+        $penyewaan = Penyewaan::with(['detailPenyewaan.barang'])
+            ->where('id_user', auth()->id())
             ->latest('id_penyewaan')
             ->paginate(5);
-            
+
         return view('pelanggan.penyewaan.riwayat', compact('penyewaan'));
-        
     }
 }

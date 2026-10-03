@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -37,6 +38,7 @@
                 <th>No</th>
                 <th>Kode Penyewaan</th>
                 <th>Nama Pelanggan</th>
+                <th>Barang Disewa</th>
                 <th>Tanggal Sewa</th>
                 <th>Rencana Kembali</th>
                 <th>Total Harga</th>
@@ -52,6 +54,17 @@
                     <td>{{ $penyewaan->firstItem() + $loop->index }}</td>
                     <td>{{ $item->kode_penyewaan }}</td>
                     <td>{{ $item->user->nama ?? '-' }}</td>
+                    <td>
+                        @forelse ($item->detailPenyewaan as $detail)
+                            {{ $detail->barang->nama_barang ?? 'Barang tidak ditemukan' }}
+                            ({{ $detail->jumlah }} unit)
+                            @if (!$loop->last)
+                                <br>
+                            @endif
+                        @empty
+                            -
+                        @endforelse
+                    </td>
                     <td>{{ $item->tanggal_sewa->format('d-m-Y') }}</td>
                     <td>{{ $item->tanggal_rencana_kembali->format('d-m-Y') }}</td>
                     <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
@@ -77,7 +90,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9">Data penyewaan tidak ditemukan.</td>
+                    <td colspan="10">Data penyewaan tidak ditemukan.</td>
                 </tr>
             @endforelse
         </tbody>
