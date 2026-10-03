@@ -80,14 +80,34 @@
                                 @method('PATCH')
                                 <button type="submit">Tolak</button>
                             </form>
+
                         @elseif ($item->status === 'disetujui')
                             <form action="{{ route('admin.penyewaan.konfirmasiPembayaran', $item->id_penyewaan) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" onclick="return confirm('Pastikan pembayaran sudah diterima. Konfirmasi pembayaran ini?')">
+                                <button
+                                    type="submit"
+                                    onclick="return confirm('Pastikan pembayaran sudah diterima. Konfirmasi pembayaran ini?')"
+                                >
                                     Konfirmasi Pembayaran
                                 </button>
                             </form>
+
+                        @elseif ($item->status === 'dibayar')
+                            <form action="{{ route('admin.penyewaan.dikembalikan', $item->id_penyewaan) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button
+                                    type="submit"
+                                    onclick="return confirm('Pastikan barang sudah dikembalikan. Konfirmasi pengembalian ini?')"
+                                >
+                                    Kembalikan
+                                </button>
+                            </form>
+
+                        @elseif ($item->status === 'dikembalikan')
+                            <span>Selesai</span>
+
                         @else
                             -
                         @endif

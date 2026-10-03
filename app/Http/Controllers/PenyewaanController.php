@@ -180,6 +180,26 @@ class PenyewaanController extends Controller
         );
     }
 
+    public function dikembalikan($id)
+    {
+        $penyewaan = Penyewaan::findOrFail($id);
+
+        if ($penyewaan->status !== 'dibayar') {
+            return back()->with(
+                'error',
+                'Pengembalian hanya bisa dikonfirmasi jika penyewaan sudah dibayar.'
+            );
+        }
+
+        $penyewaan->status = 'dikembalikan';
+        $penyewaan->save();
+
+        return back()->with(
+            'success',
+            'Pengembalian barang berhasil dikonfirmasi.'
+        );
+    }
+
     public function tolak($id)
     {
         $penyewaan = Penyewaan::findOrFail($id);
