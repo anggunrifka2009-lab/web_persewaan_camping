@@ -31,10 +31,7 @@ class PenyewaanController extends Controller
             ->paginate(5)
             ->withQueryString();
 
-        return view(
-            'admin.penyewaan.index',
-            compact('penyewaan', 'cari')
-        );
+        return view('admin.penyewaan.index', compact('penyewaan', 'cari'));
     }
 
     public function setujui($id)
@@ -45,9 +42,7 @@ class PenyewaanController extends Controller
                 ->findOrFail($id);
 
             if ($penyewaan->status !== 'menunggu') {
-                return [
-                    'error' => 'Penyewaan ini sudah diproses.'
-                ];
+                return ['error' => 'Penyewaan ini sudah diproses.'];
             }
 
             $nomor = preg_replace('/\D/', '', $penyewaan->user->no_hp ?? '');
@@ -59,17 +54,13 @@ class PenyewaanController extends Controller
             }
 
             if (empty($nomor)) {
-                return [
-                    'error' => 'Nomor WhatsApp pelanggan belum diisi.'
-                ];
+                return ['error' => 'Nomor WhatsApp pelanggan belum diisi.'];
             }
 
             $details = $penyewaan->detailPenyewaan;
 
             if ($details->isEmpty()) {
-                return [
-                    'error' => 'Detail barang penyewaan tidak ditemukan.'
-                ];
+                return ['error' => 'Detail barang penyewaan tidak ditemukan.'];
             }
 
             foreach ($details as $detail) {
@@ -78,9 +69,7 @@ class PenyewaanController extends Controller
                     ->first();
 
                 if (!$barang) {
-                    return [
-                        'error' => 'Barang yang disewa tidak ditemukan.'
-                    ];
+                    return ['error' => 'Barang yang disewa tidak ditemukan.'];
                 }
 
                 $terpakai = DetailPenyewaan::where('id_barang', $barang->id_barang)
@@ -88,7 +77,7 @@ class PenyewaanController extends Controller
                         $query->whereIn('status', [
                             'disetujui',
                             'dibayar',
-                            'berlangsung'
+                            'berlangsung',
                         ])
                             ->where('id_penyewaan', '!=', $penyewaan->id_penyewaan)
                             ->whereDate(
@@ -104,9 +93,9 @@ class PenyewaanController extends Controller
                     })
                     ->sum('jumlah');
 
-                if ($terpakai + $detail->jumlah > $barang->stok) {
+                if ($terpakai + $detail->jumlah > $barang->stok + $detail->jumlah) {
                     return [
-                        'error' => "Stok {$barang->nama_barang} tidak mencukupi untuk tanggal penyewaan tersebut."
+                        'error' => "Stok {$barang->nama_barang} tidak mencukupi untuk tanggal penyewaan tersebut.",
                     ];
                 }
             }
@@ -146,7 +135,7 @@ class PenyewaanController extends Controller
 
             return [
                 'nomor' => $nomor,
-                'pesan' => $pesan
+                'pesan' => $pesan,
             ];
         });
 
@@ -162,61 +151,132 @@ class PenyewaanController extends Controller
 
     public function konfirmasiPembayaran($id)
     {
-        $penyewaan = Penyewaan::findOrFail($id);
+        $hasil = DB::transaction(function () use ($id) {
+            $penyewaan = Penyewaan::where('id_penyewaan', $id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        if ($penyewaan->status !== 'disetujui') {
+            if ($penyewaan->status !== 'disetujui') {
+                return false;
+            }
+
+            $penyewaan->status = 'dibayar';
+            $penyewaan->save();
+
+            return true;
+        });
+
+        if (!$hasil) {
             return back()->with(
                 'error',
                 'Pembayaran hanya bisa dikonfirmasi untuk penyewaan yang sudah disetujui.'
             );
         }
 
-        $penyewaan->status = 'dibayar';
-        $penyewaan->save();
-
-        return back()->with(
-            'success',
-            'Pembayaran berhasil dikonfirmasi.'
-        );
+        return back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
     }
 
     public function dikembalikan($id)
     {
-        $penyewaan = Penyewaan::findOrFail($id);
+        $hasil = DB::transaction(function () use ($id) {
+            $penyewaan = Penyewaan::where('id_penyewaan', $id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        if ($penyewaan->status !== 'dibayar') {
+            if ($penyewaan->status !== 'dibayar') {
+                return false;
+            }
+
+            $details = DetailPenyewaan::where(
+                'id_penyewaan',
+                $penyewaan->id_penyewaan
+            )->get();
+
+            if ($details->isEmpty()) {
+                return false;
+            }
+
+            foreach ($details as $detail) {
+                $barang = Barang::where('id_barang', $detail->id_barang)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$barang) {
+                    throw new \RuntimeException('Barang penyewaan tidak ditemukan.');
+                }
+
+                $barang->stok += $detail->jumlah;
+                $barang->save();
+            }
+
+            $penyewaan->status = 'dikembalikan';
+            $penyewaan->save();
+
+            return true;
+        });
+
+        if (!$hasil) {
             return back()->with(
                 'error',
-                'Pengembalian hanya bisa dikonfirmasi jika penyewaan sudah dibayar.'
+                'Pengembalian sudah diproses atau detail barang tidak ditemukan.'
             );
         }
 
-        $penyewaan->status = 'dikembalikan';
-        $penyewaan->save();
-
         return back()->with(
             'success',
-            'Pengembalian barang berhasil dikonfirmasi.'
+            'Pengembalian barang berhasil dikonfirmasi dan stok telah dikembalikan.'
         );
     }
 
     public function tolak($id)
     {
-        $penyewaan = Penyewaan::findOrFail($id);
+        $hasil = DB::transaction(function () use ($id) {
+            $penyewaan = Penyewaan::where('id_penyewaan', $id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        if ($penyewaan->status !== 'menunggu') {
+            if ($penyewaan->status !== 'menunggu') {
+                return false;
+            }
+
+            $details = DetailPenyewaan::where(
+                'id_penyewaan',
+                $penyewaan->id_penyewaan
+            )->get();
+
+            if ($details->isEmpty()) {
+                return false;
+            }
+
+            foreach ($details as $detail) {
+                $barang = Barang::where('id_barang', $detail->id_barang)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$barang) {
+                    throw new \RuntimeException('Barang penyewaan tidak ditemukan.');
+                }
+
+                $barang->stok += $detail->jumlah;
+                $barang->save();
+            }
+
+            $penyewaan->status = 'ditolak';
+            $penyewaan->save();
+
+            return true;
+        });
+
+        if (!$hasil) {
             return back()->with(
                 'error',
-                'Penyewaan ini sudah diproses.'
+                'Penyewaan sudah diproses atau detail barang tidak ditemukan.'
             );
         }
 
-        $penyewaan->status = 'ditolak';
-        $penyewaan->save();
-
         return back()->with(
             'success',
-            'Penyewaan berhasil ditolak.'
+            'Penyewaan berhasil ditolak dan stok telah dikembalikan.'
         );
     }
 }

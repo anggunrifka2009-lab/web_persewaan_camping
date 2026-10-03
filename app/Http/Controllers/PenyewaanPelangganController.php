@@ -46,26 +46,35 @@ class PenyewaanPelangganController extends Controller
                 ->withInput();
         }
 
-        $barang = Barang::where('status', 'tersedia')
-            ->where('stok', '>', 0)
-            ->findOrFail($id_barang);
-
-        if ($request->jumlah > $barang->stok) {
-            return back()
-                ->withErrors([
-                    'jumlah' => 'Jumlah barang melebihi stok yang tersedia.'
-                ])
-                ->withInput();
-        }
-
         DB::transaction(function () use (
             $request,
-            $barang,
+            $id_barang,
             $tanggalSewa,
             $tanggalKembali,
             $lamaSewa
         ) {
-            $totalHarga = $barang->harga_sewa * $request->jumlah * $lamaSewa;
+            $barang = Barang::where('id_barang', $id_barang)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($barang->status !== 'tersedia' || $barang->stok < 1) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'jumlah' => 'Barang sedang tidak tersedia.'
+                ]);
+            }
+
+            if ($request->jumlah > $barang->stok) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'jumlah' => 'Jumlah barang melebihi stok yang tersedia.'
+                ]);
+            }
+
+            $barang->stok -= (int) $request->jumlah;
+            $barang->save();
+
+            $totalHarga = $barang->harga_sewa
+                * $request->jumlah
+                * $lamaSewa;
 
             $penyewaan = new Penyewaan();
             $penyewaan->kode_penyewaan = 'SW-' . strtoupper(Str::random(8));
