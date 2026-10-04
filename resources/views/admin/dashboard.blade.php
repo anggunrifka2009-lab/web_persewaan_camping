@@ -40,12 +40,7 @@
             <p>Kelola transaksi penyewaan.</p>
         </a>
 
-        <a href="#">
-            <h3>Pengembalian</h3>
-            <p>Kelola pengembalian dan denda.</p>
-        </a>
-
-        <a href="#">
+        <a href="{{ route('admin.laporan.index') }}">
             <h3>Laporan</h3>
             <p>Lihat dan cetak laporan.</p>
         </a>

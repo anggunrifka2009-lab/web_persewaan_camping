@@ -146,7 +146,6 @@ class PenyewaanController extends Controller
 
             foreach ($details as $detail) {
                 $namaBarang = $detail->barang->nama_barang ?? 'Barang';
-
                 $daftarBarang .= "- {$namaBarang} ({$detail->jumlah} unit)\n";
             }
 
@@ -258,9 +257,13 @@ class PenyewaanController extends Controller
 
             $tanggalKembali = Carbon::today();
 
-            $hariTerlambat = $tanggalKembali->greaterThan($tanggalRencana)
-                ? (int) $tanggalRencana->diffInDays($tanggalKembali)
-                : 0;
+            $hariTerlambat = 0;
+
+            if ($tanggalKembali->greaterThan($tanggalRencana)) {
+                $hariTerlambat = (int) $tanggalRencana->diffInDays(
+                    $tanggalKembali
+                );
+            }
 
             $denda = $hariTerlambat * $this->tarifDendaPerHari;
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\PenyewaanController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PenyewaanPelangganController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -44,6 +45,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::patch('/admin/penyewaan/{id}/dikembalikan', [PenyewaanController::class, 'dikembalikan'])
         ->name('admin.penyewaan.dikembalikan');
+
+    Route::get('/admin/laporan', [LaporanController::class, 'index'])
+        ->name('admin.laporan.index');
 });
 
 Route::middleware('auth')->group(function () {
