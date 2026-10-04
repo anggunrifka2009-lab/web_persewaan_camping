@@ -41,11 +41,6 @@
         </a>
 
         <a href="#">
-            <h3>Pembayaran</h3>
-            <p>Kelola pembayaran pelanggan.</p>
-        </a>
-
-        <a href="#">
             <h3>Pengembalian</h3>
             <p>Kelola pengembalian dan denda.</p>
         </a>

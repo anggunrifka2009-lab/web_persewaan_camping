@@ -42,20 +42,27 @@
                 <th>Rencana Kembali</th>
                 <th>Total Harga</th>
                 <th>Status</th>
+                <th>Denda</th>
                 <th>Aksi</th>
             </tr>
         </thead>
 
         <tbody id="hasil-penyewaan">
             @forelse ($penyewaan as $item)
+                @php
+                    $dataPengembalian = $pengembalian->get($item->id_penyewaan);
+                @endphp
+
                 <tr>
                     <td>{{ $penyewaan->firstItem() + $loop->index }}</td>
                     <td>{{ $item->kode_penyewaan }}</td>
                     <td>{{ $item->user->nama ?? '-' }}</td>
+
                     <td>
                         @forelse ($item->detailPenyewaan as $detail)
                             {{ $detail->barang->nama_barang ?? 'Barang tidak ditemukan' }}
                             ({{ $detail->jumlah }} unit)
+
                             @if (!$loop->last)
                                 <br>
                             @endif
@@ -63,10 +70,29 @@
                             -
                         @endforelse
                     </td>
+
                     <td>{{ $item->tanggal_sewa->format('d-m-Y') }}</td>
                     <td>{{ $item->tanggal_rencana_kembali->format('d-m-Y') }}</td>
                     <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
-                    <td>{{ ucfirst($item->status) }}</td>
+
+                    <td>
+                        @if ($item->status === 'dikembalikan')
+                            Selesai
+                        @elseif ($item->status === 'ditolak')
+                            Batal
+                        @else
+                            {{ ucfirst($item->status) }}
+                        @endif
+                    </td>
+
+                    <td>
+                        @if ($dataPengembalian)
+                            Rp {{ number_format($dataPengembalian->denda, 0, ',', '.') }}
+                        @else
+                            -
+                        @endif
+                    </td>
+
                     <td>
                         @if ($item->status === 'menunggu')
                             <form action="{{ route('admin.penyewaan.setujui', $item->id_penyewaan) }}" method="POST">
@@ -108,6 +134,9 @@
                         @elseif ($item->status === 'dikembalikan')
                             <span>Selesai</span>
 
+                        @elseif ($item->status === 'ditolak')
+                            <span>Batal</span>
+
                         @else
                             -
                         @endif
@@ -115,7 +144,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9">Data penyewaan tidak ditemukan.</td>
+                    <td colspan="10">Data penyewaan tidak ditemukan.</td>
                 </tr>
             @endforelse
         </tbody>

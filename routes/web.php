@@ -41,7 +41,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::patch('/admin/penyewaan/{id}/konfirmasi-pembayaran', [PenyewaanController::class, 'konfirmasiPembayaran'])
         ->name('admin.penyewaan.konfirmasiPembayaran');
-        
+
     Route::patch('/admin/penyewaan/{id}/dikembalikan', [PenyewaanController::class, 'dikembalikan'])
         ->name('admin.penyewaan.dikembalikan');
 });
