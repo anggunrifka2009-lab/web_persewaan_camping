@@ -130,6 +130,47 @@
                                 </button>
                             </form>
 
+                            @php
+                                $tanggalKembali = $item->tanggal_rencana_kembali->copy()->startOfDay();
+                                $hariIni = now()->startOfDay();
+                                $sisaHari = $hariIni->diffInDays($tanggalKembali, false);
+                            @endphp
+
+                            @if ($sisaHari <= 1)
+                                @php
+                                    $nomor = preg_replace('/\D/', '', $item->user?->no_hp ?? '');
+
+                                    if (str_starts_with($nomor, '0')) {
+                                        $nomor = '62' . substr($nomor, 1);
+                                    } elseif (str_starts_with($nomor, '8')) {
+                                        $nomor = '62' . $nomor;
+                                    }
+
+                                    $namaPelanggan = $item->user?->nama ?? 'Pelanggan';
+                                    $waktu = $sisaHari < 0
+                                        ? 'sudah melewati tanggal pengembalian'
+                                        : ($sisaHari == 0 ? 'jatuh tempo hari ini' : 'akan berakhir besok');
+
+                                    $pesan = "Halo {$namaPelanggan}, kami ingin mengingatkan bahwa masa sewa alat camping dengan kode {$item->kode_penyewaan} {$waktu}.\n\n"
+                                        . "Tanggal rencana kembali: {$item->tanggal_rencana_kembali->format('d-m-Y')}\n\n"
+                                        . "Mohon mengembalikan barang sesuai jadwal. Jika terlambat, denda akan dikenakan sesuai ketentuan yang berlaku. Terima kasih.";
+                                @endphp
+
+                                @if (strlen($nomor) >= 10 && strlen($nomor) <= 15)
+                                    <br>
+                                    <a
+                                        href="https://wa.me/{{ $nomor }}?text={{ urlencode($pesan) }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Ingatkan via WhatsApp
+                                    </a>
+                                @else
+                                    <br>
+                                    <span>Nomor HP belum valid</span>
+                                @endif
+                            @endif
+
                         @elseif ($item->status === 'dikembalikan')
                             <span>Selesai</span>
 
@@ -196,6 +237,7 @@
             input.addEventListener('input', function () {
                 clearTimeout(timer);
                 timer = setTimeout(function () {
+                    cariPencarian(); // tetap pakai fungsi cariPenyewaan
                     cariPenyewaan();
                 }, 300);
             });
