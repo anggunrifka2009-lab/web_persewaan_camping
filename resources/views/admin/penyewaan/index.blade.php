@@ -62,7 +62,6 @@
                         @forelse ($item->detailPenyewaan as $detail)
                             {{ $detail->barang->nama_barang ?? 'Barang tidak ditemukan' }}
                             ({{ $detail->jumlah }} unit)
-
                             @if (!$loop->last)
                                 <br>
                             @endif
@@ -168,7 +167,7 @@
             const pagination = document.getElementById('pagination-penyewaan');
             let timer;
 
-            async function muatPenyewaan(url) {
+            async function cariPenyewaan(url = new URL(form.action, window.location.origin)) {
                 url.searchParams.set('cari', input.value);
 
                 try {
@@ -190,22 +189,21 @@
                         pagination.innerHTML = paginationBaru.innerHTML;
                     }
                 } catch (error) {
-                    console.error('Gagal memuat penyewaan:', error);
+                    console.error('Pencarian penyewaan gagal:', error);
                 }
             }
 
             input.addEventListener('input', function () {
                 clearTimeout(timer);
-
                 timer = setTimeout(function () {
-                    muatPenyewaan(new URL(form.action, window.location.origin));
+                    cariPenyewaan();
                 }, 300);
             });
 
             form.addEventListener('submit', function (event) {
                 event.preventDefault();
                 clearTimeout(timer);
-                muatPenyewaan(new URL(form.action, window.location.origin));
+                cariPenyewaan();
             });
 
             pagination.addEventListener('click', function (event) {
@@ -214,7 +212,7 @@
                 if (!link) return;
 
                 event.preventDefault();
-                muatPenyewaan(new URL(link.href));
+                cariPenyewaan(new URL(link.href));
             });
         });
     </script>

@@ -11,20 +11,11 @@ class LaporanController extends Controller
     {
         $totalPenyewaan = Penyewaan::count();
 
-        $totalSelesai = Penyewaan::where(
-            'status',
-            'dikembalikan'
-        )->count();
+        $totalSelesai = Penyewaan::where('status', 'dikembalikan')->count();
 
-        $totalMenunggu = Penyewaan::where(
-            'status',
-            'menunggu'
-        )->count();
+        $totalMenunggu = Penyewaan::where('status', 'menunggu')->count();
 
-        $totalDitolak = Penyewaan::where(
-            'status',
-            'ditolak'
-        )->count();
+        $totalDitolak = Penyewaan::where('status', 'ditolak')->count();
 
         $totalPendapatan = Penyewaan::whereIn('status', [
             'dibayar',
