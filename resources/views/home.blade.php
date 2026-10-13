@@ -13,6 +13,7 @@
     <div>
         @auth
             <span>Halo, {{ Auth::user()->nama }}</span>
+            <a href="{{ route('akun.index') }}">Informasi Akun</a>
 
             @if (Auth::user()->role === 'pelanggan')
                 <a href="{{ route('penyewaan.riwayat') }}">Riwayat Penyewaan</a>
