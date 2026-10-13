@@ -7,6 +7,7 @@ use App\Http\Controllers\PenyewaanController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PenyewaanPelangganController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\InformasiAkunController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -51,6 +52,21 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/informasi-akun', [InformasiAkunController::class, 'index'])
+        ->name('akun.index');
+
+    Route::get('/informasi-akun/edit', [InformasiAkunController::class, 'edit'])
+        ->name('akun.edit');
+
+    Route::put('/informasi-akun', [InformasiAkunController::class, 'update'])
+        ->name('akun.update');
+
+    Route::get('/informasi-akun/password', [InformasiAkunController::class, 'editPassword'])
+        ->name('akun.password');
+
+    Route::put('/informasi-akun/password', [InformasiAkunController::class, 'updatePassword'])
+        ->name('akun.password.update');
+
     Route::get('/sewa/{id_barang}', [PenyewaanPelangganController::class, 'create'])
         ->name('penyewaan.create');
 
