@@ -12,9 +12,7 @@
     <h2>Login</h2>
 
     @if ($errors->any())
-        <div class="error">
-            {{ $errors->first() }}
-        </div>
+        <p style="color: red;">{{ $errors->first() }}</p>
     @endif
 
     <form action="{{ route('login.process') }}" method="POST">
