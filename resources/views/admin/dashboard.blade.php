@@ -10,6 +10,8 @@
 <div class="navbar">
     <h2>Admin Persewaan</h2>
 
+    <a href="{{ route('akun.index') }}">Informasi Akun</a>
+
     <form action="{{ route('logout') }}" method="POST">
         @csrf
         <button type="submit">Logout</button>
