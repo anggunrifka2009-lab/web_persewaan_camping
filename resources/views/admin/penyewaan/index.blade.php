@@ -26,7 +26,6 @@
             autocomplete="off"
         >
         <button type="submit">Cari</button>
-        <a href="{{ route('admin.penyewaan.index') }}">Reset</a>
     </form>
 
     <br>
@@ -237,7 +236,6 @@
             input.addEventListener('input', function () {
                 clearTimeout(timer);
                 timer = setTimeout(function () {
-                    cariPencarian(); // tetap pakai fungsi cariPenyewaan
                     cariPenyewaan();
                 }, 300);
             });

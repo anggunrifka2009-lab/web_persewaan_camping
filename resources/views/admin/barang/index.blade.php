@@ -19,7 +19,6 @@
         autocomplete="off"
     >
     <button type="submit">Cari</button>
-    <a href="{{ route('barang.index') }}">Reset</a>
 </form>
 
 <br>
