@@ -29,7 +29,7 @@
         <input type="email" name="email" value="{{ old('email') }}" required>
 
         <label>No. HP</label>
-        <input type="text" name="no_hp" value="{{ old('no_hp') }}" required>
+        <input type="tel" name="no_hp" value="{{ old('no_hp') }}" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
 
         <label>Alamat</label>
         <textarea name="alamat" rows="3" required>{{ old('alamat') }}</textarea>
