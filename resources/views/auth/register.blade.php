@@ -31,9 +31,6 @@
         <label>No. HP</label>
         <input type="tel" name="no_hp" value="{{ old('no_hp') }}" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
 
-        <label>Alamat</label>
-        <textarea name="alamat" rows="3" required>{{ old('alamat') }}</textarea>
-
         <label>Password</label>
         <input type="password" name="password" required>
 
