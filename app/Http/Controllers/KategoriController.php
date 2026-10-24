@@ -14,11 +14,6 @@ class KategoriController extends Controller
         return view('admin.kategori.index', compact('kategori'));
     }
 
-    public function create()
-    {
-        return view('admin.kategori.create');
-    }
-
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -28,11 +23,6 @@ class KategoriController extends Controller
         Kategori::create($data);
 
         return redirect()->route('kategori.index');
-    }
-
-    public function edit(Kategori $kategori)
-    {
-        return view('admin.kategori.edit', compact('kategori'));
     }
 
     public function update(Request $request, Kategori $kategori)
@@ -51,6 +41,5 @@ class KategoriController extends Controller
         $kategori->delete();
 
         return redirect()->route('kategori.index');
-
     }
 }

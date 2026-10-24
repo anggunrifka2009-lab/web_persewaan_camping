@@ -23,11 +23,17 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/admin', [LaporanController::class, 'dashboard'])
+        ->name('admin.dashboard');
 
-    Route::resource('/admin/kategori', KategoriController::class);
+    Route::resource('/admin/kategori', KategoriController::class)
+        ->except(['create', 'edit', 'show'])
+        ->names([
+            'index' => 'kategori.index',
+            'store' => 'kategori.store',
+            'update' => 'kategori.update',
+            'destroy' => 'kategori.destroy',
+        ]);
 
     Route::resource('/admin/barang', BarangController::class)
         ->except(['show']);
