@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BarangController extends Controller
 {
@@ -41,6 +42,7 @@ class BarangController extends Controller
         $data = $request->validate([
             'id_kategori' => 'required|exists:kategori,id_kategori',
             'nama_barang' => 'required|string|max:100',
+            'foto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'deskripsi' => 'required|string',
             'harga_sewa' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
@@ -79,6 +81,7 @@ class BarangController extends Controller
             ->max() + 1;
 
         $data['kode_barang'] = $prefix . str_pad($nomor, 3, '0', STR_PAD_LEFT);
+        $data['foto'] = $request->file('foto')->store('barang', 'public');
 
         Barang::create($data);
 
@@ -106,11 +109,22 @@ class BarangController extends Controller
         $data = $request->validate([
             'id_kategori' => 'required|exists:kategori,id_kategori',
             'nama_barang' => 'required|string|max:100',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'deskripsi' => 'required|string',
             'harga_sewa' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
             'status' => 'required|in:tersedia,tidak tersedia',
         ]);
+
+        if ($request->hasFile('foto')) {
+            if ($barang->foto) {
+                Storage::disk('public')->delete($barang->foto);
+            }
+
+            $data['foto'] = $request->file('foto')->store('barang', 'public');
+        } else {
+            unset($data['foto']);
+        }
 
         $barang->update($data);
 
