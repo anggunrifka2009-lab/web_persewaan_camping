@@ -21,7 +21,9 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (! Auth::attempt($credentials)) {
+        $remember = $request->boolean('remember');
+
+        if (! Auth::attempt($credentials, $remember)) {
             return back()->withErrors([
                 'email' => 'Email atau password salah.',
             ])->onlyInput('email');
@@ -56,7 +58,7 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
             'role' => 'pelanggan',
             'no_hp' => $data['no_hp'],
-            'alamat' => $data['alamat'],
+            'alamat' => $data['alamat'] ?? null,
         ]);
 
         Auth::login($user);

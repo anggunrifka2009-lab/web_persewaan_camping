@@ -224,7 +224,6 @@
             text-decoration: underline;
         }
 
-        /* Laptop dan tablet */
         @media (max-width: 1000px) {
             body {
                 padding: 24px;
@@ -248,7 +247,6 @@
             }
         }
 
-        /* HP dan tablet portrait */
         @media (max-width: 760px) {
             body {
                 align-items: flex-start;
@@ -306,7 +304,6 @@
             }
         }
 
-        /* HP kecil */
         @media (max-width: 380px) {
             body {
                 padding: 12px;
@@ -333,7 +330,6 @@
             }
         }
 
-        /* Desktop dengan layar pendek */
         @media (min-width: 761px) and (max-height: 700px) {
             body {
                 align-items: flex-start;

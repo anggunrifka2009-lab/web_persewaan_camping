@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -178,6 +179,48 @@
             box-shadow: 0 0 0 3px rgba(36, 75, 56, 0.10);
         }
 
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            padding-right: 48px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        .toggle-password:hover {
+            color: var(--forest);
+        }
+
+        .toggle-password:focus-visible {
+            outline: 2px solid var(--forest);
+            outline-offset: 2px;
+        }
+
+        .toggle-password svg {
+            display: block;
+            width: 20px;
+            height: 20px;
+        }
+
         .password-options {
             display: flex;
             align-items: center;
@@ -240,7 +283,6 @@
             line-height: 1.8;
         }
 
-        /* Laptop dan tablet */
         @media (max-width: 1000px) {
             body {
                 padding: 24px;
@@ -264,7 +306,6 @@
             }
         }
 
-        /* HP dan tablet portrait */
         @media (max-width: 760px) {
             body {
                 align-items: flex-start;
@@ -322,7 +363,6 @@
             }
         }
 
-        /* HP kecil */
         @media (max-width: 380px) {
             body {
                 padding: 12px;
@@ -353,7 +393,6 @@
             }
         }
 
-        /* Desktop dengan layar pendek */
         @media (min-width: 761px) and (max-height: 700px) {
             body {
                 align-items: flex-start;
@@ -376,6 +415,7 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -444,19 +484,50 @@
 
             <div class="field">
                 <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Masukkan password"
-                    autocomplete="current-password"
-                    required
-                >
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Masukkan password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        id="togglePassword"
+                        aria-label="Tampilkan password"
+                        aria-pressed="false"
+                    >
+                        <svg
+                            id="eyeIcon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div class="password-options">
                 <label class="remember">
-                    <input type="checkbox" name="remember" value="1">
+                    <input
+                        type="checkbox"
+                        name="remember"
+                        value="1"
+                        {{ old('remember') ? 'checked' : '' }}
+                    >
                     Ingat saya
                 </label>
             </div>
@@ -473,6 +544,37 @@
 
     </main>
 </div>
+
+<script>
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePassword.addEventListener('click', function () {
+        const isHidden = passwordInput.type === 'password';
+
+        passwordInput.type = isHidden ? 'text' : 'password';
+
+        togglePassword.setAttribute(
+            'aria-label',
+            isHidden ? 'Sembunyikan password' : 'Tampilkan password'
+        );
+
+        togglePassword.setAttribute('aria-pressed', String(isHidden));
+
+        eyeIcon.innerHTML = isHidden
+            ? `
+                <path d="M3 3l18 18"/>
+                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+                <path d="M9.9 5.2A11 11 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-4 4.7"/>
+                <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.6 7 10 7a10.7 10.7 0 0 0 3.4-.6"/>
+            `
+            : `
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+            `;
+    });
+</script>
 
 </body>
 </html>
