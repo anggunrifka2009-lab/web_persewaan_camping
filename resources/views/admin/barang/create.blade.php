@@ -44,145 +44,6 @@
             font: inherit;
         }
 
-        .sidebar {
-            position: fixed;
-            inset: 0 auto 0 0;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            width: 250px;
-            padding: 28px 18px 20px;
-            background: var(--white);
-            border-right: 1px solid var(--border);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 0 12px 30px;
-            color: var(--forest);
-            font-size: 23px;
-            font-weight: 800;
-            letter-spacing: -.8px;
-        }
-
-        .brand-icon {
-            display: grid;
-            place-items: center;
-            width: 39px;
-            height: 39px;
-            border-radius: 12px;
-            background: var(--forest);
-            color: white;
-            font-size: 23px;
-        }
-
-        .sidebar-label {
-            padding: 0 12px;
-            margin-bottom: 11px;
-            color: #92968e;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-        }
-
-        .nav-menu {
-            display: grid;
-            gap: 6px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            min-height: 46px;
-            padding: 12px 14px;
-            border-radius: 11px;
-            color: #69736a;
-            font-size: 13px;
-            font-weight: 600;
-            transition: .2s;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            background: var(--soft-green);
-            color: var(--forest);
-        }
-
-        .nav-icon {
-            display: grid;
-            place-items: center;
-            width: 22px;
-            font-size: 18px;
-        }
-
-        .sidebar-bottom {
-            margin-top: auto;
-            padding-top: 18px;
-            border-top: 1px solid var(--border);
-        }
-
-        .admin-info {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 10px 9px 16px;
-        }
-
-        .avatar {
-            display: grid;
-            flex-shrink: 0;
-            place-items: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #e7eee4;
-            color: var(--forest);
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .admin-name {
-            overflow: hidden;
-            color: var(--text);
-            font-size: 12px;
-            font-weight: 700;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .admin-role {
-            margin-top: 4px;
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        .logout-form {
-            margin: 0;
-        }
-
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            padding: 12px 14px;
-            border: 0;
-            border-radius: 10px;
-            background: transparent;
-            color: #8a5149;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
-        }
-
-        .logout-btn:hover {
-            background: #f8eeeb;
-        }
-
         .main {
             min-height: 100vh;
             margin-left: 250px;
@@ -460,7 +321,14 @@
         .preview-placeholder span {
             display: block;
             margin-bottom: 9px;
-            font-size: 32px;
+        }
+
+        .placeholder-icon {
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            object-fit: contain;
         }
 
         .preview-placeholder strong {
@@ -471,44 +339,6 @@
         }
 
         .preview-placeholder small {
-            font-size: 10px;
-            line-height: 1.6;
-        }
-
-        .info-list {
-            display: grid;
-            gap: 14px;
-            margin-top: 17px;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .info-icon {
-            display: grid;
-            flex-shrink: 0;
-            place-items: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 9px;
-            background: var(--soft-green);
-            color: var(--forest);
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .info-item strong {
-            display: block;
-            margin-bottom: 4px;
-            font-size: 11px;
-        }
-
-        .info-item span {
-            display: block;
-            color: var(--muted);
             font-size: 10px;
             line-height: 1.6;
         }
@@ -548,12 +378,6 @@
         }
 
         @media (max-width: 900px) {
-            .sidebar {
-                width: 215px;
-                padding-right: 13px;
-                padding-left: 13px;
-            }
-
             .main {
                 margin-left: 215px;
                 padding: 28px 20px;
@@ -565,64 +389,6 @@
         }
 
         @media (max-width: 620px) {
-            .sidebar {
-                position: relative;
-                inset: auto;
-                width: 100%;
-                padding: 15px 16px 13px;
-                border-right: 0;
-                border-bottom: 1px solid var(--border);
-            }
-
-            .brand {
-                padding: 0 4px 15px;
-                font-size: 21px;
-            }
-
-            .sidebar-label {
-                margin: 0 4px 8px;
-            }
-
-            .nav-menu {
-                display: flex;
-                gap: 7px;
-                overflow-x: auto;
-                padding-bottom: 3px;
-            }
-
-            .nav-link {
-                flex: 0 0 auto;
-                min-height: 40px;
-                gap: 8px;
-                padding: 10px 12px;
-                font-size: 12px;
-                white-space: nowrap;
-            }
-
-            .nav-icon {
-                font-size: 16px;
-            }
-
-            .sidebar-bottom {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 10px;
-                margin-top: 13px;
-                padding-top: 11px;
-            }
-
-            .admin-info {
-                min-width: 0;
-                padding: 0 4px;
-            }
-
-            .logout-btn {
-                width: auto;
-                padding: 10px;
-                white-space: nowrap;
-            }
-
             .main {
                 margin-left: 0;
                 padding: 24px 17px;
@@ -668,76 +434,41 @@
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <a href="{{ route('admin.dashboard') }}" class="brand">
-            <span class="brand-icon">⌁</span>
-            <span>CampRent</span>
-        </a>
-
-        <p class="sidebar-label">MENU UTAMA</p>
-
-        <nav class="nav-menu" aria-label="Navigasi admin">
-            <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                <span class="nav-icon">▦</span><span>Dashboard</span>
-            </a>
-
-            <a href="{{ route('kategori.index') }}" class="nav-link">
-                <span class="nav-icon">▤</span><span>Kategori</span>
-            </a>
-
-            <a href="{{ route('barang.index') }}" class="nav-link active">
-                <span class="nav-icon">⌂</span><span>Barang</span>
-            </a>
-
-            <a href="{{ route('admin.penyewaan.index') }}" class="nav-link">
-                <span class="nav-icon">▣</span><span>Penyewaan</span>
-            </a>
-
-            <a href="{{ route('admin.laporan.index') }}" class="nav-link">
-                <span class="nav-icon">▥</span><span>Laporan</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-            <a href="{{ route('akun.index') }}" class="admin-info">
-                <span class="avatar">{{ strtoupper(substr(Auth::user()->nama, 0, 1)) }}</span>
-                <span style="min-width:0">
-                    <span class="admin-name" style="display:block">{{ Auth::user()->nama }}</span>
-                    <span class="admin-role" style="display:block">Administrator</span>
-                </span>
-            </a>
-
-            <form action="{{ route('logout') }}" method="POST" class="logout-form">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <span class="nav-icon">↪</span>
-                    <span>Logout</span>
-                </button>
-            </form>
-        </div>
-    </aside>
+    @include('admin.sidebar')
 
     <main class="main">
         <header class="topbar">
             <div>
                 <div class="topbar-heading">
-                    <a href="{{ route('barang.index') }}" class="btn-back" aria-label="Kembali ke daftar barang">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <a href="{{ route('barang.index') }}"
+                       class="btn-back"
+                       aria-label="Kembali ke daftar barang">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
                             <path d="m12 19-7-7 7-7"/>
                             <path d="M19 12H5"/>
                         </svg>
                     </a>
+
                     <h1 class="page-title">Tambah Barang</h1>
                 </div>
-                <p class="page-subtitle">Tambahkan perlengkapan camping baru ke daftar penyewaan.</p>
+
+                <p class="page-subtitle">
+                    Tambahkan perlengkapan camping baru ke daftar penyewaan.
+                </p>
             </div>
         </header>
 
         @if ($errors->any())
             <div class="alert-error">
                 <strong>Data belum berhasil disimpan.</strong>
+
                 <ul style="padding-left:18px;margin-top:7px;">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -750,88 +481,156 @@
             <section class="panel">
                 <div class="panel-heading">
                     <h2>Informasi Barang</h2>
-                    <p>Isi informasi barang dengan benar. Kode barang akan dibuat otomatis berdasarkan kategori.</p>
+                    <p>
+                        Isi informasi barang dengan benar. Kode barang akan dibuat
+                        otomatis berdasarkan kategori.
+                    </p>
                 </div>
 
-                <form action="{{ route('barang.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('barang.store') }}"
+                      method="POST"
+                      enctype="multipart/form-data">
                     @csrf
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="id_kategori">Kategori <span class="required">*</span></label>
-                            <select name="id_kategori" id="id_kategori" class="form-control" required>
+                            <label for="id_kategori">
+                                Kategori <span class="required">*</span>
+                            </label>
+
+                            <select name="id_kategori"
+                                    id="id_kategori"
+                                    class="form-control"
+                                    required>
                                 <option value="">Pilih kategori barang</option>
+
                                 @foreach ($kategori as $item)
-                                    <option value="{{ $item->id_kategori }}" {{ old('id_kategori') == $item->id_kategori ? 'selected' : '' }}>
+                                    <option value="{{ $item->id_kategori }}"
+                                        {{ old('id_kategori') == $item->id_kategori ? 'selected' : '' }}>
                                         {{ $item->nama_kategori }}
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('id_kategori')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="nama_barang">Nama Barang <span class="required">*</span></label>
-                            <input type="text" name="nama_barang" id="nama_barang"
-                                   class="form-control" value="{{ old('nama_barang') }}"
+                            <label for="nama_barang">
+                                Nama Barang <span class="required">*</span>
+                            </label>
+
+                            <input type="text"
+                                   name="nama_barang"
+                                   id="nama_barang"
+                                   class="form-control"
+                                   value="{{ old('nama_barang') }}"
                                    placeholder="Contoh: Tenda Camping 4 Orang"
-                                   maxlength="100" required>
+                                   maxlength="100"
+                                   required>
+
                             @error('nama_barang')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group full">
-                            <label for="foto">Foto Barang <span class="required">*</span></label>
-                            <input type="file" name="foto" id="foto" class="form-control"
-                                   accept="image/jpeg,image/png,image/webp" required>
-                            <span class="error-message">Format JPG, JPEG, PNG, atau WebP. Maksimal 2 MB.</span>
+                            <label for="foto">
+                                Foto Barang <span class="required">*</span>
+                            </label>
+
+                            <input type="file"
+                                   name="foto"
+                                   id="foto"
+                                   class="form-control"
+                                   accept="image/jpeg,image/png,image/webp"
+                                   required>
+
+                            <span class="error-message">
+                                Format JPG, JPEG, PNG, atau WebP. Maksimal 2 MB.
+                            </span>
+
                             @error('foto')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group full">
-                            <label for="deskripsi">Deskripsi <span class="required">*</span></label>
-                            <textarea name="deskripsi" id="deskripsi" class="form-control"
+                            <label for="deskripsi">
+                                Deskripsi <span class="required">*</span>
+                            </label>
+
+                            <textarea name="deskripsi"
+                                      id="deskripsi"
+                                      class="form-control"
                                       placeholder="Masukkan detail atau kondisi barang"
                                       required>{{ old('deskripsi') }}</textarea>
+
                             @error('deskripsi')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="harga_sewa">Harga Sewa (Rp) <span class="required">*</span></label>
-                            <input type="text" name="harga_sewa" id="harga_sewa"
-                                   class="form-control" value="{{ old('harga_sewa') }}"
-                                   placeholder="Contoh: 50.000" inputmode="numeric" required>
+                            <label for="harga_sewa">
+                                Harga Sewa (Rp) <span class="required">*</span>
+                            </label>
+
+                            <input type="text"
+                                   name="harga_sewa"
+                                   id="harga_sewa"
+                                   class="form-control"
+                                   value="{{ old('harga_sewa') }}"
+                                   placeholder="Contoh: 50.000"
+                                   inputmode="numeric"
+                                   required>
+
                             @error('harga_sewa')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="stok">Stok <span class="required">*</span></label>
-                            <input type="number" name="stok" id="stok" class="form-control"
-                                   value="{{ old('stok', 0) }}" min="0" step="1" required>
+                            <label for="stok">
+                                Stok <span class="required">*</span>
+                            </label>
+
+                            <input type="number"
+                                   name="stok"
+                                   id="stok"
+                                   class="form-control"
+                                   value="{{ old('stok', 0) }}"
+                                   min="0"
+                                   step="1"
+                                   required>
+
                             @error('stok')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group full">
-                            <label for="status">Status <span class="required">*</span></label>
-                            <select name="status" id="status" class="form-control" required>
-                                <option value="tersedia" {{ old('status', 'tersedia') === 'tersedia' ? 'selected' : '' }}>
+                            <label for="status">
+                                Status <span class="required">*</span>
+                            </label>
+
+                            <select name="status"
+                                    id="status"
+                                    class="form-control"
+                                    required>
+                                <option value="tersedia"
+                                    {{ old('status', 'tersedia') === 'tersedia' ? 'selected' : '' }}>
                                     Tersedia
                                 </option>
-                                <option value="tidak tersedia" {{ old('status') === 'tidak tersedia' ? 'selected' : '' }}>
+
+                                <option value="tidak tersedia"
+                                    {{ old('status') === 'tidak tersedia' ? 'selected' : '' }}>
                                     Tidak Tersedia
                                 </option>
                             </select>
+
                             @error('status')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
@@ -839,8 +638,14 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="{{ route('barang.index') }}" class="btn btn-secondary">Batal</a>
-                        <button type="submit" class="btn btn-primary">Simpan Barang</button>
+                        <a href="{{ route('barang.index') }}"
+                           class="btn btn-secondary">
+                            Batal
+                        </a>
+
+                        <button type="submit" class="btn btn-primary">
+                            Simpan Barang
+                        </button>
                     </div>
                 </form>
             </section>
@@ -850,13 +655,25 @@
                     <h3>Pratinjau Foto</h3>
 
                     <div class="preview-box">
-                        <img id="preview-foto" src="" alt="Pratinjau foto barang">
+                        <img id="preview-foto"
+                             src=""
+                             alt="Pratinjau foto barang">
+
                         <div class="preview-placeholder" id="preview-placeholder">
-                            <span>⌂</span>
+                            <span>
+                                <img src="{{ asset('images/barang.png') }}"
+                                     alt="Ikon foto"
+                                     class="placeholder-icon">
+                            </span>
+
                             <strong>Belum ada foto</strong>
-                            <small>Pilih gambar dari perangkatmu untuk melihat pratinjau.</small>
+
+                            <small>
+                                Pilih gambar dari perangkatmu untuk melihat pratinjau.
+                            </small>
                         </div>
                     </div>
+
                     <p id="nama-file">Belum ada file yang dipilih.</p>
                 </section>
             </aside>
@@ -891,7 +708,11 @@
                 return;
             }
 
-            const formatDiizinkan = ['image/jpeg', 'image/png', 'image/webp'];
+            const formatDiizinkan = [
+                'image/jpeg',
+                'image/png',
+                'image/webp'
+            ];
 
             if (!formatDiizinkan.includes(file.type)) {
                 this.value = '';
@@ -899,6 +720,7 @@
                 previewFoto.style.display = 'none';
                 placeholderFoto.style.display = 'block';
                 namaFile.textContent = 'Format file tidak didukung.';
+
                 alert('Pilih foto berformat JPG, JPEG, PNG, atau WebP.');
                 return;
             }
@@ -909,6 +731,7 @@
                 previewFoto.style.display = 'none';
                 placeholderFoto.style.display = 'block';
                 namaFile.textContent = 'Ukuran foto melebihi 2 MB.';
+
                 alert('Ukuran foto maksimal 2 MB.');
                 return;
             }

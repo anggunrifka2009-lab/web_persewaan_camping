@@ -42,149 +42,33 @@
             font: inherit;
         }
 
-        .sidebar {
-            position: fixed;
-            inset: 0 auto 0 0;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            width: 250px;
-            padding: 28px 18px 20px;
-            background: var(--white);
-            border-right: 1px solid var(--border);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 0 12px 30px;
-            color: var(--forest);
-            font-size: 23px;
-            font-weight: 800;
-            letter-spacing: -.8px;
-        }
-
-        .brand-icon {
-            display: grid;
-            place-items: center;
-            width: 39px;
-            height: 39px;
-            border-radius: 12px;
-            background: var(--forest);
-            color: white;
-            font-size: 23px;
-        }
-
-        .sidebar-label {
-            padding: 0 12px;
-            margin-bottom: 11px;
-            color: #92968e;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-        }
-
-        .nav-menu {
-            display: grid;
-            gap: 6px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            min-height: 46px;
-            padding: 12px 14px;
-            border-radius: 11px;
-            color: #69736a;
-            font-size: 13px;
-            font-weight: 600;
-            transition: .2s;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            background: #eaf0e8;
-            color: var(--forest);
-        }
-
-        .nav-icon {
-            display: grid;
-            place-items: center;
-            width: 22px;
-            font-size: 18px;
-        }
-
-        .sidebar-bottom {
-            margin-top: auto;
-            padding-top: 18px;
-            border-top: 1px solid var(--border);
-        }
-
-        .admin-info {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 10px 9px 16px;
-        }
-
-        .avatar {
-            display: grid;
-            flex-shrink: 0;
-            place-items: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #e7eee4;
-            color: var(--forest);
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .admin-name {
-            overflow: hidden;
-            color: var(--text);
-            font-size: 12px;
-            font-weight: 700;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .admin-role {
-            margin-top: 4px;
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        .logout-form {
-            margin: 0;
-        }
-
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            padding: 12px 14px;
-            border: 0;
-            border-radius: 10px;
-            background: transparent;
-            color: #8a5149;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
-        }
-
-        .logout-btn:hover {
-            background: #f8eeeb;
-        }
-
         .main {
             min-height: 100vh;
             margin-left: 250px;
             padding: 32px 38px 28px;
+        }
+
+        /* ANIMASI PEMBUKA HALAMAN */
+        #barang-content {
+            animation: contentEnter 0.3s ease-out;
+        }
+
+        @keyframes contentEnter {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #barang-content {
+                animation: none;
+            }
         }
 
         .topbar {
@@ -206,23 +90,6 @@
             color: var(--muted);
             font-size: 12px;
             line-height: 1.7;
-        }
-
-        .topbar-account {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 13px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--white);
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .topbar-account:hover {
-            border-color: #b9c8b8;
-            color: var(--forest);
         }
 
         .panel {
@@ -533,12 +400,6 @@
         }
 
         @media (max-width: 900px) {
-            .sidebar {
-                width: 215px;
-                padding-right: 13px;
-                padding-left: 13px;
-            }
-
             .main {
                 margin-left: 215px;
                 padding: 28px 20px;
@@ -556,64 +417,6 @@
         }
 
         @media (max-width: 620px) {
-            .sidebar {
-                position: relative;
-                inset: auto;
-                width: 100%;
-                padding: 15px 16px 13px;
-                border-right: 0;
-                border-bottom: 1px solid var(--border);
-            }
-
-            .brand {
-                padding: 0 4px 15px;
-                font-size: 21px;
-            }
-
-            .sidebar-label {
-                margin: 0 4px 8px;
-            }
-
-            .nav-menu {
-                display: flex;
-                gap: 7px;
-                overflow-x: auto;
-                padding-bottom: 3px;
-            }
-
-            .nav-link {
-                flex: 0 0 auto;
-                min-height: 40px;
-                gap: 8px;
-                padding: 10px 12px;
-                font-size: 12px;
-                white-space: nowrap;
-            }
-
-            .nav-icon {
-                font-size: 16px;
-            }
-
-            .sidebar-bottom {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 10px;
-                margin-top: 13px;
-                padding-top: 11px;
-            }
-
-            .admin-info {
-                min-width: 0;
-                padding: 0 4px;
-            }
-
-            .logout-btn {
-                width: auto;
-                padding: 10px;
-                white-space: nowrap;
-            }
-
             .main {
                 margin-left: 0;
                 padding: 24px 17px;
@@ -626,11 +429,6 @@
 
             .page-title {
                 font-size: 21px;
-            }
-
-            .topbar-account {
-                padding: 9px 10px;
-                font-size: 0;
             }
 
             .panel {
@@ -675,62 +473,15 @@
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <a href="{{ route('admin.dashboard') }}" class="brand">
-            <span class="brand-icon">⌁</span>
-            <span>CampRent</span>
-        </a>
+    @include('admin.sidebar')
 
-        <p class="sidebar-label">MENU UTAMA</p>
-
-        <nav class="nav-menu" aria-label="Navigasi admin">
-            <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                <span class="nav-icon">▦</span><span>Dashboard</span>
-            </a>
-
-            <a href="{{ route('kategori.index') }}" class="nav-link">
-                <span class="nav-icon">▤</span><span>Kategori</span>
-            </a>
-
-            <a href="{{ route('barang.index') }}" class="nav-link active">
-                <span class="nav-icon">⌂</span><span>Barang</span>
-            </a>
-
-            <a href="{{ route('admin.penyewaan.index') }}" class="nav-link">
-                <span class="nav-icon">▣</span><span>Penyewaan</span>
-            </a>
-
-            <a href="{{ route('admin.laporan.index') }}" class="nav-link">
-                <span class="nav-icon">▥</span><span>Laporan</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-            <a href="{{ route('akun.index') }}" class="admin-info">
-                <span class="avatar">{{ strtoupper(substr(Auth::user()->nama, 0, 1)) }}</span>
-
-                <span style="min-width:0">
-                    <span class="admin-name" style="display:block">{{ Auth::user()->nama }}</span>
-                    <span class="admin-role" style="display:block">Administrator</span>
-                </span>
-            </a>
-
-            <form action="{{ route('logout') }}" method="POST" class="logout-form">
-                @csrf
-
-                <button type="submit" class="logout-btn">
-                    <span class="nav-icon">↪</span>
-                    <span>Logout</span>
-                </button>
-            </form>
-        </div>
-    </aside>
-
-    <main class="main">
+    <main class="main" id="barang-content">
         <header class="topbar">
             <div>
                 <h1 class="page-title">Data Barang</h1>
-                <p class="page-subtitle">Kelola daftar alat camping yang tersedia untuk disewa.</p>
+                <p class="page-subtitle">
+                    Kelola daftar alat camping yang tersedia untuk disewa.
+                </p>
             </div>
         </header>
 
@@ -758,7 +509,9 @@
                 </div>
             @endif
 
-            <form action="{{ route('barang.index') }}" method="GET" id="form-pencarian" class="search-form" style="margin-bottom:20px;">
+            <form action="{{ route('barang.index') }}" method="GET"
+                  id="form-pencarian" class="search-form"
+                  style="margin-bottom:20px;">
                 <input
                     type="text"
                     name="cari"
@@ -815,9 +568,7 @@
                                 </td>
 
                                 <td class="code">{{ $item->kode_barang }}</td>
-
                                 <td class="item-name">{{ $item->nama_barang }}</td>
-
                                 <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
 
                                 <td class="price">
@@ -836,7 +587,8 @@
 
                                 <td>
                                     <div class="actions">
-                                        <a href="{{ route('barang.edit', $item->id_barang) }}" class="btn btn-edit">
+                                        <a href="{{ route('barang.edit', $item->id_barang) }}"
+                                           class="btn btn-edit">
                                             Edit
                                         </a>
 
