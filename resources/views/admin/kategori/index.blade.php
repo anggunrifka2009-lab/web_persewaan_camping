@@ -20,7 +20,11 @@
             --border: #e4e2d9;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             min-height: 100vh;
@@ -29,140 +33,14 @@
             font-family: 'Inter', sans-serif;
         }
 
-        a { color: inherit; text-decoration: none; }
-        button, input { font: inherit; }
-
-        .sidebar {
-            position: fixed;
-            inset: 0 auto 0 0;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            width: 250px;
-            padding: 28px 18px 20px;
-            background: var(--white);
-            border-right: 1px solid var(--border);
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 0 12px 30px;
-            color: var(--forest);
-            font-size: 23px;
-            font-weight: 800;
-            letter-spacing: -.8px;
+        button, input {
+            font: inherit;
         }
-
-        .brand-icon {
-            display: grid;
-            place-items: center;
-            width: 39px;
-            height: 39px;
-            border-radius: 12px;
-            background: var(--forest);
-            color: white;
-            font-size: 23px;
-        }
-
-        .sidebar-label {
-            padding: 0 12px;
-            margin-bottom: 11px;
-            color: #92968e;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-        }
-
-        .nav-menu { display: grid; gap: 6px; }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            min-height: 46px;
-            padding: 12px 14px;
-            border-radius: 11px;
-            color: #69736a;
-            font-size: 13px;
-            font-weight: 600;
-            transition: .2s;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            background: #eaf0e8;
-            color: var(--forest);
-        }
-
-        .nav-icon {
-            display: grid;
-            place-items: center;
-            width: 22px;
-            font-size: 18px;
-        }
-
-        .sidebar-bottom {
-            margin-top: auto;
-            padding-top: 18px;
-            border-top: 1px solid var(--border);
-        }
-
-        .admin-info {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 10px 9px 16px;
-        }
-
-        .avatar {
-            display: grid;
-            flex-shrink: 0;
-            place-items: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #e7eee4;
-            color: var(--forest);
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .admin-name {
-            overflow: hidden;
-            color: var(--text);
-            font-size: 12px;
-            font-weight: 700;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .admin-role {
-            margin-top: 4px;
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        .logout-form { margin: 0; }
-
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            padding: 12px 14px;
-            border: 0;
-            border-radius: 10px;
-            background: transparent;
-            color: #8a5149;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
-        }
-
-        .logout-btn:hover { background: #f8eeeb; }
 
         .main {
             min-height: 100vh;
@@ -238,7 +116,9 @@
             color: white;
         }
 
-        .btn-primary:hover { background: var(--forest-dark); }
+        .btn-primary:hover {
+            background: var(--forest-dark);
+        }
 
         .btn-light {
             border-color: var(--border);
@@ -246,7 +126,9 @@
             color: var(--text);
         }
 
-        .btn-light:hover { background: var(--cream); }
+        .btn-light:hover {
+            background: var(--cream);
+        }
 
         .btn-edit {
             padding: 8px 11px;
@@ -254,7 +136,9 @@
             color: var(--forest);
         }
 
-        .btn-edit:hover { background: #dce8d9; }
+        .btn-edit:hover {
+            background: #dce8d9;
+        }
 
         .btn-delete {
             padding: 8px 11px;
@@ -262,7 +146,9 @@
             color: #984c43;
         }
 
-        .btn-delete:hover { background: #f2dfda; }
+        .btn-delete:hover {
+            background: #f2dfda;
+        }
 
         .table-wrap {
             overflow-x: auto;
@@ -276,7 +162,9 @@
             text-align: left;
         }
 
-        thead { background: #f9f8f2; }
+        thead {
+            background: #f9f8f2;
+        }
 
         th {
             padding: 15px 18px;
@@ -295,10 +183,18 @@
             vertical-align: middle;
         }
 
-        tbody tr:hover { background: #fcfbf7; }
+        tbody tr:hover {
+            background: #fcfbf7;
+        }
 
-        .number { width: 70px; color: var(--muted); }
-        .category-name { font-weight: 700; }
+        .number {
+            width: 70px;
+            color: var(--muted);
+        }
+
+        .category-name {
+            font-weight: 700;
+        }
 
         .actions {
             display: flex;
@@ -306,7 +202,10 @@
             gap: 8px;
         }
 
-        .delete-form { display: inline; margin: 0; }
+        .delete-form {
+            display: inline;
+            margin: 0;
+        }
 
         .empty-state {
             padding: 35px 20px;
@@ -324,6 +223,30 @@
             line-height: 1.7;
         }
 
+        /* ANIMASI PEMBUKA HALAMAN */
+        #kategori-content {
+            animation: contentEnter 0.3s ease-out;
+        }
+
+        @keyframes contentEnter {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #kategori-content {
+                animation: none;
+            }
+        }
+
+        /* MODAL */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -337,7 +260,9 @@
             -webkit-backdrop-filter: blur(5px);
         }
 
-        .modal-overlay.show { display: flex; }
+        .modal-overlay.show {
+            display: flex;
+        }
 
         .modal {
             width: 100%;
@@ -356,6 +281,7 @@
                 opacity: 0;
                 transform: translateY(10px) scale(.98);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -396,9 +322,13 @@
             color: #334155;
         }
 
-        .modal-body { padding: 24px; }
+        .modal-body {
+            padding: 24px;
+        }
 
-        .form-group { margin-bottom: 26px; }
+        .form-group {
+            margin-bottom: 26px;
+        }
 
         .form-label {
             display: block;
@@ -424,7 +354,9 @@
             transition: .2s;
         }
 
-        .form-input::placeholder { color: #8792a3; }
+        .form-input::placeholder {
+            color: #8792a3;
+        }
 
         .form-input:focus {
             border-color: #8aa795;
@@ -468,7 +400,9 @@
             color: #34445c;
         }
 
-        .modal-actions .btn-light:hover { background: #f8fafc; }
+        .modal-actions .btn-light:hover {
+            background: #f8fafc;
+        }
 
         .modal-actions .btn-primary {
             border-color: var(--forest);
@@ -481,134 +415,97 @@
         }
 
         @media (max-width: 900px) {
-            .sidebar {
-                width: 215px;
-                padding-right: 13px;
-                padding-left: 13px;
+            .main {
+                margin-left: 215px;
+                padding: 28px 24px;
             }
-
-            .main { margin-left: 215px; padding: 28px 24px; }
         }
 
         @media (max-width: 620px) {
-            .sidebar {
-                position: relative;
-                inset: auto;
-                width: 100%;
-                padding: 15px 16px 13px;
-                border-right: 0;
-                border-bottom: 1px solid var(--border);
+            .main {
+                margin-left: 0;
+                padding: 24px 17px;
             }
 
-            .brand { padding: 0 4px 15px; font-size: 21px; }
-            .sidebar-label { margin: 0 4px 8px; }
-
-            .nav-menu {
-                display: flex;
-                gap: 7px;
-                overflow-x: auto;
-                padding-bottom: 3px;
+            .topbar {
+                align-items: flex-start;
+                margin-bottom: 22px;
             }
 
-            .nav-link {
-                flex: 0 0 auto;
-                min-height: 40px;
-                gap: 8px;
+            .page-title {
+                font-size: 21px;
+            }
+
+            .panel {
+                padding: 18px 14px;
+            }
+
+            .panel-heading {
+                align-items: flex-start;
+            }
+
+            .panel-heading h2 {
+                font-size: 16px;
+            }
+
+            .btn {
                 padding: 10px 12px;
-                font-size: 12px;
-                white-space: nowrap;
             }
 
-            .nav-icon { font-size: 16px; }
-
-            .sidebar-bottom {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 10px;
-                margin-top: 13px;
-                padding-top: 11px;
+            table {
+                min-width: 470px;
             }
 
-            .admin-info { min-width: 0; padding: 0 4px; }
-
-            .logout-btn {
-                width: auto;
-                padding: 10px;
-                white-space: nowrap;
+            .footer {
+                margin-top: 28px;
             }
 
-            .main { margin-left: 0; padding: 24px 17px; }
-            .topbar { align-items: flex-start; margin-bottom: 22px; }
-            .page-title { font-size: 21px; }
-            .panel { padding: 18px 14px; }
-            .panel-heading { align-items: flex-start; }
-            .panel-heading h2 { font-size: 16px; }
-            .btn { padding: 10px 12px; }
-            table { min-width: 470px; }
-            .footer { margin-top: 28px; }
+            .modal-overlay {
+                padding: 16px;
+            }
 
-            .modal-overlay { padding: 16px; }
-            .modal { max-width: 448px; border-radius: 20px; }
-            .modal-header { padding: 21px 20px; }
-            .modal-body { padding: 20px; }
+            .modal {
+                max-width: 448px;
+                border-radius: 20px;
+            }
+
+            .modal-header {
+                padding: 21px 20px;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
         }
 
         @media (max-width: 380px) {
-            .main { padding-right: 12px; padding-left: 12px; }
-            .panel-heading { flex-direction: column; }
-            .panel-heading > .btn { width: 100%; }
-            .modal-actions { gap: 9px; }
-            .modal-actions .btn { padding: 10px 8px; }
+            .main {
+                padding-right: 12px;
+                padding-left: 12px;
+            }
+
+            .panel-heading {
+                flex-direction: column;
+            }
+
+            .panel-heading > .btn {
+                width: 100%;
+            }
+
+            .modal-actions {
+                gap: 9px;
+            }
+
+            .modal-actions .btn {
+                padding: 10px 8px;
+            }
         }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <a href="{{ route('admin.dashboard') }}" class="brand">
-            <span class="brand-icon">⌁</span>
-            <span>CampRent</span>
-        </a>
+    @include('admin.sidebar')
 
-        <p class="sidebar-label">MENU UTAMA</p>
-
-        <nav class="nav-menu" aria-label="Navigasi admin">
-            <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                <span class="nav-icon">▦</span><span>Dashboard</span>
-            </a>
-            <a href="{{ route('kategori.index') }}" class="nav-link active">
-                <span class="nav-icon">▤</span><span>Kategori</span>
-            </a>
-            <a href="{{ route('barang.index') }}" class="nav-link">
-                <span class="nav-icon">⌂</span><span>Barang</span>
-            </a>
-            <a href="{{ route('admin.penyewaan.index') }}" class="nav-link">
-                <span class="nav-icon">▣</span><span>Penyewaan</span>
-            </a>
-            <a href="{{ route('admin.laporan.index') }}" class="nav-link">
-                <span class="nav-icon">▥</span><span>Laporan</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-            <a href="{{ route('akun.index') }}" class="admin-info">
-                <span class="avatar">{{ strtoupper(substr(Auth::user()->nama, 0, 1)) }}</span>
-                <span style="min-width:0">
-                    <span class="admin-name" style="display:block">{{ Auth::user()->nama }}</span>
-                    <span class="admin-role" style="display:block">Administrator</span>
-                </span>
-            </a>
-
-            <form action="{{ route('logout') }}" method="POST" class="logout-form">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <span class="nav-icon">↪</span><span>Logout</span>
-                </button>
-            </form>
-        </div>
-    </aside>
-
-    <main class="main">
+    <main class="main" id="kategori-content">
         <header class="topbar">
             <div>
                 <h1 class="page-title">Data Kategori</h1>
@@ -649,11 +546,16 @@
                             <th>AKSI</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         @forelse ($kategori as $item)
                             <tr>
                                 <td class="number">{{ $loop->iteration }}</td>
-                                <td class="category-name">{{ $item->nama_kategori }}</td>
+
+                                <td class="category-name">
+                                    {{ $item->nama_kategori }}
+                                </td>
+
                                 <td>
                                     <div class="actions">
                                         <button
@@ -673,7 +575,10 @@
                                         >
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-delete">Hapus</button>
+
+                                            <button type="submit" class="btn btn-delete">
+                                                Hapus
+                                            </button>
                                         </form>
                                     </div>
                                 </td>
@@ -690,7 +595,9 @@
             </div>
         </section>
 
-        <footer class="footer">CampRent — Sistem Informasi Persewaan Alat Camping</footer>
+        <footer class="footer">
+            CampRent — Sistem Informasi Persewaan Alat Camping
+        </footer>
     </main>
 
     <div
@@ -724,6 +631,7 @@
 
                     <div class="form-group">
                         <label for="createNamaKategori" class="form-label">Nama Kategori</label>
+
                         <input
                             type="text"
                             id="createNamaKategori"
@@ -779,11 +687,19 @@
                 <form id="editCategoryForm" action="{{ route('kategori.index') }}" method="POST">
                     @csrf
                     @method('PUT')
+
                     <input type="hidden" name="_form_type" value="edit">
-                    <input type="hidden" name="_edit_id" id="editKategoriId" value="{{ old('_form_type') === 'edit' ? old('_edit_id') : '' }}">
+
+                    <input
+                        type="hidden"
+                        name="_edit_id"
+                        id="editKategoriId"
+                        value="{{ old('_form_type') === 'edit' ? old('_edit_id') : '' }}"
+                    >
 
                     <div class="form-group">
                         <label for="editNamaKategori" class="form-label">Nama Kategori</label>
+
                         <input
                             type="text"
                             id="editNamaKategori"
@@ -823,7 +739,6 @@
             closeAllModals();
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
-
             setTimeout(() => input.focus(), 100);
         }
 
