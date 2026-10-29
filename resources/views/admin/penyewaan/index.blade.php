@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Penyewaan - CampRent</title>
+    <title>Data Penyewaan - CamRent</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +38,7 @@
             text-decoration: none;
         }
 
-        button, input {
+        button, input, select {
             font: inherit;
         }
 
@@ -53,12 +53,21 @@
         }
 
         @keyframes contentEnter {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            #penyewaan-content { animation: none; }
+            #penyewaan-content {
+                animation: none;
+            }
         }
 
         .topbar {
@@ -130,28 +139,38 @@
             color: #347246;
         }
 
-        .btn-approve:hover { background: #dcebd7; }
+        .btn-approve:hover {
+            background: #dcebd7;
+        }
 
-        .btn-reject, .btn-cancel {
+        .btn-reject,
+        .btn-cancel {
             background: #f8eeeb;
             color: #984c43;
         }
 
-        .btn-reject:hover, .btn-cancel:hover { background: #f2dfda; }
+        .btn-reject:hover,
+        .btn-cancel:hover {
+            background: #f2dfda;
+        }
 
         .btn-payment {
             background: #edf0f8;
             color: #465b8c;
         }
 
-        .btn-payment:hover { background: #dfe5f5; }
+        .btn-payment:hover {
+            background: #dfe5f5;
+        }
 
         .btn-return {
             background: #eaf0e8;
             color: var(--forest);
         }
 
-        .btn-return:hover { background: #dce8d9; }
+        .btn-return:hover {
+            background: #dce8d9;
+        }
 
         .toolbar {
             display: flex;
@@ -168,16 +187,24 @@
             font-weight: 600;
         }
 
+        .filter-form {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+            width: min(100%, 650px);
+        }
+
         .search-form {
             display: flex;
             align-items: center;
             gap: 9px;
-            width: min(100%, 430px);
+            flex: 1 1 280px;
+            min-width: 0;
         }
 
-        .search-form input {
-            width: 100%;
-            min-width: 0;
+        .search-form input,
+        .filter-form select {
             height: 40px;
             padding: 0 13px;
             border: 1px solid var(--border);
@@ -188,7 +215,19 @@
             font-size: 12px;
         }
 
-        .search-form input:focus {
+        .search-form input {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .filter-form select {
+            flex: 0 1 170px;
+            min-width: 150px;
+            cursor: pointer;
+        }
+
+        .search-form input:focus,
+        .filter-form select:focus {
             border-color: #9bb39a;
             box-shadow: 0 0 0 3px rgba(36, 75, 56, .07);
         }
@@ -201,7 +240,22 @@
             color: var(--forest);
         }
 
-        .btn-search:hover { background: #dce8d9; }
+        .btn-search:hover {
+            background: #dce8d9;
+        }
+
+        .btn-reset {
+            min-height: 40px;
+            padding: 10px 13px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            color: var(--muted);
+        }
+
+        .btn-reset:hover {
+            background: #f4f2eb;
+            color: var(--forest);
+        }
 
         .table-wrap {
             overflow-x: auto;
@@ -215,7 +269,9 @@
             text-align: left;
         }
 
-        thead { background: #f9f8f2; }
+        thead {
+            background: #f9f8f2;
+        }
 
         th {
             padding: 15px 14px;
@@ -234,7 +290,9 @@
             vertical-align: middle;
         }
 
-        tbody tr:hover { background: #fcfbf7; }
+        tbody tr:hover {
+            background: #fcfbf7;
+        }
 
         .number {
             width: 45px;
@@ -252,9 +310,13 @@
             font-weight: 700;
         }
 
-        .items-cell { min-width: 155px; }
+        .items-cell {
+            min-width: 155px;
+        }
 
-        .item-line + .item-line { margin-top: 4px; }
+        .item-line + .item-line {
+            margin-top: 4px;
+        }
 
         .price {
             font-weight: 700;
@@ -270,11 +332,31 @@
             white-space: nowrap;
         }
 
-        .status-menunggu { background: #fbf0d9; color: #94691d; }
-        .status-disetujui { background: #edf0f8; color: #465b8c; }
-        .status-dibayar { background: #eaf2e7; color: #347246; }
-        .status-dikembalikan { background: #e5eee7; color: #244b38; }
-        .status-ditolak, .status-dibatalkan { background: #f8eeeb; color: #984c43; }
+        .status-menunggu {
+            background: #fbf0d9;
+            color: #94691d;
+        }
+
+        .status-disetujui {
+            background: #edf0f8;
+            color: #465b8c;
+        }
+
+        .status-dibayar {
+            background: #eaf2e7;
+            color: #347246;
+        }
+
+        .status-dikembalikan {
+            background: #e5eee7;
+            color: #244b38;
+        }
+
+        .status-ditolak,
+        .status-dibatalkan {
+            background: #f8eeeb;
+            color: #984c43;
+        }
 
         .fine {
             font-weight: 600;
@@ -294,7 +376,9 @@
             margin: 0;
         }
 
-        .action-form .btn { width: 100%; }
+        .action-form .btn {
+            width: 100%;
+        }
 
         .action-note {
             color: var(--muted);
@@ -309,52 +393,71 @@
             line-height: 1.8;
         }
 
-        .pagination-area {
+        .pagination-wrap {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            align-items: center;
             flex-wrap: wrap;
-            margin-top: 18px;
+            gap: 14px;
+            margin-top: 20px;
         }
 
         .pagination-info {
             color: var(--muted);
-            font-size: 11px;
+            font-size: 12px;
         }
 
-        .pagination nav > div:first-child { display: none; }
+        .pagination nav {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .pagination nav > div:first-child {
+            display: none;
+        }
 
         .pagination nav > div:last-child {
             display: flex;
             align-items: center;
-            gap: 5px;
+            flex-wrap: wrap;
+            gap: 4px;
         }
 
-        .pagination nav span, .pagination nav a {
+        .pagination a,
+        .pagination span[aria-current="page"] span,
+        .pagination span[aria-disabled="true"] span {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             min-width: 34px;
             min-height: 34px;
             padding: 7px 10px;
+            margin: 0 2px;
             border: 1px solid var(--border);
             border-radius: 8px;
-            background: var(--white);
-            color: var(--forest);
-            font-size: 11px;
+            font-size: 12px;
             text-decoration: none;
         }
 
-        .pagination nav a:hover { background: #eaf0e8; }
+        .pagination a {
+            color: var(--forest);
+        }
 
-        .pagination nav span[aria-current="page"] span {
+        .pagination a:hover {
+            background: #eaf0e8;
+        }
+
+        .pagination span[aria-current="page"] span {
             border-color: var(--forest);
             background: var(--forest);
             color: white;
         }
 
-        .pagination nav span[aria-disabled="true"] span { color: #b5b7af; }
+        .pagination span[aria-disabled="true"] span {
+            color: #aaa;
+        }
 
         .footer {
             margin-top: 35px;
@@ -374,36 +477,117 @@
             line-height: 1.7;
         }
 
-        .alert-success { border-color: #cfe0cc; background: #edf5e9; color: #315b3d; }
-        .alert-error { border-color: #ead0cb; background: #f8eeeb; color: #984c43; }
+        .alert-success {
+            border-color: #cfe0cc;
+            background: #edf5e9;
+            color: #315b3d;
+        }
+
+        .alert-error {
+            border-color: #ead0cb;
+            background: #f8eeeb;
+            color: #984c43;
+        }
 
         @media (max-width: 1200px) {
-            .main { padding-right: 24px; padding-left: 24px; }
-            .panel { padding: 20px; }
-            th, td { padding-right: 11px; padding-left: 11px; }
+            .main {
+                padding-right: 24px;
+                padding-left: 24px;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            th,
+            td {
+                padding-right: 11px;
+                padding-left: 11px;
+            }
         }
 
         @media (max-width: 900px) {
-            .main { margin-left: 215px; padding: 28px 24px; }
-            .toolbar { align-items: flex-start; flex-direction: column; }
-            .search-form { width: 100%; max-width: none; }
+            .main {
+                margin-left: 215px;
+                padding: 28px 24px;
+            }
+
+            .toolbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .filter-form {
+                width: 100%;
+                max-width: none;
+            }
         }
 
         @media (max-width: 620px) {
-            .main { margin-left: 0; padding: 24px 17px; }
-            .topbar { align-items: flex-start; margin-bottom: 22px; }
-            .page-title { font-size: 21px; }
-            .panel { padding: 18px 14px; }
-            .panel-heading { align-items: flex-start; flex-direction: column; }
-            .panel-heading h2 { font-size: 16px; }
-            table { min-width: 1120px; }
-            .pagination-area { align-items: flex-start; flex-direction: column; }
-            .footer { margin-top: 28px; }
+            .main {
+                margin-left: 0;
+                padding: 24px 17px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                margin-bottom: 22px;
+            }
+
+            .page-title {
+                font-size: 21px;
+            }
+
+            .panel {
+                padding: 18px 14px;
+            }
+
+            .panel-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .panel-heading h2 {
+                font-size: 16px;
+            }
+
+            .filter-form {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .filter-form select {
+                width: 100%;
+                flex-basis: auto;
+            }
+
+            .search-form {
+                flex-basis: auto;
+                width: 100%;
+            }
+
+            table {
+                min-width: 1120px;
+            }
+
+            .pagination-wrap {
+                align-items: flex-start;
+            }
+
+            .footer {
+                margin-top: 28px;
+            }
         }
 
         @media (max-width: 380px) {
-            .main { padding-right: 12px; padding-left: 12px; }
-            .topbar { gap: 10px; }
+            .main {
+                padding-right: 12px;
+                padding-left: 12px;
+            }
+
+            .topbar {
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -443,14 +627,32 @@
                 <form action="{{ route('admin.penyewaan.index') }}"
                       method="GET"
                       id="form-pencarian"
-                      class="search-form">
-                    <input type="text"
-                           name="cari"
-                           id="cari-penyewaan"
-                           placeholder="Cari kode penyewaan atau nama pelanggan..."
-                           value="{{ $cari }}"
-                           autocomplete="off">
-                    <button type="submit" class="btn btn-search">Cari</button>
+                      class="filter-form">
+
+                    <select name="status" id="filter-status">
+                        <option value="">Semua Status</option>
+                        <option value="menunggu" @selected(($status ?? request('status')) === 'menunggu')>Menunggu</option>
+                        <option value="disetujui" @selected(($status ?? request('status')) === 'disetujui')>Disetujui</option>
+                        <option value="ditolak" @selected(($status ?? request('status')) === 'ditolak')>Ditolak</option>
+                        <option value="dibayar" @selected(($status ?? request('status')) === 'dibayar')>Dibayar</option>
+                        <option value="dibatalkan" @selected(($status ?? request('status')) === 'dibatalkan')>Dibatalkan</option>
+                        <option value="dikembalikan" @selected(($status ?? request('status')) === 'dikembalikan')>Dikembalikan</option>
+                    </select>
+
+                    <div class="search-form">
+                        <input type="text"
+                               name="cari"
+                               id="cari-penyewaan"
+                               placeholder="Cari kode penyewaan atau nama pelanggan..."
+                               value="{{ $cari ?? request('cari') }}"
+                               autocomplete="off">
+
+                        <button type="submit" class="btn btn-search">Cari</button>
+                    </div>
+
+                    <a href="{{ route('admin.penyewaan.index') }}" class="btn btn-reset">
+                        Reset
+                    </a>
                 </form>
             </div>
 
@@ -484,7 +686,7 @@
                                     'menunggu' => 'Menunggu',
                                     'disetujui' => 'Disetujui',
                                     'dibayar' => 'Dibayar',
-                                    'dikembalikan' => 'Selesai',
+                                    'dikembalikan' => 'Dikembalikan',
                                     'ditolak' => 'Ditolak',
                                     'dibatalkan' => 'Dibatalkan',
                                     default => ucfirst($item->status),
@@ -506,9 +708,13 @@
                                     {{ $penyewaan->firstItem() + $loop->index }}
                                 </td>
 
-                                <td class="rental-code">{{ $item->kode_penyewaan }}</td>
+                                <td class="rental-code">
+                                    {{ $item->kode_penyewaan }}
+                                </td>
 
-                                <td class="customer-name">{{ $item->user->nama ?? '-' }}</td>
+                                <td class="customer-name">
+                                    {{ $item->user->nama ?? '-' }}
+                                </td>
 
                                 <td class="items-cell">
                                     @forelse ($item->detailPenyewaan as $detail)
@@ -521,7 +727,9 @@
                                     @endforelse
                                 </td>
 
-                                <td>{{ $tanggalSewa->format('d-m-Y') }}</td>
+                                <td>
+                                    {{ $tanggalSewa->format('d-m-Y') }}
+                                </td>
 
                                 <td>
                                     {{ \Carbon\Carbon::parse($item->tanggal_rencana_kembali)->format('d-m-Y') }}
@@ -549,9 +757,11 @@
                                     <div class="actions">
                                         @if ($item->status === 'menunggu')
                                             <form action="{{ route('admin.penyewaan.setujui', $item->id_penyewaan) }}"
-                                                  method="POST" class="action-form">
+                                                  method="POST"
+                                                  class="action-form">
                                                 @csrf
                                                 @method('PATCH')
+
                                                 <button type="submit" class="btn btn-approve">
                                                     Setujui
                                                 </button>
@@ -563,6 +773,7 @@
                                                   onsubmit="return confirm('Yakin ingin menolak penyewaan ini?')">
                                                 @csrf
                                                 @method('PATCH')
+
                                                 <button type="submit" class="btn btn-reject">
                                                     Tolak
                                                 </button>
@@ -575,6 +786,7 @@
                                                   onsubmit="return confirm('Pastikan pembayaran sudah diterima. Konfirmasi pembayaran ini?')">
                                                 @csrf
                                                 @method('PATCH')
+
                                                 <button type="submit" class="btn btn-payment">
                                                     Konfirmasi Pembayaran
                                                 </button>
@@ -588,6 +800,7 @@
                                                       onsubmit="return confirm('Yakin ingin membatalkan penyewaan ini? Pastikan pelanggan sudah diberi informasi.')">
                                                     @csrf
                                                     @method('PATCH')
+
                                                     <button type="submit" class="btn btn-cancel">
                                                         Batal
                                                     </button>
@@ -599,6 +812,7 @@
                                                       onsubmit="return confirm('Pastikan barang benar-benar sudah diterima kembali. Konfirmasi pengembalian ini?')">
                                                     @csrf
                                                     @method('PATCH')
+
                                                     <button type="submit" class="btn btn-return">
                                                         Kembalikan
                                                     </button>
@@ -611,7 +825,7 @@
 
                                         @elseif ($item->status === 'dikembalikan')
                                             <span class="status-badge status-dikembalikan">
-                                                Selesai
+                                                Dikembalikan
                                             </span>
 
                                         @elseif ($item->status === 'ditolak')
@@ -641,14 +855,10 @@
                 </table>
             </div>
 
-            <div class="pagination-area">
-                <div class="pagination-info" id="info-penyewaan">
-                    @if ($penyewaan->total() > 0)
-                        Menampilkan {{ $penyewaan->firstItem() }}–{{ $penyewaan->lastItem() }}
-                        dari {{ $penyewaan->total() }} data
-                    @else
-                        Belum ada data penyewaan.
-                    @endif
+            <div class="pagination-wrap">
+                <div class="pagination-info">
+                    Menampilkan {{ $penyewaan->firstItem() ?? 0 }}-{{ $penyewaan->lastItem() ?? 0 }}
+                    dari {{ $penyewaan->total() }} data
                 </div>
 
                 <div id="pagination-penyewaan" class="pagination">
@@ -658,7 +868,7 @@
         </section>
 
         <footer class="footer">
-            CampRent — Sistem Informasi Persewaan Alat Camping
+            CamRent — Sistem Informasi Persewaan Alat Camping
         </footer>
     </main>
 
@@ -666,42 +876,56 @@
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('form-pencarian');
             const input = document.getElementById('cari-penyewaan');
+            const filterStatus = document.getElementById('filter-status');
             const hasil = document.getElementById('hasil-penyewaan');
             const pagination = document.getElementById('pagination-penyewaan');
-            const info = document.getElementById('info-penyewaan');
 
             let timer;
             let controller;
 
             async function cariPenyewaan(url = new URL(form.action, window.location.origin)) {
-                if (controller) controller.abort();
+                if (controller) {
+                    controller.abort();
+                }
 
                 controller = new AbortController();
+
                 url.searchParams.set('cari', input.value);
+
+                if (filterStatus.value) {
+                    url.searchParams.set('status', filterStatus.value);
+                } else {
+                    url.searchParams.delete('status');
+                }
 
                 try {
                     const response = await fetch(url, {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
                         signal: controller.signal
                     });
 
-                    if (!response.ok) return;
+                    if (!response.ok) {
+                        return;
+                    }
 
                     const html = await response.text();
                     const dokumen = new DOMParser().parseFromString(html, 'text/html');
 
                     const hasilBaru = dokumen.querySelector('#hasil-penyewaan');
                     const paginationBaru = dokumen.querySelector('#pagination-penyewaan');
-                    const infoBaru = dokumen.querySelector('#info-penyewaan');
+                    const statusBaru = dokumen.querySelector('#filter-status');
 
-                    if (hasilBaru && paginationBaru && infoBaru) {
+                    if (hasilBaru && paginationBaru) {
                         hasil.innerHTML = hasilBaru.innerHTML;
                         pagination.innerHTML = paginationBaru.innerHTML;
-                        info.innerHTML = infoBaru.innerHTML;
 
-                        const alamat = new URL(url);
-                        alamat.searchParams.set('cari', input.value);
-                        window.history.replaceState({}, '', alamat);
+                        if (statusBaru) {
+                            filterStatus.value = statusBaru.value;
+                        }
+
+                        window.history.replaceState({}, '', url);
                     }
                 } catch (error) {
                     if (error.name !== 'AbortError') {
@@ -712,7 +936,15 @@
 
             input.addEventListener('input', function () {
                 clearTimeout(timer);
-                timer = setTimeout(() => cariPenyewaan(), 300);
+
+                timer = setTimeout(() => {
+                    cariPenyewaan();
+                }, 300);
+            });
+
+            filterStatus.addEventListener('change', function () {
+                clearTimeout(timer);
+                cariPenyewaan();
             });
 
             form.addEventListener('submit', function (event) {
@@ -723,7 +955,10 @@
 
             pagination.addEventListener('click', function (event) {
                 const link = event.target.closest('a');
-                if (!link) return;
+
+                if (!link) {
+                    return;
+                }
 
                 event.preventDefault();
                 cariPenyewaan(new URL(link.href));

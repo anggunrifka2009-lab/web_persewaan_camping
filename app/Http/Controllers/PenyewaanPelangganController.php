@@ -119,7 +119,7 @@ class PenyewaanPelangganController extends Controller
         ])
             ->where('id_user', Auth::id())
             ->latest('id_penyewaan')
-            ->paginate(5);
+            ->paginate(7);
 
         return view(
             'pelanggan.penyewaan.riwayat',

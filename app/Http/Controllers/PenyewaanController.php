@@ -11,14 +11,24 @@ use Carbon\Carbon;
 
 class PenyewaanController extends Controller
 {
-    private $namaBank = 'NAMA BANK';
-    private $nomorRekening = 'NOMOR REKENING';
-    private $namaPemilikRekening = 'NAMA PEMILIK REKENING';
-    private $tarifDendaPerHari = 5000;
+    private $namaBank = 'BRI';
+    private $nomorRekening = '000101234567508';
+    private $namaPemilikRekening = 'ANGGUN';
+    private $tarifDendaPerHari = 1500;
+
+    private $daftarStatus = [
+        'menunggu',
+        'disetujui',
+        'ditolak',
+        'dibayar',
+        'dibatalkan',
+        'dikembalikan',
+    ];
 
     public function index(Request $request)
     {
-        $cari = $request->cari;
+        $cari = $request->input('cari');
+        $status = $request->input('status');
 
         $penyewaan = Penyewaan::with([
             'user',
@@ -32,8 +42,14 @@ class PenyewaanController extends Controller
                         });
                 });
             })
+            ->when(
+                in_array($status, $this->daftarStatus, true),
+                function ($query) use ($status) {
+                    $query->where('status', $status);
+                }
+            )
             ->latest('id_penyewaan')
-            ->paginate(5)
+            ->paginate(7)
             ->withQueryString();
 
         $pengembalian = DB::table('pengembalian')
@@ -44,9 +60,17 @@ class PenyewaanController extends Controller
             ->get()
             ->keyBy('id_penyewaan');
 
+        $daftarStatus = $this->daftarStatus;
+
         return view(
             'admin.penyewaan.index',
-            compact('penyewaan', 'cari', 'pengembalian')
+            compact(
+                'penyewaan',
+                'cari',
+                'status',
+                'daftarStatus',
+                'pengembalian'
+            )
         );
     }
 
@@ -101,7 +125,9 @@ class PenyewaanController extends Controller
             );
 
             if (!$nomor) {
-                return ['error' => 'Nomor WhatsApp pelanggan belum valid. Status penyewaan tidak diubah.'];
+                return [
+                    'error' => 'Nomor WhatsApp pelanggan belum valid. Status penyewaan tidak diubah.',
+                ];
             }
 
             $penyewaan->status = 'disetujui';
@@ -256,7 +282,7 @@ class PenyewaanController extends Controller
             )->format('d-m-Y');
 
             $pesan = "Halo {$penyewaan->user->nama},\n\n"
-                . "Kami informasikan bahwa penyewaan alat camping kamu telah dibatalkan oleh admin CampRent.\n\n"
+                . "Kami informasikan bahwa penyewaan alat camping kamu telah dibatalkan oleh admin CamRent.\n\n"
                 . "Kode penyewaan: {$penyewaan->kode_penyewaan}\n"
                 . "Tanggal sewa: {$tanggalSewaFormat}\n"
                 . "Total pembayaran: Rp "
