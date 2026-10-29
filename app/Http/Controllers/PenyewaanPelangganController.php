@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
 class PenyewaanPelangganController extends Controller
@@ -17,7 +18,8 @@ class PenyewaanPelangganController extends Controller
     {
         abort_unless(Auth::user()->role === 'pelanggan', 403);
 
-        $barang = Barang::where('status', 'tersedia')
+        $barang = Barang::with('kategori')
+            ->where('status', 'tersedia')
             ->where('stok', '>', 0)
             ->findOrFail($id_barang);
 
@@ -34,14 +36,18 @@ class PenyewaanPelangganController extends Controller
             'tanggal_rencana_kembali' => 'required|date|after:tanggal_sewa',
         ]);
 
-        $tanggalSewa = Carbon::parse($request->tanggal_sewa);
-        $tanggalKembali = Carbon::parse($request->tanggal_rencana_kembali);
-        $lamaSewa = $tanggalSewa->diffInDays($tanggalKembali);
+        $tanggalSewa = Carbon::parse($request->tanggal_sewa)->startOfDay();
+        $tanggalKembali = Carbon::parse(
+            $request->tanggal_rencana_kembali
+        )->startOfDay();
+
+        $lamaSewa = (int) $tanggalSewa->diffInDays($tanggalKembali);
 
         if ($lamaSewa > 7) {
             return back()
                 ->withErrors([
-                    'tanggal_rencana_kembali' => 'Maksimal penyewaan 7 hari.'
+                    'tanggal_rencana_kembali' =>
+                        'Maksimal penyewaan adalah 7 hari.',
                 ])
                 ->withInput();
         }
@@ -58,29 +64,29 @@ class PenyewaanPelangganController extends Controller
                 ->firstOrFail();
 
             if ($barang->status !== 'tersedia' || $barang->stok < 1) {
-                throw \Illuminate\Validation\ValidationException::withMessages([
-                    'jumlah' => 'Barang sedang tidak tersedia.'
+                throw ValidationException::withMessages([
+                    'jumlah' => 'Barang sedang tidak tersedia.',
                 ]);
             }
 
-            if ($request->jumlah > $barang->stok) {
-                throw \Illuminate\Validation\ValidationException::withMessages([
-                    'jumlah' => 'Jumlah barang melebihi stok yang tersedia.'
+            $jumlah = (int) $request->jumlah;
+
+            if ($jumlah > $barang->stok) {
+                throw ValidationException::withMessages([
+                    'jumlah' =>
+                        'Jumlah barang melebihi stok yang tersedia.',
                 ]);
             }
 
-            $barang->stok -= (int) $request->jumlah;
-            $barang->save();
-
-            $totalHarga = $barang->harga_sewa
-                * $request->jumlah
-                * $lamaSewa;
+            $totalHarga = $barang->harga_sewa * $jumlah * $lamaSewa;
 
             $penyewaan = new Penyewaan();
-            $penyewaan->kode_penyewaan = 'SW-' . strtoupper(Str::random(8));
+            $penyewaan->kode_penyewaan =
+                'SW-' . strtoupper(Str::random(8));
             $penyewaan->id_user = Auth::id();
-            $penyewaan->tanggal_sewa = $tanggalSewa;
-            $penyewaan->tanggal_rencana_kembali = $tanggalKembali;
+            $penyewaan->tanggal_sewa = $tanggalSewa->toDateString();
+            $penyewaan->tanggal_rencana_kembali =
+                $tanggalKembali->toDateString();
             $penyewaan->total_harga = $totalHarga;
             $penyewaan->status = 'menunggu';
             $penyewaan->save();
@@ -88,26 +94,36 @@ class PenyewaanPelangganController extends Controller
             $detail = new DetailPenyewaan();
             $detail->id_penyewaan = $penyewaan->id_penyewaan;
             $detail->id_barang = $barang->id_barang;
-            $detail->jumlah = $request->jumlah;
+            $detail->jumlah = $jumlah;
             $detail->harga_sewa = $barang->harga_sewa;
             $detail->subtotal = $totalHarga;
             $detail->save();
+            $barang->stok -= $jumlah;
+            $barang->save();
         });
 
         return redirect()
             ->route('home')
-            ->with('success', 'Penyewaan berhasil diajukan dan menunggu persetujuan admin.');
+            ->with(
+                'success',
+                'Penyewaan berhasil diajukan dan menunggu persetujuan admin.'
+            );
     }
 
     public function riwayat()
     {
-        abort_unless(auth()->user()->role === 'pelanggan', 403);
+        abort_unless(Auth::user()->role === 'pelanggan', 403);
 
-        $penyewaan = Penyewaan::with(['detailPenyewaan.barang'])
-            ->where('id_user', auth()->id())
+        $penyewaan = Penyewaan::with([
+            'detailPenyewaan.barang',
+        ])
+            ->where('id_user', Auth::id())
             ->latest('id_penyewaan')
             ->paginate(5);
 
-        return view('pelanggan.penyewaan.riwayat', compact('penyewaan'));
+        return view(
+            'pelanggan.penyewaan.riwayat',
+            compact('penyewaan')
+        );
     }
 }

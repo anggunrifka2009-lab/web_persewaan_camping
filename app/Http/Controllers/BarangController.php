@@ -85,7 +85,8 @@ class BarangController extends Controller
 
         Barang::create($data);
 
-        return redirect()->route('barang.index');
+        return redirect()->route('admin.barang.index')
+            ->with('success', 'Barang berhasil ditambahkan.');
     }
 
     public function show(Barang $barang)
@@ -128,13 +129,19 @@ class BarangController extends Controller
 
         $barang->update($data);
 
-        return redirect()->route('barang.index');
+        return redirect()->route('admin.barang.index')
+            ->with('success', 'Barang berhasil diperbarui.');
     }
 
     public function destroy(Barang $barang)
     {
+        if ($barang->foto) {
+            Storage::disk('public')->delete($barang->foto);
+        }
+
         $barang->delete();
 
-        return redirect()->route('barang.index');
+        return redirect()->route('admin.barang.index')
+            ->with('success', 'Barang berhasil dihapus.');
     }
 }

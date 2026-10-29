@@ -38,8 +38,7 @@
             text-decoration: none;
         }
 
-        button,
-        input {
+        button, input {
             font: inherit;
         }
 
@@ -50,25 +49,16 @@
         }
 
         #penyewaan-content {
-            animation: contentEnter 0.3s ease-out;
+            animation: contentEnter .3s ease-out;
         }
 
         @keyframes contentEnter {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            #penyewaan-content {
-                animation: none;
-            }
+            #penyewaan-content { animation: none; }
         }
 
         .topbar {
@@ -90,23 +80,6 @@
             color: var(--muted);
             font-size: 12px;
             line-height: 1.7;
-        }
-
-        .topbar-account {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 13px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--white);
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .topbar-account:hover {
-            border-color: #b9c8b8;
-            color: var(--forest);
         }
 
         .panel {
@@ -152,62 +125,33 @@
             text-align: center;
         }
 
-        .btn-primary {
-            min-height: 40px;
-            padding: 10px 15px;
-            border-radius: 10px;
-            background: var(--forest);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--forest-dark);
-        }
-
         .btn-approve {
             background: #eaf2e7;
             color: #347246;
         }
 
-        .btn-approve:hover {
-            background: #dcebd7;
-        }
+        .btn-approve:hover { background: #dcebd7; }
 
-        .btn-reject {
+        .btn-reject, .btn-cancel {
             background: #f8eeeb;
             color: #984c43;
         }
 
-        .btn-reject:hover {
-            background: #f2dfda;
-        }
+        .btn-reject:hover, .btn-cancel:hover { background: #f2dfda; }
 
         .btn-payment {
             background: #edf0f8;
             color: #465b8c;
         }
 
-        .btn-payment:hover {
-            background: #dfe5f5;
-        }
+        .btn-payment:hover { background: #dfe5f5; }
 
         .btn-return {
             background: #eaf0e8;
             color: var(--forest);
         }
 
-        .btn-return:hover {
-            background: #dce8d9;
-        }
-
-        .btn-whatsapp {
-            background: #e7f4e9;
-            color: #287442;
-        }
-
-        .btn-whatsapp:hover {
-            background: #d5ecd9;
-        }
+        .btn-return:hover { background: #dce8d9; }
 
         .toolbar {
             display: flex;
@@ -257,9 +201,7 @@
             color: var(--forest);
         }
 
-        .btn-search:hover {
-            background: #dce8d9;
-        }
+        .btn-search:hover { background: #dce8d9; }
 
         .table-wrap {
             overflow-x: auto;
@@ -273,9 +215,7 @@
             text-align: left;
         }
 
-        thead {
-            background: #f9f8f2;
-        }
+        thead { background: #f9f8f2; }
 
         th {
             padding: 15px 14px;
@@ -294,9 +234,7 @@
             vertical-align: middle;
         }
 
-        tbody tr:hover {
-            background: #fcfbf7;
-        }
+        tbody tr:hover { background: #fcfbf7; }
 
         .number {
             width: 45px;
@@ -314,13 +252,9 @@
             font-weight: 700;
         }
 
-        .items-cell {
-            min-width: 155px;
-        }
+        .items-cell { min-width: 155px; }
 
-        .item-line + .item-line {
-            margin-top: 4px;
-        }
+        .item-line + .item-line { margin-top: 4px; }
 
         .price {
             font-weight: 700;
@@ -336,30 +270,11 @@
             white-space: nowrap;
         }
 
-        .status-menunggu {
-            background: #fbf0d9;
-            color: #94691d;
-        }
-
-        .status-disetujui {
-            background: #edf0f8;
-            color: #465b8c;
-        }
-
-        .status-dibayar {
-            background: #eaf2e7;
-            color: #347246;
-        }
-
-        .status-dikembalikan {
-            background: #e5eee7;
-            color: #244b38;
-        }
-
-        .status-ditolak {
-            background: #f8eeeb;
-            color: #984c43;
-        }
+        .status-menunggu { background: #fbf0d9; color: #94691d; }
+        .status-disetujui { background: #edf0f8; color: #465b8c; }
+        .status-dibayar { background: #eaf2e7; color: #347246; }
+        .status-dikembalikan { background: #e5eee7; color: #244b38; }
+        .status-ditolak, .status-dibatalkan { background: #f8eeeb; color: #984c43; }
 
         .fine {
             font-weight: 600;
@@ -375,16 +290,16 @@
         }
 
         .action-form {
+            width: 100%;
             margin: 0;
         }
 
-        .action-form .btn {
-            width: 100%;
-        }
+        .action-form .btn { width: 100%; }
 
-        .whatsapp-note {
+        .action-note {
             color: var(--muted);
             font-size: 10px;
+            line-height: 1.6;
         }
 
         .empty-state {
@@ -408,9 +323,7 @@
             font-size: 11px;
         }
 
-        .pagination nav > div:first-child {
-            display: none;
-        }
+        .pagination nav > div:first-child { display: none; }
 
         .pagination nav > div:last-child {
             display: flex;
@@ -418,8 +331,7 @@
             gap: 5px;
         }
 
-        .pagination nav span,
-        .pagination nav a {
+        .pagination nav span, .pagination nav a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -434,9 +346,7 @@
             text-decoration: none;
         }
 
-        .pagination nav a:hover {
-            background: #eaf0e8;
-        }
+        .pagination nav a:hover { background: #eaf0e8; }
 
         .pagination nav span[aria-current="page"] span {
             border-color: var(--forest);
@@ -444,9 +354,7 @@
             color: white;
         }
 
-        .pagination nav span[aria-disabled="true"] span {
-            color: #b5b7af;
-        }
+        .pagination nav span[aria-disabled="true"] span { color: #b5b7af; }
 
         .footer {
             margin-top: 35px;
@@ -466,108 +374,36 @@
             line-height: 1.7;
         }
 
-        .alert-success {
-            border-color: #cfe0cc;
-            background: #edf5e9;
-            color: #315b3d;
-        }
-
-        .alert-error {
-            border-color: #ead0cb;
-            background: #f8eeeb;
-            color: #984c43;
-        }
+        .alert-success { border-color: #cfe0cc; background: #edf5e9; color: #315b3d; }
+        .alert-error { border-color: #ead0cb; background: #f8eeeb; color: #984c43; }
 
         @media (max-width: 1200px) {
-            .main {
-                padding-right: 24px;
-                padding-left: 24px;
-            }
-
-            .panel {
-                padding: 20px;
-            }
-
-            th,
-            td {
-                padding-right: 11px;
-                padding-left: 11px;
-            }
+            .main { padding-right: 24px; padding-left: 24px; }
+            .panel { padding: 20px; }
+            th, td { padding-right: 11px; padding-left: 11px; }
         }
 
         @media (max-width: 900px) {
-            .main {
-                margin-left: 215px;
-                padding: 28px 24px;
-            }
-
-            .toolbar {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .search-form {
-                width: 100%;
-                max-width: none;
-            }
+            .main { margin-left: 215px; padding: 28px 24px; }
+            .toolbar { align-items: flex-start; flex-direction: column; }
+            .search-form { width: 100%; max-width: none; }
         }
 
         @media (max-width: 620px) {
-            .main {
-                margin-left: 0;
-                padding: 24px 17px;
-            }
-
-            .topbar {
-                align-items: flex-start;
-                margin-bottom: 22px;
-            }
-
-            .page-title {
-                font-size: 21px;
-            }
-
-            .topbar-account {
-                padding: 9px 10px;
-                font-size: 0;
-            }
-
-            .panel {
-                padding: 18px 14px;
-            }
-
-            .panel-heading {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .panel-heading h2 {
-                font-size: 16px;
-            }
-
-            table {
-                min-width: 1120px;
-            }
-
-            .pagination-area {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .footer {
-                margin-top: 28px;
-            }
+            .main { margin-left: 0; padding: 24px 17px; }
+            .topbar { align-items: flex-start; margin-bottom: 22px; }
+            .page-title { font-size: 21px; }
+            .panel { padding: 18px 14px; }
+            .panel-heading { align-items: flex-start; flex-direction: column; }
+            .panel-heading h2 { font-size: 16px; }
+            table { min-width: 1120px; }
+            .pagination-area { align-items: flex-start; flex-direction: column; }
+            .footer { margin-top: 28px; }
         }
 
         @media (max-width: 380px) {
-            .main {
-                padding-right: 12px;
-                padding-left: 12px;
-            }
-
-            .topbar {
-                gap: 10px;
-            }
+            .main { padding-right: 12px; padding-left: 12px; }
+            .topbar { gap: 10px; }
         }
     </style>
 </head>
@@ -589,9 +425,7 @@
             <div class="panel-heading">
                 <div>
                     <h2>Daftar Penyewaan</h2>
-                    <p>
-                        Pantau status penyewaan, pembayaran, dan pengembalian barang pelanggan.
-                    </p>
+                    <p>Pantau status penyewaan, pembayaran, dan pengembalian barang pelanggan.</p>
                 </div>
             </div>
 
@@ -606,20 +440,16 @@
             <div class="toolbar">
                 <div class="toolbar-title">Riwayat penyewaan pelanggan</div>
 
-                <form
-                    action="{{ route('admin.penyewaan.index') }}"
-                    method="GET"
-                    id="form-pencarian"
-                    class="search-form"
-                >
-                    <input
-                        type="text"
-                        name="cari"
-                        id="cari-penyewaan"
-                        placeholder="Cari kode penyewaan atau nama pelanggan..."
-                        value="{{ $cari }}"
-                        autocomplete="off"
-                    >
+                <form action="{{ route('admin.penyewaan.index') }}"
+                      method="GET"
+                      id="form-pencarian"
+                      class="search-form">
+                    <input type="text"
+                           name="cari"
+                           id="cari-penyewaan"
+                           placeholder="Cari kode penyewaan atau nama pelanggan..."
+                           value="{{ $cari }}"
+                           autocomplete="off">
                     <button type="submit" class="btn btn-search">Cari</button>
                 </form>
             </div>
@@ -646,9 +476,17 @@
                             @php
                                 $dataPengembalian = $pengembalian->get($item->id_penyewaan);
 
+                                $tanggalSewa = \Carbon\Carbon::parse($item->tanggal_sewa)->startOfDay();
+                                $hariIni = \Carbon\Carbon::today();
+                                $bolehDikembalikan = $hariIni->greaterThanOrEqualTo($tanggalSewa);
+
                                 $statusLabel = match ($item->status) {
+                                    'menunggu' => 'Menunggu',
+                                    'disetujui' => 'Disetujui',
+                                    'dibayar' => 'Dibayar',
                                     'dikembalikan' => 'Selesai',
-                                    'ditolak' => 'Batal',
+                                    'ditolak' => 'Ditolak',
+                                    'dibatalkan' => 'Dibatalkan',
                                     default => ucfirst($item->status),
                                 };
 
@@ -658,6 +496,7 @@
                                     'dibayar' => 'status-dibayar',
                                     'dikembalikan' => 'status-dikembalikan',
                                     'ditolak' => 'status-ditolak',
+                                    'dibatalkan' => 'status-dibatalkan',
                                     default => '',
                                 };
                             @endphp
@@ -667,13 +506,9 @@
                                     {{ $penyewaan->firstItem() + $loop->index }}
                                 </td>
 
-                                <td class="rental-code">
-                                    {{ $item->kode_penyewaan }}
-                                </td>
+                                <td class="rental-code">{{ $item->kode_penyewaan }}</td>
 
-                                <td class="customer-name">
-                                    {{ $item->user->nama ?? '-' }}
-                                </td>
+                                <td class="customer-name">{{ $item->user->nama ?? '-' }}</td>
 
                                 <td class="items-cell">
                                     @forelse ($item->detailPenyewaan as $detail)
@@ -686,12 +521,10 @@
                                     @endforelse
                                 </td>
 
-                                <td>
-                                    {{ $item->tanggal_sewa->format('d-m-Y') }}
-                                </td>
+                                <td>{{ $tanggalSewa->format('d-m-Y') }}</td>
 
                                 <td>
-                                    {{ $item->tanggal_rencana_kembali->format('d-m-Y') }}
+                                    {{ \Carbon\Carbon::parse($item->tanggal_rencana_kembali)->format('d-m-Y') }}
                                 </td>
 
                                 <td class="price">
@@ -715,106 +548,65 @@
                                 <td>
                                     <div class="actions">
                                         @if ($item->status === 'menunggu')
-                                            <form
-                                                action="{{ route('admin.penyewaan.setujui', $item->id_penyewaan) }}"
-                                                method="POST"
-                                                class="action-form"
-                                            >
+                                            <form action="{{ route('admin.penyewaan.setujui', $item->id_penyewaan) }}"
+                                                  method="POST" class="action-form">
                                                 @csrf
                                                 @method('PATCH')
-
                                                 <button type="submit" class="btn btn-approve">
                                                     Setujui
                                                 </button>
                                             </form>
 
-                                            <form
-                                                action="{{ route('admin.penyewaan.tolak', $item->id_penyewaan) }}"
-                                                method="POST"
-                                                class="action-form"
-                                                onsubmit="return confirm('Yakin ingin menolak penyewaan ini?')"
-                                            >
+                                            <form action="{{ route('admin.penyewaan.tolak', $item->id_penyewaan) }}"
+                                                  method="POST"
+                                                  class="action-form"
+                                                  onsubmit="return confirm('Yakin ingin menolak penyewaan ini?')">
                                                 @csrf
                                                 @method('PATCH')
-
                                                 <button type="submit" class="btn btn-reject">
                                                     Tolak
                                                 </button>
                                             </form>
 
                                         @elseif ($item->status === 'disetujui')
-                                            <form
-                                                action="{{ route('admin.penyewaan.konfirmasiPembayaran', $item->id_penyewaan) }}"
-                                                method="POST"
-                                                class="action-form"
-                                                onsubmit="return confirm('Pastikan pembayaran sudah diterima. Konfirmasi pembayaran ini?')"
-                                            >
+                                            <form action="{{ route('admin.penyewaan.konfirmasiPembayaran', $item->id_penyewaan) }}"
+                                                  method="POST"
+                                                  class="action-form"
+                                                  onsubmit="return confirm('Pastikan pembayaran sudah diterima. Konfirmasi pembayaran ini?')">
                                                 @csrf
                                                 @method('PATCH')
-
                                                 <button type="submit" class="btn btn-payment">
                                                     Konfirmasi Pembayaran
                                                 </button>
                                             </form>
 
                                         @elseif ($item->status === 'dibayar')
-                                            <form
-                                                action="{{ route('admin.penyewaan.dikembalikan', $item->id_penyewaan) }}"
-                                                method="POST"
-                                                class="action-form"
-                                                onsubmit="return confirm('Pastikan barang sudah dikembalikan. Konfirmasi pengembalian ini?')"
-                                            >
-                                                @csrf
-                                                @method('PATCH')
+                                            @if (!$bolehDikembalikan)
+                                                <form action="{{ route('admin.penyewaan.batalkan', $item->id_penyewaan) }}"
+                                                      method="POST"
+                                                      class="action-form"
+                                                      onsubmit="return confirm('Yakin ingin membatalkan penyewaan ini? Pastikan pelanggan sudah diberi informasi.')">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-cancel">
+                                                        Batal
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('admin.penyewaan.dikembalikan', $item->id_penyewaan) }}"
+                                                      method="POST"
+                                                      class="action-form"
+                                                      onsubmit="return confirm('Pastikan barang benar-benar sudah diterima kembali. Konfirmasi pengembalian ini?')">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-return">
+                                                        Kembalikan
+                                                    </button>
+                                                </form>
 
-                                                <button type="submit" class="btn btn-return">
-                                                    Kembalikan
-                                                </button>
-                                            </form>
-
-                                            @php
-                                                $tanggalKembali = $item->tanggal_rencana_kembali->copy()->startOfDay();
-                                                $hariIni = now()->startOfDay();
-                                                $sisaHari = $hariIni->diffInDays($tanggalKembali, false);
-                                            @endphp
-
-                                            @if ($sisaHari <= 1)
-                                                @php
-                                                    $nomor = preg_replace('/\D/', '', $item->user?->no_hp ?? '');
-
-                                                    if (str_starts_with($nomor, '0')) {
-                                                        $nomor = '62' . substr($nomor, 1);
-                                                    } elseif (str_starts_with($nomor, '8')) {
-                                                        $nomor = '62' . $nomor;
-                                                    }
-
-                                                    $namaPelanggan = $item->user?->nama ?? 'Pelanggan';
-
-                                                    $waktu = $sisaHari < 0
-                                                        ? 'sudah melewati tanggal pengembalian'
-                                                        : ($sisaHari == 0
-                                                            ? 'jatuh tempo hari ini'
-                                                            : 'akan berakhir besok');
-
-                                                    $pesan = "Halo {$namaPelanggan}, kami ingin mengingatkan bahwa masa sewa alat camping dengan kode {$item->kode_penyewaan} {$waktu}.\n\n"
-                                                        . "Tanggal rencana kembali: {$item->tanggal_rencana_kembali->format('d-m-Y')}\n\n"
-                                                        . "Mohon mengembalikan barang sesuai jadwal. Jika terlambat, denda akan dikenakan sesuai ketentuan yang berlaku. Terima kasih.";
-                                                @endphp
-
-                                                @if (strlen($nomor) >= 10 && strlen($nomor) <= 15)
-                                                    <a
-                                                        href="https://wa.me/{{ $nomor }}?text={{ urlencode($pesan) }}"
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        class="btn btn-whatsapp"
-                                                    >
-                                                        Ingatkan via WhatsApp
-                                                    </a>
-                                                @else
-                                                    <span class="whatsapp-note">
-                                                        Nomor HP belum valid
-                                                    </span>
-                                                @endif
+                                                <span class="action-note">
+                                                    Konfirmasi setelah barang diterima dari pelanggan.
+                                                </span>
                                             @endif
 
                                         @elseif ($item->status === 'dikembalikan')
@@ -824,7 +616,12 @@
 
                                         @elseif ($item->status === 'ditolak')
                                             <span class="status-badge status-ditolak">
-                                                Batal
+                                                Ditolak
+                                            </span>
+
+                                        @elseif ($item->status === 'dibatalkan')
+                                            <span class="status-badge status-dibatalkan">
+                                                Dibatalkan
                                             </span>
 
                                         @else
@@ -877,18 +674,14 @@
             let controller;
 
             async function cariPenyewaan(url = new URL(form.action, window.location.origin)) {
-                if (controller) {
-                    controller.abort();
-                }
+                if (controller) controller.abort();
 
                 controller = new AbortController();
                 url.searchParams.set('cari', input.value);
 
                 try {
                     const response = await fetch(url, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
                         signal: controller.signal
                     });
 
@@ -919,10 +712,7 @@
 
             input.addEventListener('input', function () {
                 clearTimeout(timer);
-
-                timer = setTimeout(function () {
-                    cariPenyewaan();
-                }, 300);
+                timer = setTimeout(() => cariPenyewaan(), 300);
             });
 
             form.addEventListener('submit', function (event) {
@@ -933,7 +723,6 @@
 
             pagination.addEventListener('click', function (event) {
                 const link = event.target.closest('a');
-
                 if (!link) return;
 
                 event.preventDefault();

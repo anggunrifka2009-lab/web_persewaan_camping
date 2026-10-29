@@ -22,7 +22,8 @@ class KategoriController extends Controller
 
         Kategori::create($data);
 
-        return redirect()->route('kategori.index');
+        return redirect()->route('admin.kategori.index')
+            ->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     public function update(Request $request, Kategori $kategori)
@@ -33,13 +34,15 @@ class KategoriController extends Controller
 
         $kategori->update($data);
 
-        return redirect()->route('kategori.index');
+        return redirect()->route('admin.kategori.index')
+            ->with('success', 'Kategori berhasil diperbarui.');
     }
 
     public function destroy(Kategori $kategori)
     {
         $kategori->delete();
 
-        return redirect()->route('kategori.index');
+        return redirect()->route('admin.kategori.index')
+            ->with('success', 'Kategori berhasil dihapus.');
     }
 }

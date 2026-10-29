@@ -10,54 +10,86 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\InformasiAkunController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// ==================== HALAMAN UTAMA ====================
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home');
 
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+// ==================== LOGIN ====================
+Route::get('/login', [AuthController::class, 'showLogin'])
+    ->name('login');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.process');
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login.process');
 
+// ==================== REGISTER ====================
+Route::get('/register', [AuthController::class, 'showRegister'])
+    ->name('register');
+
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register.process');
+
+// ==================== LOGOUT ====================
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', [LaporanController::class, 'dashboard'])
-        ->name('admin.dashboard');
+// ==================== ADMIN ====================
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::resource('/admin/kategori', KategoriController::class)
-        ->except(['create', 'edit', 'show'])
-        ->names([
-            'index' => 'kategori.index',
-            'store' => 'kategori.store',
-            'update' => 'kategori.update',
-            'destroy' => 'kategori.destroy',
-        ]);
+        // Dashboard admin
+        Route::get('/', [LaporanController::class, 'dashboard'])
+            ->name('dashboard');
 
-    Route::resource('/admin/barang', BarangController::class)
-        ->except(['show']);
+        // Kategori barang
+        Route::resource('/kategori', KategoriController::class)
+            ->except(['create', 'edit', 'show'])
+            ->names([
+                'index' => 'kategori.index',
+                'store' => 'kategori.store',
+                'update' => 'kategori.update',
+                'destroy' => 'kategori.destroy',
+            ]);
 
-    Route::get('/admin/penyewaan', [PenyewaanController::class, 'index'])
-        ->name('admin.penyewaan.index');
+        // Data barang
+        Route::resource('/barang', BarangController::class)
+            ->except(['show']);
 
-    Route::patch('/admin/penyewaan/{id}/setujui', [PenyewaanController::class, 'setujui'])
-        ->name('admin.penyewaan.setujui');
+        // Daftar penyewaan
+        Route::get('/penyewaan', [PenyewaanController::class, 'index'])
+            ->name('penyewaan.index');
 
-    Route::patch('/admin/penyewaan/{id}/tolak', [PenyewaanController::class, 'tolak'])
-        ->name('admin.penyewaan.tolak');
+        // Menyetujui pengajuan penyewaan
+        Route::patch('/penyewaan/{id}/setujui', [PenyewaanController::class, 'setujui'])
+            ->name('penyewaan.setujui');
 
-    Route::patch('/admin/penyewaan/{id}/konfirmasi-pembayaran', [PenyewaanController::class, 'konfirmasiPembayaran'])
-        ->name('admin.penyewaan.konfirmasiPembayaran');
+        // Menolak pengajuan yang masih menunggu
+        Route::patch('/penyewaan/{id}/tolak', [PenyewaanController::class, 'tolak'])
+            ->name('penyewaan.tolak');
 
-    Route::patch('/admin/penyewaan/{id}/dikembalikan', [PenyewaanController::class, 'dikembalikan'])
-        ->name('admin.penyewaan.dikembalikan');
+        // Mengonfirmasi pembayaran
+        Route::patch('/penyewaan/{id}/konfirmasi-pembayaran', [PenyewaanController::class, 'konfirmasiPembayaran'])
+            ->name('penyewaan.konfirmasiPembayaran');
 
-    Route::get('/admin/laporan', [LaporanController::class, 'index'])
-        ->name('admin.laporan.index');
-});
+        // Membatalkan penyewaan yang sudah dibayar sebelum tanggal sewa
+        Route::patch('/penyewaan/{id}/batalkan', [PenyewaanController::class, 'batalkan'])
+            ->name('penyewaan.batalkan');
 
+        // Mengonfirmasi pengembalian barang
+        Route::patch('/penyewaan/{id}/dikembalikan', [PenyewaanController::class, 'dikembalikan'])
+            ->name('penyewaan.dikembalikan');
+
+        // Halaman laporan
+        Route::get('/laporan', [LaporanController::class, 'index'])
+            ->name('laporan.index');
+    });
+
+// ==================== PELANGGAN DAN AKUN ====================
 Route::middleware('auth')->group(function () {
+
+    // Informasi akun
     Route::get('/informasi-akun', [InformasiAkunController::class, 'index'])
         ->name('akun.index');
 
@@ -73,12 +105,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/informasi-akun/password', [InformasiAkunController::class, 'updatePassword'])
         ->name('akun.password.update');
 
+    // Form penyewaan pelanggan
     Route::get('/sewa/{id_barang}', [PenyewaanPelangganController::class, 'create'])
         ->name('penyewaan.create');
 
     Route::post('/sewa/{id_barang}', [PenyewaanPelangganController::class, 'store'])
         ->name('penyewaan.store');
 
+    // Riwayat penyewaan: hanya untuk melihat status
     Route::get('/riwayat-penyewaan', [PenyewaanPelangganController::class, 'riwayat'])
         ->name('penyewaan.riwayat');
 });

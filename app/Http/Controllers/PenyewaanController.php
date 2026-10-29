@@ -50,6 +50,31 @@ class PenyewaanController extends Controller
         );
     }
 
+    private function normalisasiNomorWhatsApp($nomor)
+    {
+        $nomor = preg_replace('/\D/', '', $nomor ?? '');
+
+        if (str_starts_with($nomor, '0')) {
+            $nomor = '62' . substr($nomor, 1);
+        } elseif (str_starts_with($nomor, '8')) {
+            $nomor = '62' . $nomor;
+        }
+
+        if (strlen($nomor) < 10 || strlen($nomor) > 15) {
+            return null;
+        }
+
+        return $nomor;
+    }
+
+    private function bukaWhatsApp($nomor, $pesan)
+    {
+        $url = 'https://wa.me/' . $nomor
+            . '?text=' . urlencode($pesan);
+
+        return redirect()->away($url);
+    }
+
     public function setujui($id)
     {
         $hasil = DB::transaction(function () use ($id) {
@@ -57,86 +82,26 @@ class PenyewaanController extends Controller
                 'user',
                 'detailPenyewaan.barang',
             ])
+                ->where('id_penyewaan', $id)
                 ->lockForUpdate()
-                ->findOrFail($id);
+                ->firstOrFail();
 
             if ($penyewaan->status !== 'menunggu') {
                 return ['error' => 'Penyewaan ini sudah diproses.'];
             }
 
-            $nomor = preg_replace(
-                '/\D/',
-                '',
-                $penyewaan->user->no_hp ?? ''
-            );
-
-            if (str_starts_with($nomor, '0')) {
-                $nomor = '62' . substr($nomor, 1);
-            } elseif (str_starts_with($nomor, '8')) {
-                $nomor = '62' . $nomor;
-            }
-
-            if (empty($nomor)) {
-                return [
-                    'error' => 'Nomor WhatsApp pelanggan belum diisi.',
-                ];
-            }
-
             $details = $penyewaan->detailPenyewaan;
 
             if ($details->isEmpty()) {
-                return [
-                    'error' => 'Detail barang penyewaan tidak ditemukan.',
-                ];
+                return ['error' => 'Detail barang penyewaan tidak ditemukan.'];
             }
 
-            foreach ($details as $detail) {
-                $barang = Barang::where(
-                    'id_barang',
-                    $detail->id_barang
-                )
-                    ->lockForUpdate()
-                    ->first();
+            $nomor = $this->normalisasiNomorWhatsApp(
+                $penyewaan->user->no_hp ?? ''
+            );
 
-                if (!$barang) {
-                    return [
-                        'error' => 'Barang yang disewa tidak ditemukan.',
-                    ];
-                }
-
-                $terpakai = DetailPenyewaan::where(
-                    'id_barang',
-                    $barang->id_barang
-                )
-                    ->whereHas('penyewaan', function ($query) use ($penyewaan) {
-                        $query->whereIn('status', [
-                            'disetujui',
-                            'dibayar',
-                            'berlangsung',
-                        ])
-                            ->where(
-                                'id_penyewaan',
-                                '!=',
-                                $penyewaan->id_penyewaan
-                            )
-                            ->whereDate(
-                                'tanggal_sewa',
-                                '<',
-                                $penyewaan->tanggal_rencana_kembali
-                            )
-                            ->whereDate(
-                                'tanggal_rencana_kembali',
-                                '>',
-                                $penyewaan->tanggal_sewa
-                            );
-                    })
-                    ->sum('jumlah');
-
-                if ($terpakai > $barang->stok) {
-                    return [
-                        'error' => "Stok {$barang->nama_barang} tidak mencukupi untuk tanggal penyewaan tersebut.",
-                    ];
-                }
+            if (!$nomor) {
+                return ['error' => 'Nomor WhatsApp pelanggan belum valid. Status penyewaan tidak diubah.'];
             }
 
             $penyewaan->status = 'disetujui';
@@ -187,10 +152,10 @@ class PenyewaanController extends Controller
             return back()->with('error', $hasil['error']);
         }
 
-        $url = 'https://wa.me/' . $hasil['nomor']
-            . '?text=' . urlencode($hasil['pesan']);
-
-        return redirect()->away($url);
+        return $this->bukaWhatsApp(
+            $hasil['nomor'],
+            $hasil['pesan']
+        );
     }
 
     public function konfirmasiPembayaran($id)
@@ -223,15 +188,38 @@ class PenyewaanController extends Controller
         );
     }
 
-    public function dikembalikan($id)
+    public function batalkan($id)
     {
         $hasil = DB::transaction(function () use ($id) {
-            $penyewaan = Penyewaan::where('id_penyewaan', $id)
+            $penyewaan = Penyewaan::with('user')
+                ->where('id_penyewaan', $id)
                 ->lockForUpdate()
                 ->firstOrFail();
 
             if ($penyewaan->status !== 'dibayar') {
-                return false;
+                return [
+                    'error' => 'Hanya penyewaan berstatus dibayar yang bisa dibatalkan.',
+                ];
+            }
+
+            $tanggalSewa = Carbon::parse(
+                $penyewaan->tanggal_sewa
+            )->startOfDay();
+
+            if (Carbon::today()->greaterThanOrEqualTo($tanggalSewa)) {
+                return [
+                    'error' => 'Penyewaan tidak bisa dibatalkan karena tanggal sewa sudah tiba.',
+                ];
+            }
+
+            $nomor = $this->normalisasiNomorWhatsApp(
+                $penyewaan->user->no_hp ?? ''
+            );
+
+            if (!$nomor) {
+                return [
+                    'error' => 'Nomor WhatsApp pelanggan belum valid. Pembatalan tidak dilakukan.',
+                ];
             }
 
             $details = DetailPenyewaan::where(
@@ -240,38 +228,13 @@ class PenyewaanController extends Controller
             )->get();
 
             if ($details->isEmpty()) {
-                return false;
+                return [
+                    'error' => 'Detail barang penyewaan tidak ditemukan.',
+                ];
             }
-
-            $sudahAda = DB::table('pengembalian')
-                ->where('id_penyewaan', $id)
-                ->exists();
-
-            if ($sudahAda) {
-                return false;
-            }
-
-            $tanggalRencana = Carbon::parse(
-                $penyewaan->tanggal_rencana_kembali
-            )->startOfDay();
-
-            $tanggalKembali = Carbon::today();
-
-            $hariTerlambat = 0;
-
-            if ($tanggalKembali->greaterThan($tanggalRencana)) {
-                $hariTerlambat = (int) $tanggalRencana->diffInDays(
-                    $tanggalKembali
-                );
-            }
-
-            $denda = $hariTerlambat * $this->tarifDendaPerHari;
 
             foreach ($details as $detail) {
-                $barang = Barang::where(
-                    'id_barang',
-                    $detail->id_barang
-                )
+                $barang = Barang::where('id_barang', $detail->id_barang)
                     ->lockForUpdate()
                     ->first();
 
@@ -281,7 +244,111 @@ class PenyewaanController extends Controller
                     );
                 }
 
-                $barang->stok += $detail->jumlah;
+                $barang->stok += (int) $detail->jumlah;
+                $barang->save();
+            }
+
+            $penyewaan->status = 'dibatalkan';
+            $penyewaan->save();
+
+            $tanggalSewaFormat = Carbon::parse(
+                $penyewaan->tanggal_sewa
+            )->format('d-m-Y');
+
+            $pesan = "Halo {$penyewaan->user->nama},\n\n"
+                . "Kami informasikan bahwa penyewaan alat camping kamu telah dibatalkan oleh admin CampRent.\n\n"
+                . "Kode penyewaan: {$penyewaan->kode_penyewaan}\n"
+                . "Tanggal sewa: {$tanggalSewaFormat}\n"
+                . "Total pembayaran: Rp "
+                . number_format($penyewaan->total_harga, 0, ',', '.')
+                . "\n\n"
+                . "Jika kamu sudah melakukan pembayaran, silakan hubungi admin untuk informasi pengembalian dana.\n\n"
+                . "Mohon maaf atas ketidaknyamanannya. Terima kasih.";
+
+            return [
+                'nomor' => $nomor,
+                'pesan' => $pesan,
+            ];
+        });
+
+        if (isset($hasil['error'])) {
+            return back()->with('error', $hasil['error']);
+        }
+
+        return $this->bukaWhatsApp(
+            $hasil['nomor'],
+            $hasil['pesan']
+        );
+    }
+
+    public function dikembalikan($id)
+    {
+        $hasil = DB::transaction(function () use ($id) {
+            $penyewaan = Penyewaan::where('id_penyewaan', $id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($penyewaan->status !== 'dibayar') {
+                return [
+                    'error' => 'Penyewaan ini belum dibayar atau sudah diproses.',
+                ];
+            }
+
+            $tanggalSewa = Carbon::parse(
+                $penyewaan->tanggal_sewa
+            )->startOfDay();
+
+            if (Carbon::today()->lt($tanggalSewa)) {
+                return [
+                    'error' => 'Pengembalian baru bisa dikonfirmasi saat tanggal sewa tiba.',
+                ];
+            }
+
+            $details = DetailPenyewaan::where(
+                'id_penyewaan',
+                $penyewaan->id_penyewaan
+            )->get();
+
+            if ($details->isEmpty()) {
+                return [
+                    'error' => 'Detail barang penyewaan tidak ditemukan.',
+                ];
+            }
+
+            $sudahAda = DB::table('pengembalian')
+                ->where('id_penyewaan', $id)
+                ->exists();
+
+            if ($sudahAda) {
+                return [
+                    'error' => 'Pengembalian penyewaan ini sudah diproses.',
+                ];
+            }
+
+            $tanggalRencana = Carbon::parse(
+                $penyewaan->tanggal_rencana_kembali
+            )->startOfDay();
+
+            $tanggalKembali = Carbon::today();
+
+            $hariTerlambat = $tanggalKembali->greaterThan($tanggalRencana)
+                ? (int) $tanggalRencana->diffInDays($tanggalKembali)
+                : 0;
+
+            $denda = $hariTerlambat * $this->tarifDendaPerHari;
+
+            foreach ($details as $detail) {
+                $barang = Barang::where('id_barang', $detail->id_barang)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$barang) {
+                    throw new \RuntimeException(
+                        'Barang penyewaan tidak ditemukan.'
+                    );
+                }
+
+                $barang->stok += (int) $detail->jumlah;
                 $barang->save();
             }
 
@@ -303,15 +370,12 @@ class PenyewaanController extends Controller
             ];
         });
 
-        if (!$hasil) {
-            return back()->with(
-                'error',
-                'Pengembalian sudah diproses atau detail barang tidak ditemukan.'
-            );
+        if (isset($hasil['error'])) {
+            return back()->with('error', $hasil['error']);
         }
 
         $pesan = $hasil['hari_terlambat'] > 0
-            ? 'Pengembalian berhasil dikonfirmasi. Denda keterlambatan: Rp '
+            ? 'Pengembalian dikonfirmasi. Denda keterlambatan: Rp '
                 . number_format($hasil['denda'], 0, ',', '.')
             : 'Pengembalian berhasil dikonfirmasi tanpa denda keterlambatan.';
 
@@ -326,7 +390,9 @@ class PenyewaanController extends Controller
                 ->firstOrFail();
 
             if ($penyewaan->status !== 'menunggu') {
-                return false;
+                return [
+                    'error' => 'Penyewaan sudah diproses.',
+                ];
             }
 
             $details = DetailPenyewaan::where(
@@ -335,14 +401,13 @@ class PenyewaanController extends Controller
             )->get();
 
             if ($details->isEmpty()) {
-                return false;
+                return [
+                    'error' => 'Detail barang penyewaan tidak ditemukan.',
+                ];
             }
 
             foreach ($details as $detail) {
-                $barang = Barang::where(
-                    'id_barang',
-                    $detail->id_barang
-                )
+                $barang = Barang::where('id_barang', $detail->id_barang)
                     ->lockForUpdate()
                     ->first();
 
@@ -352,21 +417,18 @@ class PenyewaanController extends Controller
                     );
                 }
 
-                $barang->stok += $detail->jumlah;
+                $barang->stok += (int) $detail->jumlah;
                 $barang->save();
             }
 
             $penyewaan->status = 'ditolak';
             $penyewaan->save();
 
-            return true;
+            return ['success' => true];
         });
 
-        if (!$hasil) {
-            return back()->with(
-                'error',
-                'Penyewaan sudah diproses atau detail barang tidak ditemukan.'
-            );
+        if (isset($hasil['error'])) {
+            return back()->with('error', $hasil['error']);
         }
 
         return back()->with(
