@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -223,9 +224,8 @@
             line-height: 1.7;
         }
 
-        /* ANIMASI PEMBUKA HALAMAN */
         #kategori-content {
-            animation: contentEnter 0.3s ease-out;
+            animation: contentEnter .3s ease-out;
         }
 
         @keyframes contentEnter {
@@ -502,6 +502,7 @@
         }
     </style>
 </head>
+
 <body>
     @include('admin.sidebar')
 
@@ -509,7 +510,9 @@
         <header class="topbar">
             <div>
                 <h1 class="page-title">Data Kategori</h1>
-                <p class="page-subtitle">Kelola kategori perlengkapan camping di CampRent.</p>
+                <p class="page-subtitle">
+                    Kelola kategori perlengkapan camping di CampRent.
+                </p>
             </div>
         </header>
 
@@ -568,7 +571,7 @@
                                         </button>
 
                                         <form
-                                            action="{{ route('kategori.destroy', $item->id_kategori) }}"
+                                            action="{{ route('admin.kategori.destroy', $item->id_kategori) }}"
                                             method="POST"
                                             class="delete-form"
                                             onsubmit="return confirm('Yakin ingin menghapus kategori ini?')"
@@ -600,6 +603,7 @@
         </footer>
     </main>
 
+    {{-- MODAL TAMBAH --}}
     <div
         class="modal-overlay {{ $errors->any() && old('_form_type') === 'create' ? 'show' : '' }}"
         id="createModal"
@@ -610,7 +614,9 @@
         <div class="modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="createModalTitle">Tambah Kategori</h2>
-                <button type="button" class="modal-close" data-close-modal aria-label="Tutup">&times;</button>
+                <button type="button" class="modal-close" data-close-modal aria-label="Tutup">
+                    &times;
+                </button>
             </div>
 
             <div class="modal-body">
@@ -625,12 +631,14 @@
                     </div>
                 @endif
 
-                <form action="{{ route('kategori.store') }}" method="POST">
+                <form action="{{ route('admin.kategori.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="_form_type" value="create">
 
                     <div class="form-group">
-                        <label for="createNamaKategori" class="form-label">Nama Kategori</label>
+                        <label for="createNamaKategori" class="form-label">
+                            Nama Kategori
+                        </label>
 
                         <input
                             type="text"
@@ -651,14 +659,20 @@
                     </div>
 
                     <div class="modal-actions">
-                        <button type="button" class="btn btn-light" data-close-modal>Batal</button>
-                        <button type="submit" class="btn btn-primary">▣ &nbsp; Simpan</button>
+                        <button type="button" class="btn btn-light" data-close-modal>
+                            Batal
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+                            ▣ &nbsp; Simpan
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    {{-- MODAL EDIT --}}
     <div
         class="modal-overlay {{ $errors->any() && old('_form_type') === 'edit' ? 'show' : '' }}"
         id="editModal"
@@ -669,7 +683,9 @@
         <div class="modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="editModalTitle">Edit Kategori</h2>
-                <button type="button" class="modal-close" data-close-modal aria-label="Tutup">&times;</button>
+                <button type="button" class="modal-close" data-close-modal aria-label="Tutup">
+                    &times;
+                </button>
             </div>
 
             <div class="modal-body">
@@ -684,7 +700,11 @@
                     </div>
                 @endif
 
-                <form id="editCategoryForm" action="{{ route('kategori.index') }}" method="POST">
+                <form
+                    id="editCategoryForm"
+                    action="{{ route('admin.kategori.index') }}"
+                    method="POST"
+                >
                     @csrf
                     @method('PUT')
 
@@ -698,7 +718,9 @@
                     >
 
                     <div class="form-group">
-                        <label for="editNamaKategori" class="form-label">Nama Kategori</label>
+                        <label for="editNamaKategori" class="form-label">
+                            Nama Kategori
+                        </label>
 
                         <input
                             type="text"
@@ -719,8 +741,13 @@
                     </div>
 
                     <div class="modal-actions">
-                        <button type="button" class="btn btn-light" data-close-modal>Batal</button>
-                        <button type="submit" class="btn btn-primary">▣ &nbsp; Simpan</button>
+                        <button type="button" class="btn btn-light" data-close-modal>
+                            Batal
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+                            ▣ &nbsp; Simpan
+                        </button>
                     </div>
                 </form>
             </div>
@@ -735,11 +762,17 @@
         const editForm = document.getElementById('editCategoryForm');
         const editIdInput = document.getElementById('editKategoriId');
 
+        // URL dasar untuk route kategori admin.
+        const kategoriBaseUrl = @json(url('/admin/kategori'));
+
         function openModal(modal, input) {
             closeAllModals();
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
-            setTimeout(() => input.focus(), 100);
+
+            if (input) {
+                setTimeout(() => input.focus(), 100);
+            }
         }
 
         function closeAllModals() {
@@ -750,27 +783,31 @@
             document.body.style.overflow = '';
         }
 
+        // Buka modal tambah.
         document.getElementById('openCreateModal').addEventListener('click', () => {
             openModal(createModal, createInput);
         });
 
+        // Buka modal edit dan tentukan route update.
         document.querySelectorAll('.open-edit-modal').forEach(button => {
             button.addEventListener('click', () => {
                 const id = button.dataset.id;
                 const name = button.dataset.name;
 
                 editIdInput.value = id;
-                editForm.action = "{{ url('/admin/kategori') }}/" + encodeURIComponent(id);
+                editForm.action = kategoriBaseUrl + '/' + encodeURIComponent(id);
                 editInput.value = name;
 
                 openModal(editModal, editInput);
             });
         });
 
+        // Tutup modal melalui tombol batal atau silang.
         document.querySelectorAll('[data-close-modal]').forEach(button => {
             button.addEventListener('click', closeAllModals);
         });
 
+        // Tutup modal ketika area luar modal diklik.
         document.querySelectorAll('.modal-overlay').forEach(modal => {
             modal.addEventListener('click', event => {
                 if (event.target === modal) {
@@ -779,12 +816,14 @@
             });
         });
 
+        // Tutup modal dengan tombol Escape.
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') {
                 closeAllModals();
             }
         });
 
+        // Buka kembali modal jika validasi server gagal.
         @if ($errors->any() && old('_form_type') === 'create')
             openModal(createModal, createInput);
         @elseif ($errors->any() && old('_form_type') === 'edit')
@@ -792,7 +831,7 @@
 
             if (previousEditId) {
                 editIdInput.value = previousEditId;
-                editForm.action = "{{ url('/admin/kategori') }}/" + encodeURIComponent(previousEditId);
+                editForm.action = kategoriBaseUrl + '/' + encodeURIComponent(previousEditId);
             }
 
             editInput.value = @json(old('nama_kategori', ''));
@@ -801,3 +840,4 @@
     </script>
 </body>
 </html>
+```
