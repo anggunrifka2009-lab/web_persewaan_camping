@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -49,6 +48,28 @@
             padding: 32px 38px 28px;
         }
 
+        #kategori-content {
+            animation: contentEnter .3s ease-out;
+        }
+
+        @keyframes contentEnter {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #kategori-content {
+                animation: none;
+            }
+        }
+
         .topbar {
             display: flex;
             align-items: center;
@@ -95,6 +116,65 @@
             color: var(--muted);
             font-size: 12px;
             line-height: 1.7;
+        }
+
+        .notif {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+            animation: notifEnter .25s ease-out;
+        }
+
+        .notif-success {
+            border: 1px solid #cfe0cc;
+            background: #edf5e9;
+            color: #315b3d;
+        }
+
+        .notif-error {
+            border: 1px solid #ead0cb;
+            background: #f8eeeb;
+            color: #984c43;
+        }
+
+        .notif-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .notif-success .notif-icon {
+            background: #d6e9d1;
+            color: #315b3d;
+        }
+
+        .notif-error .notif-icon {
+            background: #f0d8d3;
+            color: #984c43;
+        }
+
+        @keyframes notifEnter {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .btn {
@@ -224,29 +304,6 @@
             line-height: 1.7;
         }
 
-        #kategori-content {
-            animation: contentEnter .3s ease-out;
-        }
-
-        @keyframes contentEnter {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            #kategori-content {
-                animation: none;
-            }
-        }
-
-        /* MODAL */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -529,14 +586,16 @@
             </div>
 
             @if (session('success'))
-                <div style="margin-bottom:18px;padding:12px 15px;border:1px solid #cfe0cc;border-radius:10px;background:#edf5e9;color:#315b3d;font-size:12px;line-height:1.7;">
-                    {{ session('success') }}
+                <div class="notif notif-success" role="status">
+                    <span class="notif-icon">✓</span>
+                    <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             @if (session('error'))
-                <div style="margin-bottom:18px;padding:12px 15px;border:1px solid #ead0cb;border-radius:10px;background:#f8eeeb;color:#984c43;font-size:12px;line-height:1.7;">
-                    {{ session('error') }}
+                <div class="notif notif-error" role="alert">
+                    <span class="notif-icon">!</span>
+                    <span>{{ session('error') }}</span>
                 </div>
             @endif
 
@@ -603,7 +662,6 @@
         </footer>
     </main>
 
-    {{-- MODAL TAMBAH --}}
     <div
         class="modal-overlay {{ $errors->any() && old('_form_type') === 'create' ? 'show' : '' }}"
         id="createModal"
@@ -672,7 +730,6 @@
         </div>
     </div>
 
-    {{-- MODAL EDIT --}}
     <div
         class="modal-overlay {{ $errors->any() && old('_form_type') === 'edit' ? 'show' : '' }}"
         id="editModal"
@@ -762,7 +819,6 @@
         const editForm = document.getElementById('editCategoryForm');
         const editIdInput = document.getElementById('editKategoriId');
 
-        // URL dasar untuk route kategori admin.
         const kategoriBaseUrl = @json(url('/admin/kategori'));
 
         function openModal(modal, input) {
@@ -783,12 +839,10 @@
             document.body.style.overflow = '';
         }
 
-        // Buka modal tambah.
         document.getElementById('openCreateModal').addEventListener('click', () => {
             openModal(createModal, createInput);
         });
 
-        // Buka modal edit dan tentukan route update.
         document.querySelectorAll('.open-edit-modal').forEach(button => {
             button.addEventListener('click', () => {
                 const id = button.dataset.id;
@@ -802,12 +856,10 @@
             });
         });
 
-        // Tutup modal melalui tombol batal atau silang.
         document.querySelectorAll('[data-close-modal]').forEach(button => {
             button.addEventListener('click', closeAllModals);
         });
 
-        // Tutup modal ketika area luar modal diklik.
         document.querySelectorAll('.modal-overlay').forEach(modal => {
             modal.addEventListener('click', event => {
                 if (event.target === modal) {
@@ -816,14 +868,12 @@
             });
         });
 
-        // Tutup modal dengan tombol Escape.
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') {
                 closeAllModals();
             }
         });
 
-        // Buka kembali modal jika validasi server gagal.
         @if ($errors->any() && old('_form_type') === 'create')
             openModal(createModal, createInput);
         @elseif ($errors->any() && old('_form_type') === 'edit')
@@ -840,4 +890,3 @@
     </script>
 </body>
 </html>
-```
