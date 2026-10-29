@@ -1,4 +1,3 @@
-```blade
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -540,16 +539,13 @@
                         </div>
 
                         <div class="form-group full">
-                            <label for="foto">
-                                Foto Barang <span class="required">*</span>
-                            </label>
+                            <label for="foto">Foto Barang</label>
 
                             <input type="file"
                                    name="foto"
                                    id="foto"
                                    class="form-control"
-                                   accept="image/jpeg,image/png,image/webp"
-                                   required>
+                                   accept="image/jpeg,image/png,image/webp">
 
                             <span class="error-message">
                                 Format JPG, JPEG, PNG, atau WebP. Maksimal 2 MB.
@@ -561,15 +557,12 @@
                         </div>
 
                         <div class="form-group full">
-                            <label for="deskripsi">
-                                Deskripsi <span class="required">*</span>
-                            </label>
+                            <label for="deskripsi">Deskripsi</label>
 
                             <textarea name="deskripsi"
                                       id="deskripsi"
                                       class="form-control"
-                                      placeholder="Masukkan detail atau kondisi barang"
-                                      required>{{ old('deskripsi') }}</textarea>
+                                      placeholder="Masukkan detail atau kondisi barang">{{ old('deskripsi') }}</textarea>
 
                             @error('deskripsi')
                                 <span class="error-message">{{ $message }}</span>
@@ -759,4 +752,3 @@
     </script>
 </body>
 </html>
-```

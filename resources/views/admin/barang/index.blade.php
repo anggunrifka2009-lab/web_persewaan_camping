@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -57,7 +58,6 @@
                 opacity: 0;
                 transform: translateY(6px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -116,6 +116,65 @@
             color: var(--muted);
             font-size: 12px;
             line-height: 1.7;
+        }
+
+        /* NOTIFIKASI */
+        .notif {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+            animation: notifEnter .25s ease-out;
+        }
+
+        .notif-success {
+            border: 1px solid #cfe0cc;
+            background: #edf5e9;
+            color: #315b3d;
+        }
+
+        .notif-error {
+            border: 1px solid #ead0cb;
+            background: #f8eeeb;
+            color: #984c43;
+        }
+
+        .notif-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .notif-success .notif-icon {
+            background: #d6e9d1;
+            color: #315b3d;
+        }
+
+        .notif-error .notif-icon {
+            background: #f0d8d3;
+            color: #984c43;
+        }
+
+        @keyframes notifEnter {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .btn {
@@ -493,15 +552,19 @@
                 </a>
             </div>
 
+            {{-- NOTIFIKASI BERHASIL --}}
             @if (session('success'))
-                <div style="margin-bottom:18px;padding:12px 15px;border:1px solid #cfe0cc;border-radius:10px;background:#edf5e9;color:#315b3d;font-size:12px;line-height:1.7;">
-                    {{ session('success') }}
+                <div class="notif notif-success" role="status">
+                    <span class="notif-icon">✓</span>
+                    <span>{{ session('success') }}</span>
                 </div>
             @endif
 
+            {{-- NOTIFIKASI GAGAL --}}
             @if (session('error'))
-                <div style="margin-bottom:18px;padding:12px 15px;border:1px solid #ead0cb;border-radius:10px;background:#f8eeeb;color:#984c43;font-size:12px;line-height:1.7;">
-                    {{ session('error') }}
+                <div class="notif notif-error" role="alert">
+                    <span class="notif-icon">!</span>
+                    <span>{{ session('error') }}</span>
                 </div>
             @endif
 
@@ -673,7 +736,10 @@
                     }
 
                     const html = await response.text();
-                    const dokumen = new DOMParser().parseFromString(html, 'text/html');
+                    const dokumen = new DOMParser().parseFromString(
+                        html,
+                        'text/html'
+                    );
 
                     const hasilBaru = dokumen.querySelector('#hasil-barang');
                     const paginationBaru = dokumen.querySelector('#pagination-barang');

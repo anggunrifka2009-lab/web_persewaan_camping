@@ -20,7 +20,7 @@ class BarangController extends Controller
                         ->orWhere('nama_barang', 'like', "%{$cari}%");
                 });
             })
-            ->paginate(5)
+            ->paginate(7)
             ->withQueryString();
 
         return view('admin.barang.index', compact('barang', 'cari'));
@@ -42,16 +42,20 @@ class BarangController extends Controller
         $data = $request->validate([
             'id_kategori' => 'required|exists:kategori,id_kategori',
             'nama_barang' => 'required|string|max:100',
-            'foto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'deskripsi' => 'required|string',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'deskripsi' => 'nullable|string',
             'harga_sewa' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
             'status' => 'required|in:tersedia,tidak tersedia',
         ]);
 
-        $kategoriDipilih = Kategori::findOrFail($data['id_kategori']);
+        $kategoriDipilih = Kategori::findOrFail(
+            $data['id_kategori']
+        );
 
-        $namaKategori = strtolower(trim($kategoriDipilih->nama_kategori));
+        $namaKategori = strtolower(
+            trim($kategoriDipilih->nama_kategori)
+        );
 
         $prefixKategori = [
             'tenda' => 'TEN',
@@ -71,8 +75,11 @@ class BarangController extends Controller
                 3
             );
 
-        $kodeTerakhir = Barang::where('kode_barang', 'like', $prefix . '%')
-            ->pluck('kode_barang');
+        $kodeTerakhir = Barang::where(
+            'kode_barang',
+            'like',
+            $prefix . '%'
+        )->pluck('kode_barang');
 
         $nomor = $kodeTerakhir
             ->map(function ($kode) use ($prefix) {
@@ -80,12 +87,17 @@ class BarangController extends Controller
             })
             ->max() + 1;
 
-        $data['kode_barang'] = $prefix . str_pad($nomor, 3, '0', STR_PAD_LEFT);
-        $data['foto'] = $request->file('foto')->store('barang', 'public');
+        $data['kode_barang'] = $prefix
+            . str_pad($nomor, 3, '0', STR_PAD_LEFT);
+
+        $data['foto'] = $request->hasFile('foto')
+            ? $request->file('foto')->store('barang', 'public')
+            : null;
 
         Barang::create($data);
 
-        return redirect()->route('admin.barang.index')
+        return redirect()
+            ->route('admin.barang.index')
             ->with('success', 'Barang berhasil ditambahkan.');
     }
 
@@ -98,7 +110,10 @@ class BarangController extends Controller
     {
         $kategori = Kategori::all();
 
-        return view('admin.barang.edit', compact('barang', 'kategori'));
+        return view(
+            'admin.barang.edit',
+            compact('barang', 'kategori')
+        );
     }
 
     public function update(Request $request, Barang $barang)
@@ -111,25 +126,29 @@ class BarangController extends Controller
             'id_kategori' => 'required|exists:kategori,id_kategori',
             'nama_barang' => 'required|string|max:100',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'deskripsi' => 'required|string',
+            'deskripsi' => 'nullable|string',
             'harga_sewa' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
             'status' => 'required|in:tersedia,tidak tersedia',
         ]);
 
         if ($request->hasFile('foto')) {
+            $fotoBaru = $request->file('foto')
+                ->store('barang', 'public');
+
             if ($barang->foto) {
                 Storage::disk('public')->delete($barang->foto);
             }
 
-            $data['foto'] = $request->file('foto')->store('barang', 'public');
+            $data['foto'] = $fotoBaru;
         } else {
             unset($data['foto']);
         }
 
         $barang->update($data);
 
-        return redirect()->route('admin.barang.index')
+        return redirect()
+            ->route('admin.barang.index')
             ->with('success', 'Barang berhasil diperbarui.');
     }
 
@@ -141,7 +160,8 @@ class BarangController extends Controller
 
         $barang->delete();
 
-        return redirect()->route('admin.barang.index')
+        return redirect()
+            ->route('admin.barang.index')
             ->with('success', 'Barang berhasil dihapus.');
     }
 }
