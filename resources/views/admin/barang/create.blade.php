@@ -1,3 +1,4 @@
+```blade
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -440,7 +441,8 @@
         <header class="topbar">
             <div>
                 <div class="topbar-heading">
-                    <a href="{{ route('barang.index') }}"
+                    {{-- Route diperbaiki --}}
+                    <a href="{{ route('admin.barang.index') }}"
                        class="btn-back"
                        aria-label="Kembali ke daftar barang">
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -487,7 +489,8 @@
                     </p>
                 </div>
 
-                <form action="{{ route('barang.store') }}"
+                {{-- Route diperbaiki --}}
+                <form action="{{ route('admin.barang.store') }}"
                       method="POST"
                       enctype="multipart/form-data">
                     @csrf
@@ -638,7 +641,8 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="{{ route('barang.index') }}"
+                        {{-- Route diperbaiki --}}
+                        <a href="{{ route('admin.barang.index') }}"
                            class="btn btn-secondary">
                             Batal
                         </a>
@@ -690,6 +694,11 @@
         hargaSewa.addEventListener('input', function () {
             const angka = this.value.replace(/\D/g, '');
             this.value = angka.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        });
+
+        // Hilangkan titik harga sebelum dikirim ke controller.
+        document.querySelector('form').addEventListener('submit', function () {
+            hargaSewa.value = hargaSewa.value.replace(/\./g, '');
         });
 
         const inputFoto = document.getElementById('foto');
@@ -750,3 +759,4 @@
     </script>
 </body>
 </html>
+```

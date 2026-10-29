@@ -477,7 +477,9 @@
     <main class="main">
         <header class="topbar">
             <div class="topbar-heading">
-                <a href="{{ route('barang.index') }}" class="btn-back" aria-label="Kembali ke daftar barang">
+                <a href="{{ route('admin.barang.index') }}"
+                   class="btn-back"
+                   aria-label="Kembali ke daftar barang">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 24 24"
                          fill="none"
@@ -515,7 +517,7 @@
                     <p>Periksa kembali perubahan sebelum menyimpan data.</p>
                 </div>
 
-                <form action="{{ route('barang.update', $barang->id_barang) }}"
+                <form action="{{ route('admin.barang.update', $barang->id_barang) }}"
                       method="POST"
                       enctype="multipart/form-data">
                     @csrf
@@ -532,9 +534,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="id_kategori">Kategori <span class="required">*</span></label>
-                            <select name="id_kategori" id="id_kategori" class="form-control" required>
+                            <label for="id_kategori">
+                                Kategori <span class="required">*</span>
+                            </label>
+
+                            <select name="id_kategori"
+                                    id="id_kategori"
+                                    class="form-control"
+                                    required>
                                 <option value="">Pilih kategori barang</option>
+
                                 @foreach ($kategori as $item)
                                     <option value="{{ $item->id_kategori }}"
                                         {{ old('id_kategori', $barang->id_kategori) == $item->id_kategori ? 'selected' : '' }}>
@@ -542,13 +551,17 @@
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('id_kategori')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group full">
-                            <label for="nama_barang">Nama Barang <span class="required">*</span></label>
+                            <label for="nama_barang">
+                                Nama Barang <span class="required">*</span>
+                            </label>
+
                             <input type="text"
                                    name="nama_barang"
                                    id="nama_barang"
@@ -556,6 +569,7 @@
                                    value="{{ old('nama_barang', $barang->nama_barang) }}"
                                    maxlength="100"
                                    required>
+
                             @error('nama_barang')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
@@ -587,18 +601,25 @@
                         </div>
 
                         <div class="form-group full">
-                            <label for="deskripsi">Deskripsi <span class="required">*</span></label>
+                            <label for="deskripsi">
+                                Deskripsi <span class="required">*</span>
+                            </label>
+
                             <textarea name="deskripsi"
                                       id="deskripsi"
                                       class="form-control"
                                       required>{{ old('deskripsi', $barang->deskripsi) }}</textarea>
+
                             @error('deskripsi')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="harga_sewa">Harga Sewa (Rp) <span class="required">*</span></label>
+                            <label for="harga_sewa">
+                                Harga Sewa (Rp) <span class="required">*</span>
+                            </label>
+
                             <input type="text"
                                    name="harga_sewa"
                                    id="harga_sewa"
@@ -606,13 +627,17 @@
                                    value="{{ old('harga_sewa', number_format($barang->harga_sewa, 0, ',', '.')) }}"
                                    inputmode="numeric"
                                    required>
+
                             @error('harga_sewa')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="stok">Stok <span class="required">*</span></label>
+                            <label for="stok">
+                                Stok <span class="required">*</span>
+                            </label>
+
                             <input type="number"
                                    name="stok"
                                    id="stok"
@@ -621,23 +646,29 @@
                                    min="0"
                                    step="1"
                                    required>
+
                             @error('stok')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group full">
-                            <label for="status">Status <span class="required">*</span></label>
+                            <label for="status">
+                                Status <span class="required">*</span>
+                            </label>
+
                             <select name="status" id="status" class="form-control" required>
                                 <option value="tersedia"
                                     {{ old('status', $barang->status) === 'tersedia' ? 'selected' : '' }}>
                                     Tersedia
                                 </option>
+
                                 <option value="tidak tersedia"
                                     {{ old('status', $barang->status) === 'tidak tersedia' ? 'selected' : '' }}>
                                     Tidak Tersedia
                                 </option>
                             </select>
+
                             @error('status')
                                 <span class="error-message">{{ $message }}</span>
                             @enderror
@@ -645,8 +676,14 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="{{ route('barang.index') }}" class="btn btn-secondary">Batal</a>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        <a href="{{ route('admin.barang.index') }}"
+                           class="btn btn-secondary">
+                            Batal
+                        </a>
+
+                        <button type="submit" class="btn btn-primary">
+                            Simpan Perubahan
+                        </button>
                     </div>
                 </form>
             </section>
@@ -666,11 +703,15 @@
                              style="{{ $barang->foto ? 'display:none;' : '' }}">
                             <span>
                                 <img src="{{ asset('images/barang.png') }}"
-                                     alt="Icon barang"
+                                     alt="Ikon barang"
                                      class="placeholder-icon">
                             </span>
+
                             <strong>Belum ada foto</strong>
-                            <small>Pilih foto baru untuk menambahkan gambar barang.</small>
+
+                            <small>
+                                Pilih foto baru untuk menambahkan gambar barang.
+                            </small>
                         </div>
                     </div>
 
@@ -692,6 +733,11 @@
         hargaSewa.addEventListener('input', function () {
             const angka = this.value.replace(/\D/g, '');
             this.value = angka.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        });
+
+        // Hapus titik pemisah ribuan sebelum data dikirim ke server.
+        document.querySelector('form').addEventListener('submit', function () {
+            hargaSewa.value = hargaSewa.value.replace(/\./g, '');
         });
 
         const inputFoto = document.getElementById('foto');

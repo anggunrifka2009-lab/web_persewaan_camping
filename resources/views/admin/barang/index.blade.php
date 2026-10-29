@@ -48,9 +48,8 @@
             padding: 32px 38px 28px;
         }
 
-        /* ANIMASI PEMBUKA HALAMAN */
         #barang-content {
-            animation: contentEnter 0.3s ease-out;
+            animation: contentEnter .3s ease-out;
         }
 
         @keyframes contentEnter {
@@ -435,10 +434,6 @@
                 padding: 18px 14px;
             }
 
-            .panel-heading {
-                align-items: flex-start;
-            }
-
             .panel-heading h2 {
                 font-size: 16px;
             }
@@ -472,6 +467,7 @@
         }
     </style>
 </head>
+
 <body>
     @include('admin.sidebar')
 
@@ -492,7 +488,7 @@
                     <p>Data perlengkapan camping yang tersedia untuk disewakan.</p>
                 </div>
 
-                <a href="{{ route('barang.create') }}" class="btn btn-primary">
+                <a href="{{ route('admin.barang.create') }}" class="btn btn-primary">
                     <span>+</span> Tambah Barang
                 </a>
             </div>
@@ -509,9 +505,13 @@
                 </div>
             @endif
 
-            <form action="{{ route('barang.index') }}" method="GET"
-                  id="form-pencarian" class="search-form"
-                  style="margin-bottom:20px;">
+            <form
+                action="{{ route('admin.barang.index') }}"
+                method="GET"
+                id="form-pencarian"
+                class="search-form"
+                style="margin-bottom:20px;"
+            >
                 <input
                     type="text"
                     name="cari"
@@ -587,13 +587,15 @@
 
                                 <td>
                                     <div class="actions">
-                                        <a href="{{ route('barang.edit', $item->id_barang) }}"
-                                           class="btn btn-edit">
+                                        <a
+                                            href="{{ route('admin.barang.edit', $item->id_barang) }}"
+                                            class="btn btn-edit"
+                                        >
                                             Edit
                                         </a>
 
                                         <form
-                                            action="{{ route('barang.destroy', $item->id_barang) }}"
+                                            action="{{ route('admin.barang.destroy', $item->id_barang) }}"
                                             method="POST"
                                             class="delete-form"
                                             onsubmit="return confirm('Yakin ingin menghapus barang ini?')"
@@ -646,37 +648,54 @@
             const info = document.getElementById('info-barang');
 
             let timer;
+            let controller;
 
             async function muatBarang(url) {
                 url.searchParams.set('cari', input.value);
+
+                if (controller) {
+                    controller.abort();
+                }
+
+                controller = new AbortController();
 
                 try {
                     const response = await fetch(url, {
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest'
-                        }
+                        },
+                        signal: controller.signal
                     });
 
-                    if (!response.ok) return;
+                    if (!response.ok) {
+                        window.location.href = url.toString();
+                        return;
+                    }
 
                     const html = await response.text();
                     const dokumen = new DOMParser().parseFromString(html, 'text/html');
+
                     const hasilBaru = dokumen.querySelector('#hasil-barang');
                     const paginationBaru = dokumen.querySelector('#pagination-barang');
                     const infoBaru = dokumen.querySelector('#info-barang');
 
-                    if (hasilBaru && paginationBaru) {
-                        hasil.innerHTML = hasilBaru.innerHTML;
-                        pagination.innerHTML = paginationBaru.innerHTML;
-
-                        if (infoBaru) {
-                            info.innerHTML = infoBaru.innerHTML;
-                        }
-
-                        window.history.replaceState({}, '', url);
+                    if (!hasilBaru || !paginationBaru) {
+                        window.location.href = url.toString();
+                        return;
                     }
+
+                    hasil.innerHTML = hasilBaru.innerHTML;
+                    pagination.innerHTML = paginationBaru.innerHTML;
+
+                    if (infoBaru) {
+                        info.innerHTML = infoBaru.innerHTML;
+                    }
+
+                    window.history.replaceState({}, '', url.toString());
                 } catch (error) {
-                    console.error('Gagal memuat data barang:', error);
+                    if (error.name !== 'AbortError') {
+                        console.error('Gagal memuat data barang:', error);
+                    }
                 }
             }
 
@@ -699,10 +718,16 @@
             pagination.addEventListener('click', function (event) {
                 const link = event.target.closest('a');
 
-                if (!link) return;
+                if (!link) {
+                    return;
+                }
 
                 event.preventDefault();
-                muatBarang(new URL(link.href));
+
+                const url = new URL(link.href);
+                url.searchParams.set('cari', input.value);
+
+                muatBarang(url);
             });
         });
     </script>
