@@ -28,7 +28,6 @@
         }
 
         html {
-            scroll-behavior: smooth;
             scroll-padding-top: 90px;
         }
 
@@ -37,6 +36,8 @@
             background: var(--white);
             color: var(--text);
             font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
         }
 
         a {
@@ -281,6 +282,7 @@
             max-width: 1240px;
             margin: 0 auto;
             padding: 60px 28px 70px;
+            flex: 1;
         }
 
         .section-header {
@@ -381,24 +383,6 @@
             box-shadow: 0 0 0 3px rgba(36, 75, 56, .07);
         }
 
-        .btn-search {
-            min-width: 65px;
-            min-height: 40px;
-            padding: 10px 14px;
-            border: 0;
-            border-radius: 9px;
-            background: #eaf0e8;
-            color: var(--forest);
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .btn-search:hover {
-            background: #dce8d9;
-        }
-
         .btn-reset {
             display: inline-flex;
             align-items: center;
@@ -464,34 +448,6 @@
         .product-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 14px 32px rgba(38, 57, 46, 0.08);
-        }
-
-        .product-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 17px 18px 0;
-        }
-
-        .product-category {
-            max-width: 70%;
-            overflow: hidden;
-            padding: 7px 10px;
-            border-radius: 7px;
-            background: #edf1e8;
-            color: var(--forest);
-            font-size: 11px;
-            font-weight: 600;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .product-code {
-            color: var(--muted);
-            font-size: 10px;
-            overflow-wrap: anywhere;
-            text-align: right;
         }
 
         .product-illustration {
@@ -595,20 +551,6 @@
             background: var(--forest-dark);
         }
 
-        .rent-btn.disabled {
-            background: #e8e8e2;
-            color: #898c84;
-            cursor: not-allowed;
-        }
-
-        .rent-login {
-            color: var(--forest);
-            font-size: 11px;
-            font-weight: 700;
-            line-height: 1.6;
-            text-align: right;
-        }
-
         .footer {
             padding: 30px 6%;
             background: var(--forest-dark);
@@ -633,20 +575,17 @@
                 padding-right: 4%;
                 padding-left: 4%;
             }
-
             .hero {
                 padding: 65px 5%;
             }
-
             .benefits {
                 padding-right: 5%;
                 padding-left: 5%;
+                grid-template-columns: 1fr;
             }
-
             .product-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
-
             .filter-form {
                 width: 100%;
                 max-width: none;
@@ -660,15 +599,12 @@
                 gap: 13px;
                 padding: 16px 5%;
             }
-
             .brand {
                 font-size: 21px;
             }
-
             .brand-icon {
                 font-size: 26px;
             }
-
             .nav-menu {
                 width: 100%;
                 justify-content: flex-start;
@@ -676,137 +612,24 @@
                 gap: 9px;
                 padding-top: 3px;
             }
-
             .nav-link {
                 padding: 9px 10px;
                 font-size: 12px;
             }
-
             .nav-button,
             .nav-cta {
                 padding: 10px 13px;
                 font-size: 12px;
             }
-
             .hero {
                 padding: 53px 6%;
-                background-position: 60% center;
             }
-
-            .hero-label {
-                margin-bottom: 18px;
-                font-size: 9px;
-                letter-spacing: 1px;
-            }
-
             .hero h1 {
                 font-size: 37px;
-                letter-spacing: -1.5px;
             }
-
-            .hero p {
-                font-size: 13px;
-                line-height: 1.8;
-            }
-
-            .benefits {
-                grid-template-columns: minmax(0, 1fr);
-                gap: 18px;
-                padding: 23px 6%;
-            }
-
-            .container {
-                padding: 42px 18px 50px;
-            }
-
-            .section-header {
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .toolbar {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .filter-form {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            .filter-form select {
-                width: 100%;
-                flex-basis: auto;
-            }
-
-            .search-form {
-                flex-basis: auto;
-                width: 100%;
-            }
-
             .product-grid {
                 grid-template-columns: minmax(0, 1fr);
                 gap: 15px;
-            }
-
-            .product-illustration {
-                height: 220px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .navbar {
-                padding-right: 13px;
-                padding-left: 13px;
-            }
-
-            .nav-menu {
-                gap: 6px;
-            }
-
-            .nav-link {
-                padding: 9px 7px;
-            }
-
-            .hero {
-                padding: 45px 6%;
-            }
-
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .hero-actions {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            .hero-primary,
-            .hero-secondary {
-                text-align: center;
-            }
-
-            .container {
-                padding-right: 13px;
-                padding-left: 13px;
-            }
-
-            .product-info {
-                padding-right: 14px;
-                padding-left: 14px;
-            }
-
-            .product-bottom {
-                gap: 8px;
-            }
-
-            .price {
-                font-size: 15px;
-            }
-
-            .rent-btn {
-                padding: 10px;
             }
         }
     </style>
@@ -823,15 +646,9 @@
     <div class="nav-menu">
         @auth
             @if (Auth::user()->role === 'pelanggan')
-                <a href="{{ route('penyewaan.riwayat') }}" class="nav-link">
-                    Riwayat Penyewaan
-                </a>
+                <a href="{{ route('penyewaan.riwayat') }}" class="nav-link">Riwayat Penyewaan</a>
             @endif
-
-            <a href="{{ route('akun.index') }}" class="nav-link">
-                Informasi Akun
-            </a>
-
+            <a href="{{ route('akun.index') }}" class="nav-link">Informasi Akun</a>
             <form action="{{ route('logout') }}" method="POST" class="nav-form">
                 @csrf
                 <button type="submit" class="nav-button">Logout</button>
@@ -903,9 +720,7 @@
         <div>
             <div class="section-label">CAMPING ESSENTIALS</div>
             <h2>Daftar Alat Camping</h2>
-            <p>
-                Temukan perlengkapan yang kamu butuhkan untuk petualangan berikutnya.
-            </p>
+            <p>Temukan perlengkapan yang kamu butuhkan untuk petualangan berikutnya.</p>
         </div>
 
         <div class="product-count" id="jumlah-barang">
@@ -916,14 +731,9 @@
     <div class="toolbar">
         <div class="toolbar-title">Daftar perlengkapan camping</div>
 
-        <form action="{{ url('/') }}"
-              method="GET"
-              id="form-pencarian"
-              class="filter-form">
-
+        <form action="{{ url('/') }}" method="GET" id="form-pencarian" class="filter-form">
             <select name="kategori" id="filter-kategori" aria-label="Pilih kategori">
                 <option value="">Semua Kategori</option>
-
                 @foreach ($kategori as $itemKategori)
                     <option
                         value="{{ $itemKategori->id_kategori }}"
@@ -943,64 +753,26 @@
                     value="{{ $cari ?? request('cari') }}"
                     autocomplete="off"
                 >
-
             </div>
 
-            <button type="button" class="btn-reset" id="btn-reset">
-                Reset
-            </button>
+            <button type="button" class="btn-reset" id="btn-reset">Reset</button>
         </form>
     </div>
 
     <div id="hasil-barang">
-
         @if ($barang->isEmpty())
             <div class="empty-state">
                 <div class="empty-icon">⌂</div>
-
-                <h3>
-                    @if (!empty($kategoriDipilih) || !empty($cari))
-                        Barang tidak ditemukan
-                    @else
-                        Belum ada alat camping
-                    @endif
-                </h3>
-
-                <p>
-                    @if (!empty($kategoriDipilih) || !empty($cari))
-                        Coba gunakan kata kunci atau kategori yang berbeda.
-                    @else
-                        Daftar perlengkapan akan ditampilkan di sini setelah tersedia.
-                    @endif
-                </p>
+                <h3>Barang tidak ditemukan</h3>
+                <p>Coba gunakan kata kunci atau kategori yang berbeda.</p>
             </div>
         @else
             <div class="product-grid">
                 @foreach ($barang as $item)
                     <article class="product-card">
-
-                        <div class="product-top">
-                            <span class="product-category">
-                                {{ $item->kategori->nama_kategori ?? 'Tanpa kategori' }}
-                            </span>
-
-                            <span class="product-code">
-                                {{ $item->kode_barang }}
-                            </span>
-                        </div>
-
                         <div class="product-illustration">
                             @if ($item->foto)
-                                <img
-                                    src="{{ asset('storage/' . $item->foto) }}"
-                                    alt="Foto {{ $item->nama_barang }}"
-                                    loading="lazy"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                                >
-
-                                <span class="no-image" style="display: none;">
-                                    Foto tidak dapat ditampilkan
-                                </span>
+                                <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto {{ $item->nama_barang }}" loading="lazy">
                             @else
                                 <span class="no-image">Foto belum tersedia</span>
                             @endif
@@ -1010,57 +782,29 @@
                             <h3>{{ $item->nama_barang }}</h3>
 
                             @if ($item->stok > 0)
-                                <p class="stock available">
-                                    ✓ Stok tersedia: {{ $item->stok }}
-                                </p>
+                                <p class="stock available">✓ Stok tersedia: {{ $item->stok }}</p>
                             @else
-                                <p class="stock empty">
-                                    Stok sedang habis
-                                </p>
+                                <p class="stock empty">Stok sedang habis</p>
                             @endif
 
                             <div class="product-bottom">
                                 <div>
                                     <p class="price-label">Harga sewa</p>
-
                                     <p class="price">
                                         Rp {{ number_format($item->harga_sewa, 0, ',', '.') }}
                                         <span>/ hari</span>
                                     </p>
                                 </div>
 
-                                @auth
-                                    @if (Auth::user()->role === 'pelanggan')
-                                        @if ($item->stok > 0)
-                                            <a
-                                                href="{{ route('penyewaan.create', $item->id_barang) }}"
-                                                class="rent-btn"
-                                            >
-                                                Sewa →
-                                            </a>
-                                        @else
-                                            <span class="rent-btn disabled">
-                                                Stok Habis
-                                            </span>
-                                        @endif
-                                    @else
-                                        <span class="product-code">
-                                            Khusus pelanggan
-                                        </span>
-                                    @endif
-                                @else
-                                    <a href="{{ route('login') }}" class="rent-login">
-                                        Login untuk<br>menyewa →
-                                    </a>
-                                @endauth
+                                <a href="{{ route('barang.detail', $item->id_barang) }}" class="rent-btn">
+                                    Lihat Detail →
+                                </a>
                             </div>
                         </div>
-
                     </article>
                 @endforeach
             </div>
         @endif
-
     </div>
 
 </main>
@@ -1072,113 +816,67 @@
 </footer>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('form-pencarian');
-    const input = document.getElementById('cari-barang');
-    const filterKategori = document.getElementById('filter-kategori');
-    const tombolReset = document.getElementById('btn-reset');
-    const hasil = document.getElementById('hasil-barang');
-    const jumlahBarang = document.getElementById('jumlah-barang');
-
-    const hasilAwal = hasil.innerHTML;
-    const jumlahAwal = jumlahBarang.innerHTML;
-
-    let timer = null;
-    let controller = null;
-
-    async function cariBarang() {
-        if (controller) {
-            controller.abort();
-        }
-
-        controller = new AbortController();
-
-        const url = new URL(form.action, window.location.origin);
-
-        const kataKunci = input.value.trim();
-        const kategori = filterKategori.value;
-
-        if (kataKunci !== '') {
-            url.searchParams.set('cari', kataKunci);
-        }
-
-        if (kategori !== '') {
-            url.searchParams.set('kategori', kategori);
-        }
-
-        try {
-            const response = await fetch(url.toString(), {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'text/html'
-                },
-                signal: controller.signal
-            });
-
-            if (!response.ok) {
-                throw new Error('Pencarian gagal. Status: ' + response.status);
-            }
-
-            const html = await response.text();
-            const dokumen = new DOMParser().parseFromString(html, 'text/html');
-
-            const hasilBaru = dokumen.querySelector('#hasil-barang');
-            const jumlahBaru = dokumen.querySelector('#jumlah-barang');
-
-            if (!hasilBaru || !jumlahBaru) {
-                throw new Error('Elemen hasil pencarian tidak ditemukan.');
-            }
-
-            hasil.innerHTML = hasilBaru.innerHTML;
-            jumlahBarang.innerHTML = jumlahBaru.innerHTML;
-
-            window.history.replaceState({}, '', url.toString());
-
-        } catch (error) {
-            if (error.name !== 'AbortError') {
-                console.error('Pencarian barang gagal:', error);
-            }
-        }
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
     }
 
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
+    if (window.location.hash === '#daftar-barang') {
+        setTimeout(function() {
+            history.replaceState(null, null, window.location.pathname + window.location.search);
+        }, 100);
+    } else {
+        window.scrollTo(0, 0);
+    }
 
-        clearTimeout(timer);
-        cariBarang();
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('form-pencarian');
+        const input = document.getElementById('cari-barang');
+        const filterKategori = document.getElementById('filter-kategori');
+        const tombolReset = document.getElementById('btn-reset');
+        const hasil = document.getElementById('hasil-barang');
+        const jumlahBarang = document.getElementById('jumlah-barang');
 
-    input.addEventListener('input', function () {
-        clearTimeout(timer);
+        const hasilAwal = hasil.innerHTML;
+        const jumlahAwal = jumlahBarang.innerHTML;
+        let timer = null;
+        let controller = null;
 
-        timer = setTimeout(function () {
-            cariBarang();
-        }, 300);
-    });
+        async function cariBarang() {
+            if (controller) controller.abort();
+            controller = new AbortController();
 
-    filterKategori.addEventListener('change', function () {
-        clearTimeout(timer);
-        cariBarang();
-    });
+            const url = new URL(form.action, window.location.origin);
+            if (input.value.trim() !== '') url.searchParams.set('cari', input.value.trim());
+            if (filterKategori.value !== '') url.searchParams.set('kategori', filterKategori.value);
 
-    tombolReset.addEventListener('click', function () {
-        clearTimeout(timer);
+            try {
+                const response = await fetch(url.toString(), {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'text/html' },
+                    signal: controller.signal
+                });
+                if (!response.ok) throw new Error('Gagal memuat');
+                const html = await response.text();
+                const dokumen = new DOMParser().parseFromString(html, 'text/html');
 
-        if (controller) {
-            controller.abort();
-            controller = null;
+                hasil.innerHTML = dokumen.querySelector('#hasil-barang').innerHTML;
+                jumlahBarang.innerHTML = dokumen.querySelector('#jumlah-barang').innerHTML;
+                window.history.replaceState({}, '', url.toString());
+            } catch (error) {
+                if (error.name !== 'AbortError') console.error(error);
+            }
         }
 
-        input.value = '';
-        filterKategori.value = '';
-
-        hasil.innerHTML = hasilAwal;
-        jumlahBarang.innerHTML = jumlahAwal;
-
-        window.history.replaceState({}, '', form.action);
+        form.addEventListener('submit', (e) => { e.preventDefault(); cariBarang(); });
+        input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(cariBarang, 300); });
+        filterKategori.addEventListener('change', cariBarang);
+        tombolReset.addEventListener('click', () => {
+            input.value = '';
+            filterKategori.value = '';
+            hasil.innerHTML = hasilAwal;
+            jumlahBarang.innerHTML = jumlahAwal;
+            window.history.replaceState({}, '', form.action);
+        });
     });
-});
 </script>
 
 </body>
