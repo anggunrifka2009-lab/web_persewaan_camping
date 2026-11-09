@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
 
+Route::get('/barang/{id_barang}', [HomeController::class, 'show'])
+    ->name('barang.detail');
+
 Route::get('/login', [AuthController::class, 'showLogin'])
     ->name('login');
 

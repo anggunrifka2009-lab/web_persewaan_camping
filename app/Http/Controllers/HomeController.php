@@ -37,4 +37,14 @@ class HomeController extends Controller
             'cari'
         ));
     }
+
+    public function show($id_barang)
+    {
+        $barang = Barang::with('kategori')
+            ->where('status', 'tersedia')
+            ->where('stok', '>', 0)
+            ->findOrFail($id_barang);
+
+        return view('detail-barang', compact('barang'));
+    }
 }
