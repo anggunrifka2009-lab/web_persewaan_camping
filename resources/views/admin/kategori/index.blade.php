@@ -722,7 +722,7 @@
                         </button>
 
                         <button type="submit" class="btn btn-primary">
-                            ▣ &nbsp; Simpan
+                            Simpan
                         </button>
                     </div>
                 </form>
@@ -803,7 +803,7 @@
                         </button>
 
                         <button type="submit" class="btn btn-primary">
-                            ▣ &nbsp; Simpan
+                            Simpan
                         </button>
                     </div>
                 </form>
