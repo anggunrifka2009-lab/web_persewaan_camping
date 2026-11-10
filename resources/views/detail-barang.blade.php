@@ -16,12 +16,15 @@
             --white: #fffefa;
             --forest: #244b38;
             --forest-dark: #193a2b;
+            --forest-soft: #edf1e8;
             --text: #26392e;
             --muted: #7b817a;
             --border: #e4e2d9;
         }
 
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -29,11 +32,14 @@
 
         body {
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             background: var(--white);
             color: var(--text);
             font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
+            font-size: 13px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
         }
 
         a {
@@ -41,23 +47,26 @@
             text-decoration: none;
         }
 
-        a:focus-visible,
-        button:focus-visible {
+        button {
+            font: inherit;
+        }
+
+        :focus-visible {
             outline: 2px solid var(--forest);
             outline-offset: 2px;
         }
 
-        /* Navbar Sesuai Home */
+        /* Navbar */
         .navbar {
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 100;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 24px;
             width: 100%;
-            padding: 18px 6%;
+            padding: 15px 2%;
             border-bottom: 1px solid var(--border);
             background: rgba(255, 254, 250, 0.97);
             backdrop-filter: blur(12px);
@@ -71,7 +80,7 @@
             color: var(--forest);
             font-size: 23px;
             font-weight: 800;
-            letter-spacing: -0.8px;
+            letter-spacing: -.8px;
         }
 
         .brand-icon {
@@ -84,6 +93,7 @@
             justify-content: flex-end;
             gap: 14px;
             min-width: 0;
+            margin-left: auto;
         }
 
         .nav-link {
@@ -92,33 +102,135 @@
             font-size: 13px;
             font-weight: 600;
             white-space: nowrap;
-            transition: color 0.2s;
+            transition: color .2s;
         }
 
         .nav-link:hover {
             color: var(--forest);
         }
 
-        .nav-form {
+        .account-dropdown-wrapper {
+            position: relative;
+        }
+
+        .account-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 8px 5px 5px;
+            border: 1px solid transparent;
+            border-radius: 30px;
+            background: transparent;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .account-dropdown-toggle:hover,
+        .account-dropdown-wrapper.show .account-dropdown-toggle {
+            background: var(--forest-soft);
+        }
+
+        .nav-account {
+            display: grid;
             flex-shrink: 0;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #e7eee4;
+            color: var(--forest);
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .dropdown-arrow {
+            width: 15px;
+            height: 15px;
+            color: var(--muted);
+            transition: transform .2s;
+        }
+
+        .account-dropdown-wrapper.show .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            z-index: 101;
+            width: 220px;
+            padding: 7px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--white);
+            box-shadow: 0 10px 30px rgba(38, 57, 46, .12);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity .2s ease, transform .2s ease, visibility .2s;
+        }
+
+        .account-dropdown-wrapper.show .account-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 11px 12px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f2f3ed;
+        }
+
+        .dropdown-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+            color: var(--muted);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            margin: 5px 4px;
+            background: var(--border);
+        }
+
+        .nav-form {
             margin: 0;
         }
 
-        .nav-button {
-            padding: 10px 17px;
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            background: var(--white);
-            color: var(--text);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
+        .dropdown-logout {
+            color: #eb533f;
         }
 
-        .nav-button:hover {
-            border-color: var(--forest);
-            color: var(--forest);
+        .dropdown-logout:hover {
+            background: #f8eeeb;
+        }
+
+        .dropdown-logout img {
+            display: block;
+            width: 17px;
+            height: 17px;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%)
+                invert(48%) sepia(77%) saturate(1800%)
+                hue-rotate(327deg) brightness(96%) contrast(95%);
         }
 
         .nav-cta {
@@ -132,7 +244,7 @@
             font-size: 13px;
             font-weight: 600;
             white-space: nowrap;
-            transition: background 0.2s;
+            transition: background .2s;
         }
 
         .nav-cta:hover {
@@ -158,24 +270,24 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 42px;
-            height: 42px;
             flex-shrink: 0;
+            width: 38px;
+            height: 38px;
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 9px;
             background: var(--white);
             color: var(--forest);
-            transition: .2s ease;
+            transition: background .2s;
         }
 
         .btn-back:hover {
-            background: var(--cream);
+            background: var(--forest-soft);
         }
 
         .btn-back svg {
-            width: 19px;
-            height: 19px;
-            stroke: currentColor;
+            display: block;
+            width: 20px;
+            height: 20px;
         }
 
         .page-title {
@@ -386,11 +498,11 @@
         }
 
         .panel {
+            height: auto;
             padding: 22px;
             border: 1px solid var(--border);
             border-radius: 14px;
             background: var(--white);
-            height: auto;
         }
 
         .spec-table {
@@ -562,7 +674,7 @@
             font-weight: 500;
         }
 
-        /* Footer Sesuai Home */
+        /* Footer */
         .footer {
             padding: 30px 6%;
             background: var(--forest-dark);
@@ -584,12 +696,10 @@
 
         @media (max-width: 900px) {
             .navbar {
-                padding-right: 4%;
-                padding-left: 4%;
+                padding-right: 3%;
+                padding-left: 3%;
             }
-        }
 
-        @media (max-width: 800px) {
             .two-col,
             .steps {
                 grid-template-columns: 1fr;
@@ -599,9 +709,9 @@
         @media (max-width: 650px) {
             .navbar {
                 align-items: center;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 gap: 13px;
-                padding: 16px 5%;
+                padding: 14px 5%;
             }
 
             .brand {
@@ -613,22 +723,19 @@
             }
 
             .nav-menu {
-                width: 100%;
-                justify-content: flex-start;
-                flex-wrap: wrap;
-                gap: 9px;
-                padding-top: 3px;
+                width: auto;
+                flex-shrink: 0;
+                justify-content: flex-end;
+                margin-left: auto;
             }
 
-            .nav-link {
-                padding: 9px 10px;
-                font-size: 12px;
+            .nav-account {
+                width: 38px;
+                height: 38px;
             }
 
-            .nav-button,
-            .nav-cta {
-                padding: 10px 13px;
-                font-size: 12px;
+            .account-dropdown {
+                width: 210px;
             }
 
             .container {
@@ -638,11 +745,6 @@
             .topbar {
                 gap: 11px;
                 margin-bottom: 22px;
-            }
-
-            .btn-back {
-                width: 39px;
-                height: 39px;
             }
 
             .page-title {
@@ -681,30 +783,96 @@
 <body>
 
     <nav class="navbar">
-        <a href="{{ url('/') }}" class="brand">
+        <a href="{{ route('home') }}" class="brand">
             <span class="brand-icon">⌁</span>
             CampRent
         </a>
 
         <div class="nav-menu">
             @auth
-                @if (Auth::user()->role === 'pelanggan')
-                    <a href="{{ route('penyewaan.riwayat') }}" class="nav-link">
-                        Riwayat Penyewaan
-                    </a>
-                @endif
+                <div class="account-dropdown-wrapper" id="accountDropdown">
 
-                <a href="{{ route('akun.index') }}" class="nav-link">
-                    Informasi Akun
+                    <button
+                        type="button"
+                        class="account-dropdown-toggle"
+                        id="account-toggle"
+                        aria-label="Menu akun"
+                        aria-expanded="false"
+                        aria-controls="account-menu"
+                    >
+                        <span class="nav-account">
+                            {{ strtoupper(mb_substr(Auth::user()->nama, 0, 1)) }}
+                        </span>
+
+                        <svg class="dropdown-arrow"
+                             xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+
+                    <div class="account-dropdown" id="account-menu">
+
+                        <a href="{{ route('akun.index') }}" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <circle cx="12" cy="8" r="4"/>
+                                <path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
+                            </svg>
+                            <span>Informasi Akun</span>
+                        </a>
+
+                        @if (Auth::user()->role === 'pelanggan')
+                            <a href="{{ route('penyewaan.riwayat') }}" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+                                    <path d="M3 3v5h5"/>
+                                    <path d="M3.5 13a9 9 0 1 0 2.1-6.2L3 8"/>
+                                    <path d="M12 7v5l3 2"/>
+                                </svg>
+                                <span>Riwayat Penyewaan</span>
+                            </a>
+                        @endif
+
+                        <div class="dropdown-divider"></div>
+
+                        <form action="{{ route('logout') }}" method="POST" class="nav-form">
+                            @csrf
+
+                            <button type="submit" class="dropdown-item dropdown-logout">
+                                <img src="{{ asset('images/logout.png') }}" alt="">
+                                <span>Logout</span>
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            @else
+                <a href="{{ route('login') }}" class="nav-link">
+                    Login
                 </a>
 
-                <form action="{{ route('logout') }}" method="POST" class="nav-form">
-                    @csrf
-                    <button type="submit" class="nav-button">Logout</button>
-                </form>
-            @else
-                <a href="{{ route('login') }}" class="nav-link">Login</a>
-                <a href="{{ route('register') }}" class="nav-cta">Daftar Sekarang</a>
+                <a href="{{ route('register') }}" class="nav-cta">
+                    Daftar Sekarang
+                </a>
             @endauth
         </div>
     </nav>
@@ -712,10 +880,20 @@
     <main class="container">
 
         <div class="topbar">
-            <a href="{{ url('/') }}#daftar-barang" class="btn-back" aria-label="Kembali">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M19 12H5" />
-                    <path d="m12 19-7-7 7-7" />
+            <a href="{{ url('/') }}#daftar-barang"
+               class="btn-back"
+               aria-label="Kembali"
+               title="Kembali">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="m12 19-7-7 7-7"/>
+                    <path d="M19 12H5"/>
                 </svg>
             </a>
 
@@ -927,6 +1105,35 @@
         <p>Siapkan perlengkapanmu, nikmati petualanganmu.</p>
     </footer>
 
-</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdown = document.getElementById('accountDropdown');
+            const toggle = document.getElementById('account-toggle');
 
+            if (!dropdown || !toggle) return;
+
+            toggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+
+                const isOpen = dropdown.classList.toggle('show');
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    dropdown.classList.remove('show');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
+
+</body>
 </html>
