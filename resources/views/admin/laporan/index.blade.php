@@ -85,6 +85,52 @@
             line-height: 1.7;
         }
 
+        /* ===== Filter tanggal ===== */
+        .filter-bar {
+            display: flex;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding: 16px 18px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--white);
+        }
+
+        .filter-bar .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-bar label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .filter-bar input[type="date"] {
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: white;
+            color: var(--text);
+            font: inherit;
+            font-size: 12px;
+        }
+
+        .filter-bar input[type="date"]:focus {
+            outline: none;
+            border-color: var(--forest);
+        }
+
+        .filter-error {
+            width: 100%;
+            color: #984c43;
+            font-size: 11px;
+        }
+
         .ringkasan {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -177,6 +223,16 @@
         .btn-primary:hover {
             border-color: var(--forest-dark);
             background: var(--forest-dark);
+        }
+
+        .btn-secondary {
+            border-color: var(--border);
+            background: white;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #f3f1e9;
         }
 
         .table-wrap {
@@ -406,6 +462,14 @@
                 font-size: 11px;
             }
 
+            .filter-bar {
+                padding: 14px;
+            }
+
+            .filter-bar .field {
+                flex: 1 1 140px;
+            }
+
             .ringkasan {
                 gap: 10px;
                 margin-bottom: 26px;
@@ -531,6 +595,7 @@
             }
 
             .btn-primary,
+            .filter-bar,
             .pagination-area,
             .footer {
                 display: none !important;
@@ -581,16 +646,48 @@
 <body>
     @include('admin.sidebar')
 
+    @php
+        $filterAktif = request()->filled('dari') || request()->filled('sampai');
+    @endphp
+
     <main class="main" id="laporan-content">
         <header class="topbar">
             <div>
                 <h1 class="page-title">Laporan Penyewaan</h1>
                 <p class="page-subtitle">
                     Rekap data penyewaan alat camping dan pendapatan CampRent.
+                    @if ($filterAktif)
+                        Periode:
+                        {{ request('dari') ? \Carbon\Carbon::parse(request('dari'))->format('d-m-Y') : 'awal' }}
+                        s/d
+                        {{ request('sampai') ? \Carbon\Carbon::parse(request('sampai'))->format('d-m-Y') : 'sekarang' }}.
+                    @endif
                     Tanggal cetak: {{ now()->format('d-m-Y') }}
                 </p>
             </div>
         </header>
+
+        <form method="GET" action="{{ route('admin.laporan.index') }}" class="filter-bar">
+            <div class="field">
+                <label for="dari">Dari tanggal</label>
+                <input type="date" id="dari" name="dari" value="{{ request('dari') }}">
+            </div>
+
+            <div class="field">
+                <label for="sampai">Sampai tanggal</label>
+                <input type="date" id="sampai" name="sampai" value="{{ request('sampai') }}">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Terapkan Filter</button>
+
+            @if ($filterAktif)
+                <a href="{{ route('admin.laporan.index') }}" class="btn btn-secondary">Reset</a>
+            @endif
+
+            @if ($errors->any())
+                <div class="filter-error">{{ $errors->first() }}</div>
+            @endif
+        </form>
 
         <section class="ringkasan">
             <div class="card">
@@ -631,7 +728,7 @@
                     <p>Pantau riwayat transaksi, status penyewaan, dan denda pengembalian barang.</p>
                 </div>
 
-                <a href="{{ route('admin.laporan.pdf') }}" target="_blank" class="btn btn-primary">
+                <a href="{{ route('admin.laporan.pdf', request()->only(['dari', 'sampai'])) }}" target="_blank" class="btn btn-primary">
                     Cetak Laporan (PDF)
                 </a>
             </div>
@@ -718,7 +815,9 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="empty-state">Belum ada data penyewaan.</td>
+                                    <td colspan="9" class="empty-state">
+                                        {{ $filterAktif ? 'Tidak ada data penyewaan pada periode ini.' : 'Belum ada data penyewaan.' }}
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -731,7 +830,7 @@
                             Menampilkan {{ $penyewaan->firstItem() }}-{{ $penyewaan->lastItem() }}
                             dari {{ $penyewaan->total() }} data
                         @else
-                            Belum ada data penyewaan.
+                            {{ $filterAktif ? 'Tidak ada data pada periode ini.' : 'Belum ada data penyewaan.' }}
                         @endif
                     </div>
 

@@ -7,7 +7,7 @@
         @page { margin: 20px 25px; }
         body { font-family: DejaVu Sans, sans-serif; font-size: 9px; color: #222; }
         h1 { font-size: 16px; margin: 0 0 4px; color: #244b38; }
-        .sub { color: #666; font-size: 9px; margin-bottom: 14px; }
+        .sub { color: #666; font-size: 9px; margin-bottom: 14px; line-height: 1.6; }
 
         table { width: 100%; border-collapse: collapse; }
 
@@ -43,8 +43,16 @@
 <body>
     <h1>Laporan Penyewaan</h1>
     <div class="sub">
-        Rekap data penyewaan alat camping dan pendapatan CampRent.
-        Tanggal cetak: {{ now()->format('d-m-Y') }}
+        Rekap data penyewaan alat camping dan pendapatan CampRent.<br>
+        Periode:
+        @if (!empty($dari) || !empty($sampai))
+            {{ !empty($dari) ? \Carbon\Carbon::parse($dari)->format('d-m-Y') : 'Awal' }}
+            s/d
+            {{ !empty($sampai) ? \Carbon\Carbon::parse($sampai)->format('d-m-Y') : 'Sekarang' }}
+        @else
+            Semua data
+        @endif
+        | Tanggal cetak: {{ now()->format('d-m-Y') }}
     </div>
 
     <table class="ringkasan">
@@ -126,7 +134,9 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" class="center">Belum ada data penyewaan.</td>
+                    <td colspan="9" class="center">
+                        {{ (!empty($dari) || !empty($sampai)) ? 'Tidak ada data penyewaan pada periode ini.' : 'Belum ada data penyewaan.' }}
+                    </td>
                 </tr>
             @endforelse
         </tbody>

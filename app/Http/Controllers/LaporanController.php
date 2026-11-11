@@ -11,25 +11,16 @@ class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        $totalPenyewaan = Penyewaan::count();
+        $request->validate([
+            'dari'   => 'nullable|date',
+            'sampai' => 'nullable|date|after_or_equal:dari',
+        ]);
 
-        $totalSelesai = Penyewaan::where('status', 'dikembalikan')->count();
-
-        $totalMenunggu = Penyewaan::where('status', 'menunggu')->count();
-
-        $totalDitolak = Penyewaan::where('status', 'ditolak')->count();
-
-        $totalPendapatan = Penyewaan::whereIn('status', [
-            'dibayar',
-            'dikembalikan',
-        ])->sum('total_harga');
-
-        $totalDenda = DB::table('pengembalian')->sum('denda');
-
-        $penyewaan = Penyewaan::with([
-            'user',
-            'detailPenyewaan.barang',
-        ])
+        $penyewaan = $this->queryPenyewaan($request)
+            ->with([
+                'user',
+                'detailPenyewaan.barang',
+            ])
             ->latest('id_penyewaan')
             ->paginate(7)
             ->withQueryString();
@@ -42,39 +33,25 @@ class LaporanController extends Controller
             ->get()
             ->keyBy('id_penyewaan');
 
-        return view('admin.laporan.index', compact(
-            'totalPenyewaan',
-            'totalSelesai',
-            'totalMenunggu',
-            'totalDitolak',
-            'totalPendapatan',
-            'totalDenda',
-            'penyewaan',
-            'pengembalian'
+        return view('admin.laporan.index', array_merge(
+            $this->ringkasan($request),
+            compact('penyewaan', 'pengembalian')
         ));
     }
 
-    public function cetakPdf()
+    public function cetakPdf(Request $request)
     {
-        $totalPenyewaan = Penyewaan::count();
+        $request->validate([
+            'dari'   => 'nullable|date',
+            'sampai' => 'nullable|date|after_or_equal:dari',
+        ]);
 
-        $totalSelesai = Penyewaan::where('status', 'dikembalikan')->count();
-
-        $totalMenunggu = Penyewaan::where('status', 'menunggu')->count();
-
-        $totalDitolak = Penyewaan::where('status', 'ditolak')->count();
-
-        $totalPendapatan = Penyewaan::whereIn('status', [
-            'dibayar',
-            'dikembalikan',
-        ])->sum('total_harga');
-
-        $totalDenda = DB::table('pengembalian')->sum('denda');
-
-        $penyewaan = Penyewaan::with([
-            'user',
-            'detailPenyewaan.barang',
-        ])
+        // Semua data dalam rentang tanggal, bukan paginate
+        $penyewaan = $this->queryPenyewaan($request)
+            ->with([
+                'user',
+                'detailPenyewaan.barang',
+            ])
             ->latest('id_penyewaan')
             ->get();
 
@@ -83,15 +60,12 @@ class LaporanController extends Controller
             ->get()
             ->keyBy('id_penyewaan');
 
-        $pdf = Pdf::loadView('admin.laporan.laporan-pdf', compact(
-            'totalPenyewaan',
-            'totalSelesai',
-            'totalMenunggu',
-            'totalDitolak',
-            'totalPendapatan',
-            'totalDenda',
-            'penyewaan',
-            'pengembalian'
+        $dari   = $request->input('dari');
+        $sampai = $request->input('sampai');
+
+        $pdf = Pdf::loadView('admin.laporan.laporan-pdf', array_merge(
+            $this->ringkasan($request),
+            compact('penyewaan', 'pengembalian', 'dari', 'sampai')
         ))->setPaper('a4', 'landscape');
 
         return $pdf->stream('laporan-penyewaan-' . now()->format('Ymd') . '.pdf');
@@ -132,5 +106,49 @@ class LaporanController extends Controller
             'totalPendapatan',
             'penyewaanTerbaru'
         ));
+    }
+
+    /**
+     * Query dasar penyewaan dengan filter rentang tanggal sewa.
+     */
+    private function queryPenyewaan(Request $request)
+    {
+        return Penyewaan::query()
+            ->when($request->filled('dari'), fn ($q) =>
+                $q->whereDate('tanggal_sewa', '>=', $request->input('dari')))
+            ->when($request->filled('sampai'), fn ($q) =>
+                $q->whereDate('tanggal_sewa', '<=', $request->input('sampai')));
+    }
+
+    /**
+     * Angka ringkasan, mengikuti filter tanggal yang sama dengan tabel.
+     */
+    private function ringkasan(Request $request): array
+    {
+        $base = $this->queryPenyewaan($request);
+
+        return [
+            'totalPenyewaan' => (clone $base)->count(),
+
+            'totalSelesai' => (clone $base)
+                ->where('status', 'dikembalikan')
+                ->count(),
+
+            'totalMenunggu' => (clone $base)
+                ->where('status', 'menunggu')
+                ->count(),
+
+            'totalDitolak' => (clone $base)
+                ->where('status', 'ditolak')
+                ->count(),
+
+            'totalPendapatan' => (clone $base)
+                ->whereIn('status', ['dibayar', 'dikembalikan'])
+                ->sum('total_harga'),
+
+            'totalDenda' => DB::table('pengembalian')
+                ->whereIn('id_penyewaan', (clone $base)->select('id_penyewaan'))
+                ->sum('denda'),
+        ];
     }
 }
