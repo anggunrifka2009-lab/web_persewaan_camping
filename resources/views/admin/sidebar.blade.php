@@ -94,7 +94,15 @@
         display: flex;
         align-items: center;
         gap: 11px;
-        padding: 10px 9px 16px;
+        margin-bottom: 6px;
+        padding: 10px 9px;
+        border-radius: 11px;
+        transition: .2s;
+    }
+
+    .admin-info:hover,
+    .admin-info.active {
+        background: #eaf0e8;
     }
 
     .avatar {
@@ -218,6 +226,7 @@
 
         .admin-info {
             min-width: 0;
+            margin-bottom: 0;
             padding: 0 4px;
         }
 
@@ -291,9 +300,9 @@
     <div class="sidebar-bottom">
         <a href="{{ route('akun.index') }}"
            data-turbo-frame="konten-admin"
-           class="admin-info">
+           class="admin-info {{ request()->routeIs('akun.*') ? 'active' : '' }}">
             <span class="avatar">
-                {{ strtoupper(substr(Auth::user()->nama, 0, 1)) }}
+                {{ strtoupper(mb_substr(Auth::user()->nama, 0, 1)) }}
             </span>
 
             <span style="min-width:0">

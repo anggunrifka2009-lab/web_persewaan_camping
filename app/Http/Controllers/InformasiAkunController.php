@@ -10,13 +10,23 @@ class InformasiAkunController extends Controller
 {
     public function index()
     {
-        return view('akun.index', [
-            'user' => auth()->user(),
+        $user = auth()->user();
+
+        $view = $user->role === 'admin'
+            ? 'admin.akun.index'
+            : 'akun.index';
+
+        return view($view, [
+            'user' => $user,
         ]);
     }
 
     public function edit()
     {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('akun.index');
+        }
+
         return view('akun.edit', [
             'user' => auth()->user(),
         ]);
@@ -50,6 +60,10 @@ class InformasiAkunController extends Controller
 
     public function editPassword()
     {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('akun.index');
+        }
+
         return view('akun.password');
     }
 
