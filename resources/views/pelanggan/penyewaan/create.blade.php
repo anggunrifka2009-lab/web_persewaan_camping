@@ -59,7 +59,6 @@
             outline-offset: 2px;
         }
 
-        /* Navbar */
         .navbar {
             position: sticky;
             top: 0;
@@ -219,21 +218,37 @@
         }
 
         .dropdown-logout {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 14px;
+            border: 0;
+            border-radius: 10px;
+            background: transparent;
             color: #eb533f;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: background .2s;
         }
 
         .dropdown-logout:hover {
             background: #f8eeeb;
         }
 
-        .dropdown-logout img {
+        .dropdown-logout svg {
             display: block;
-            width: 17px;
-            height: 17px;
-            object-fit: contain;
-            filter: brightness(0) saturate(100%)
-                invert(48%) sepia(77%) saturate(1800%)
-                hue-rotate(327deg) brightness(96%) contrast(95%);
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            color: #eb533f;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .nav-cta {
@@ -768,7 +783,9 @@
                             @csrf
 
                             <button type="submit" class="dropdown-item dropdown-logout">
-                                <img src="{{ asset('images/logout.png') }}" alt="">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                                </svg>
                                 <span>Logout</span>
                             </button>
                         </form>

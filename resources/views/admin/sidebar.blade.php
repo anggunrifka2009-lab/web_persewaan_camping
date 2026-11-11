@@ -74,14 +74,15 @@
         height: 22px;
     }
 
-    .nav-icon img {
+    .nav-icon svg {
         display: block;
         width: 20px;
         height: 20px;
-        object-fit: contain;
-        filter: brightness(0) saturate(100%)
-                invert(24%) sepia(17%) saturate(1050%)
-                hue-rotate(93deg) brightness(88%) contrast(90%);
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
     }
 
     .sidebar-bottom {
@@ -157,19 +158,9 @@
         background: #f8eeeb;
     }
 
-    .logout-btn .nav-icon {
-        color: #8a5149;
-        font-size: 18px;
-    }
-
-    .logout-btn .nav-icon img {
-        display: block;
-        width: 20px;
-        height: 20px;
-        object-fit: contain;
-        filter: brightness(0) saturate(100%)
-                invert(48%) sepia(77%) saturate(1800%)
-                hue-rotate(327deg) brightness(96%) contrast(95%);
+    .sidebar-toggle,
+    .sidebar-overlay {
+        display: none;
     }
 
     @media (max-width: 900px) {
@@ -181,64 +172,160 @@
     }
 
     @media (max-width: 620px) {
+        body {
+            padding-left: 64px;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        .sidebar-overlay {
+            display: block;
+            position: fixed;
+            inset: 0;
+            z-index: 9;
+            background: rgba(25, 58, 43, .4);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .25s ease, visibility .25s;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
         .sidebar {
-            position: relative;
-            inset: auto;
-            width: 100%;
-            padding: 15px 16px 13px;
-            border-right: 0;
-            border-bottom: 1px solid var(--border);
+            width: 64px;
+            height: 100vh;
+            height: 100dvh;
+            padding: 14px 10px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            transition: width .25s ease, box-shadow .25s ease;
         }
 
-        .brand {
-            padding: 0 4px 15px;
-            font-size: 21px;
+        .sidebar.expanded {
+            width: 250px;
+            max-width: 82vw;
+            padding: 14px 14px 16px;
+            box-shadow: 10px 0 40px rgba(25, 58, 43, .2);
         }
 
+        .sidebar-toggle {
+            display: grid;
+            place-items: center;
+            flex: 0 0 44px;
+            width: 44px;
+            height: 44px;
+            margin-bottom: 14px;
+            border: 0;
+            border-radius: 11px;
+            background: transparent;
+            color: var(--forest);
+            cursor: pointer;
+        }
+
+        .sidebar-toggle:hover {
+            background: #eaf0e8;
+        }
+
+        .sidebar-toggle svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Mode ikon (default di mobile) */
+        .brand,
         .sidebar-label {
-            margin: 0 4px 8px;
+            display: none;
         }
 
         .nav-menu {
-            display: flex;
-            gap: 7px;
-            overflow-x: auto;
-            padding-bottom: 3px;
+            justify-items: center;
         }
 
-        .nav-link {
-            flex: 0 0 auto;
-            min-height: 40px;
-            gap: 8px;
-            padding: 10px 12px;
-            font-size: 12px;
-            white-space: nowrap;
+        .nav-link,
+        .admin-info,
+        .logout-btn {
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            min-height: 44px;
+            padding: 0;
+            gap: 0;
+        }
+
+        .nav-link > span:last-child,
+        .admin-info > span:last-child,
+        .logout-btn > span:last-child {
+            display: none;
         }
 
         .sidebar-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 13px;
-            padding-top: 11px;
+            display: grid;
+            justify-items: center;
+            gap: 6px;
         }
 
         .admin-info {
-            min-width: 0;
             margin-bottom: 0;
-            padding: 0 4px;
         }
 
-        .logout-btn {
-            width: auto;
-            padding: 10px;
-            white-space: nowrap;
+        .sidebar.expanded .brand {
+            display: flex;
+            padding-bottom: 22px;
+        }
+
+        .sidebar.expanded .sidebar-label {
+            display: block;
+        }
+
+        .sidebar.expanded .nav-menu,
+        .sidebar.expanded .sidebar-bottom {
+            justify-items: stretch;
+        }
+
+        .sidebar.expanded .nav-link,
+        .sidebar.expanded .admin-info,
+        .sidebar.expanded .logout-btn {
+            justify-content: flex-start;
+            width: 100%;
+            height: auto;
+            padding: 12px 14px;
+            gap: 13px;
+        }
+
+        .sidebar.expanded .admin-info {
+            padding: 10px 9px;
+            gap: 11px;
+        }
+
+        .sidebar.expanded .nav-link > span:last-child,
+        .sidebar.expanded .admin-info > span:last-child,
+        .sidebar.expanded .logout-btn > span:last-child {
+            display: block;
         }
     }
 </style>
 
-<aside class="sidebar">
+<div class="sidebar-overlay" data-sidebar-close></div>
+
+<aside class="sidebar" id="sidebar">
+    <button type="button"
+            class="sidebar-toggle"
+            data-sidebar-toggle
+            aria-label="Buka atau tutup menu"
+            aria-controls="sidebar"
+            aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="16" rx="3"/>
+            <path d="M9 4v16"/>
+        </svg>
+    </button>
+
     <a href="{{ route('admin.dashboard') }}"
        data-turbo-frame="konten-admin"
        class="brand">
@@ -254,7 +341,12 @@
            data-turbo-frame="konten-admin"
            class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <span class="nav-icon">
-                <img src="{{ asset('images/dashboard.png') }}" alt="">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="9" rx="1"/>
+                    <rect x="14" y="3" width="7" height="5" rx="1"/>
+                    <rect x="14" y="12" width="7" height="9" rx="1"/>
+                    <rect x="3" y="16" width="7" height="5" rx="1"/>
+                </svg>
             </span>
             <span>Dashboard</span>
         </a>
@@ -263,7 +355,9 @@
            data-turbo-frame="konten-admin"
            class="nav-link {{ request()->routeIs('admin.kategori.*', 'kategori.*') ? 'active' : '' }}">
             <span class="nav-icon">
-                <img src="{{ asset('images/category.png') }}" alt="">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>
+                </svg>
             </span>
             <span>Kategori</span>
         </a>
@@ -272,7 +366,10 @@
            data-turbo-frame="konten-admin"
            class="nav-link {{ request()->routeIs('admin.barang.*', 'barang.*') ? 'active' : '' }}">
             <span class="nav-icon">
-                <img src="{{ asset('images/product.png') }}" alt="">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 8 12 3 3 8v8l9 5 9-5z"/>
+                    <path d="m3 8 9 5 9-5M12 13v8"/>
+                </svg>
             </span>
             <span>Barang</span>
         </a>
@@ -281,7 +378,10 @@
            data-turbo-frame="konten-admin"
            class="nav-link {{ request()->routeIs('admin.penyewaan.*') ? 'active' : '' }}">
             <span class="nav-icon">
-                <img src="{{ asset('images/rental.png') }}" alt="">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="5" y="3" width="14" height="18" rx="2"/>
+                    <path d="M9 8h6M9 12h6M9 16h4"/>
+                </svg>
             </span>
             <span>Penyewaan</span>
         </a>
@@ -290,7 +390,9 @@
            data-turbo-frame="konten-admin"
            class="nav-link {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
             <span class="nav-icon">
-                <img src="{{ asset('images/report.png') }}" alt="">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>
+                </svg>
             </span>
             <span>Laporan</span>
         </a>
@@ -320,10 +422,44 @@
 
             <button type="submit" class="logout-btn">
                 <span class="nav-icon">
-                    <img src="{{ asset('images/logout.png') }}" alt="">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                    </svg>
                 </span>
                 <span>Logout</span>
             </button>
         </form>
     </div>
 </aside>
+
+<script>
+    if (!window.__sidebarReady) {
+        window.__sidebarReady = true;
+
+        const setSidebar = (open) => {
+            document.getElementById('sidebar')?.classList.toggle('expanded', open);
+            document.querySelector('.sidebar-overlay')?.classList.toggle('show', open);
+            document.body.classList.toggle('no-scroll', open);
+            document.querySelector('[data-sidebar-toggle]')?.setAttribute('aria-expanded', open);
+        };
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('[data-sidebar-toggle]')) {
+                setSidebar(!document.getElementById('sidebar').classList.contains('expanded'));
+            } else if (
+                e.target.closest('[data-sidebar-close]') ||
+                e.target.closest('.sidebar .nav-link, .sidebar .admin-info')
+            ) {
+                setSidebar(false);
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') setSidebar(false);
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 620) setSidebar(false);
+        });
+    }
+</script>
