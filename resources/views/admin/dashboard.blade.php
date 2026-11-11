@@ -455,36 +455,39 @@
         <section>
             <div class="section-heading">
                 <div>
-                    <h3>Ringkasan Laporan</h3>
-                    <p>Gambaran singkat aktivitas persewaan saat ini.</p>
+                    <h3>Ringkasan Laporan Harian</h3>
+                    <p>
+                        Ringkasan aktivitas persewaan tanggal
+                        {{ now()->translatedFormat('d F Y') }}.
+                    </p>
                 </div>
-
-                <a href="{{ route('admin.laporan.index') }}" class="section-link">Laporan lengkap →</a>
             </div>
 
             <div class="stats">
                 <div class="stat-card">
-                    <p class="stat-label">Total Penyewaan</p>
+                    <p class="stat-label">Total Penyewaan Hari Ini</p>
                     <p class="stat-value">{{ number_format($totalPenyewaan, 0, ',', '.') }}</p>
-                    <p class="stat-note">Seluruh transaksi penyewaan</p>
+                    <p class="stat-note">Jumlah transaksi hari ini</p>
                 </div>
 
                 <div class="stat-card">
                     <p class="stat-label">Menunggu Persetujuan</p>
                     <p class="stat-value">{{ number_format($totalMenunggu, 0, ',', '.') }}</p>
-                    <p class="stat-note">Perlu diperiksa oleh admin</p>
+                    <p class="stat-note">Penyewaan hari ini yang menunggu</p>
                 </div>
 
                 <div class="stat-card">
                     <p class="stat-label">Penyewaan Selesai</p>
                     <p class="stat-value">{{ number_format($totalSelesai, 0, ',', '.') }}</p>
-                    <p class="stat-note">Penyewaan yang sudah dikembalikan</p>
+                    <p class="stat-note">Penyewaan hari ini yang selesai</p>
                 </div>
 
                 <div class="stat-card">
-                    <p class="stat-label">Total Pendapatan</p>
-                    <p class="stat-value" style="font-size:clamp(17px, 1.8vw, 23px)">Rp{{ number_format($totalPendapatan, 0, ',', '.') }}</p>
-                    <p class="stat-note">Dari transaksi berstatus dibayar dan dikembalikan</p>
+                    <p class="stat-label">Total Pendapatan Hari Ini</p>
+                    <p class="stat-value" style="font-size:clamp(17px, 1.8vw, 23px)">
+                        Rp{{ number_format($totalPendapatan, 0, ',', '.') }}
+                    </p>
+                    <p class="stat-note">Dari transaksi dibayar dan dikembalikan hari ini</p>
                 </div>
             </div>
         </section>

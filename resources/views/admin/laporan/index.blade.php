@@ -48,6 +48,21 @@
             padding: 32px 38px 28px;
         }
 
+        #laporan-content {
+            animation: contentEnter .3s ease-out;
+        }
+
+        @keyframes contentEnter {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .topbar {
             display: flex;
             align-items: center;
@@ -164,8 +179,6 @@
             background: var(--forest-dark);
         }
 
-        /* TABEL */
-
         .table-wrap {
             overflow-x: auto;
             border: 1px solid var(--border);
@@ -262,47 +275,63 @@
             line-height: 1.8;
         }
 
-        /* PAGINATION */
-
-        .pagination-wrap {
+        .pagination-area {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
             margin-top: 18px;
         }
 
         .pagination-info {
             color: var(--muted);
             font-size: 11px;
-            line-height: 1.7;
         }
 
-        .pagination {
-            color: var(--forest);
-            font-size: 11px;
+        .pagination nav > div:first-child {
+            display: none;
         }
 
-        .pagination nav {
-            display: flex;
-            align-items: center;
-        }
-
-        .pagination nav > div:first-child p {
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        .pagination nav > div:last-child > span,
-        .pagination nav > div:last-child > a {
+        .pagination nav > div:last-child {
             display: flex;
             align-items: center;
             gap: 4px;
         }
 
         .pagination a,
-        .pagination span {
+        .pagination span[aria-current="page"] span,
+        .pagination span[aria-disabled="true"] span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            min-height: 34px;
+            padding: 7px 10px;
+            margin: 0 2px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--white);
             font-size: 11px;
+            text-decoration: none;
+        }
+
+        .pagination a {
+            color: var(--forest);
+        }
+
+        .pagination a:hover {
+            background: #eaf0e8;
+        }
+
+        .pagination span[aria-current="page"] span {
+            border-color: var(--forest);
+            background: var(--forest);
+            color: white;
+        }
+
+        .pagination span[aria-disabled="true"] span {
+            color: #b5b7af;
         }
 
         .pagination svg {
@@ -310,36 +339,13 @@
             height: 16px;
         }
 
-        .pagination nav a,
-        .pagination nav span[aria-current="page"] span,
-        .pagination nav span[aria-disabled="true"] span {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 32px;
-            min-height: 32px;
-            padding: 6px 10px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--white);
-            color: var(--text);
+        #laporan-ajax {
+            transition: opacity .15s;
         }
 
-        .pagination nav a:hover {
-            border-color: #c4d2c4;
-            background: #eaf0e8;
-            color: var(--forest);
-        }
-
-        .pagination nav span[aria-current="page"] span {
-            border-color: var(--forest);
-            background: var(--forest);
-            color: white;
-        }
-
-        .pagination nav span[aria-disabled="true"] span {
-            color: #aaa;
-            cursor: not-allowed;
+        #laporan-ajax.loading {
+            opacity: .55;
+            pointer-events: none;
         }
 
         .footer {
@@ -349,22 +355,6 @@
             color: var(--muted);
             font-size: 11px;
             line-height: 1.7;
-        }
-
-        #laporan-content {
-            animation: contentEnter .3s ease-out;
-        }
-
-        @keyframes contentEnter {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         @media (max-width: 1100px) {
@@ -387,18 +377,13 @@
                 align-items: flex-start;
             }
 
-            .table-wrap {
-                overflow-x: auto;
-            }
-
             table {
                 min-width: 1050px;
             }
 
-            .pagination-wrap {
+            .pagination-area {
                 align-items: flex-start;
                 flex-direction: column;
-                gap: 10px;
             }
         }
 
@@ -455,10 +440,6 @@
 
             .table-wrap {
                 border-radius: 10px;
-            }
-
-            .pagination-wrap {
-                gap: 12px;
             }
 
             .pagination {
@@ -550,7 +531,7 @@
             }
 
             .btn-primary,
-            .pagination-wrap,
+            .pagination-area,
             .footer {
                 display: none !important;
             }
@@ -601,7 +582,6 @@
     @include('admin.sidebar')
 
     <main class="main" id="laporan-content">
-
         <header class="topbar">
             <div>
                 <h1 class="page-title">Laporan Penyewaan</h1>
@@ -611,213 +591,225 @@
                 </p>
             </div>
         </header>
-        <section class="ringkasan">
 
+        <section class="ringkasan">
             <div class="card">
                 <h3>Total Penyewaan</h3>
-                <div class="angka">
-                    {{ number_format($totalPenyewaan, 0, ',', '.') }}
-                </div>
+                <div class="angka">{{ number_format($totalPenyewaan, 0, ',', '.') }}</div>
             </div>
 
             <div class="card">
                 <h3>Penyewaan Selesai</h3>
-                <div class="angka">
-                    {{ number_format($totalSelesai, 0, ',', '.') }}
-                </div>
+                <div class="angka">{{ number_format($totalSelesai, 0, ',', '.') }}</div>
             </div>
 
             <div class="card">
                 <h3>Menunggu Persetujuan</h3>
-                <div class="angka">
-                    {{ number_format($totalMenunggu, 0, ',', '.') }}
-                </div>
+                <div class="angka">{{ number_format($totalMenunggu, 0, ',', '.') }}</div>
             </div>
 
             <div class="card">
                 <h3>Penyewaan Ditolak</h3>
-                <div class="angka">
-                    {{ number_format($totalDitolak, 0, ',', '.') }}
-                </div>
+                <div class="angka">{{ number_format($totalDitolak, 0, ',', '.') }}</div>
             </div>
 
             <div class="card">
                 <h3>Total Pendapatan</h3>
-                <div class="angka">
-                    Rp {{ number_format($totalPendapatan, 0, ',', '.') }}
-                </div>
+                <div class="angka">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</div>
             </div>
 
             <div class="card">
                 <h3>Total Denda</h3>
-                <div class="angka">
-                    Rp {{ number_format($totalDenda, 0, ',', '.') }}
-                </div>
+                <div class="angka">Rp {{ number_format($totalDenda, 0, ',', '.') }}</div>
             </div>
-
         </section>
-        <section class="panel">
 
+        <section class="panel">
             <div class="panel-heading">
                 <div>
                     <h2>Riwayat Penyewaan</h2>
-                    <p>
-                        Pantau riwayat transaksi, status penyewaan, dan denda pengembalian barang.
-                    </p>
+                    <p>Pantau riwayat transaksi, status penyewaan, dan denda pengembalian barang.</p>
                 </div>
 
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    onclick="window.print()"
-                >
-                    Cetak Laporan
-                </button>
+                <a href="{{ route('admin.laporan.pdf') }}" target="_blank" class="btn btn-primary">
+                    Cetak Laporan (PDF)
+                </a>
             </div>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="number">NO.</th>
-                            <th>KODE PENYEWAAN</th>
-                            <th>PELANGGAN</th>
-                            <th>BARANG DISEWA</th>
-                            <th>TANGGAL SEWA</th>
-                            <th>RENCANA KEMBALI</th>
-                            <th>TOTAL HARGA</th>
-                            <th>DENDA</th>
-                            <th>STATUS</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @forelse ($penyewaan as $item)
-
-                            @php
-                                $dataPengembalian = DB::table('pengembalian')
-                                    ->where('id_penyewaan', $item->id_penyewaan)
-                                    ->first();
-
-                                $status = strtolower($item->status ?? '');
-
-                                $statusClass = match ($status) {
-                                    'dikembalikan' => '',
-                                    'ditolak' => 'unavailable',
-                                    'menunggu' => 'menunggu',
-                                    default => 'berjalan',
-                                };
-
-                                $statusLabel = match ($status) {
-                                    'dikembalikan' => 'Selesai',
-                                    'ditolak' => 'Ditolak',
-                                    'menunggu' => 'Menunggu',
-                                    'disetujui' => 'Disetujui',
-                                    'dibayar' => 'Dibayar',
-                                    default => ucfirst($status ?: 'Tidak diketahui'),
-                                };
-                            @endphp
-
+            <div id="laporan-ajax">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
                             <tr>
-                                <td class="number">
-                                    {{ $penyewaan->firstItem() + $loop->index }}
-                                </td>
+                                <th class="number">NO.</th>
+                                <th>KODE PENYEWAAN</th>
+                                <th>PELANGGAN</th>
+                                <th>BARANG DISEWA</th>
+                                <th>TANGGAL SEWA</th>
+                                <th>RENCANA KEMBALI</th>
+                                <th>TOTAL HARGA</th>
+                                <th>DENDA</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($penyewaan as $item)
+                                @php
+                                    $dataPengembalian = $pengembalian->get($item->id_penyewaan);
+                                    $status = strtolower($item->status ?? '');
 
-                                <td>
-                                    <span class="code">
-                                        {{ $item->kode_penyewaan ?? ('SEWA-' . $item->id_penyewaan) }}
-                                    </span>
-                                </td>
+                                    $statusClass = match ($status) {
+                                        'ditolak', 'dibatalkan' => 'unavailable',
+                                        'menunggu' => 'menunggu',
+                                        'dikembalikan' => '',
+                                        default => 'berjalan',
+                                    };
 
-                                <td>
-                                    <span class="item-name">
-                                        {{ $item->user->nama ?? '-' }}
-                                    </span>
-                                </td>
+                                    $statusLabel = match ($status) {
+                                        'dikembalikan' => 'Selesai',
+                                        'ditolak' => 'Ditolak',
+                                        'menunggu' => 'Menunggu',
+                                        'disetujui' => 'Disetujui',
+                                        'dibayar' => 'Dibayar',
+                                        'dibatalkan' => 'Dibatalkan',
+                                        default => ucfirst($status ?: 'Tidak diketahui'),
+                                    };
+                                @endphp
 
-                                <td>
-                                    @forelse ($item->detailPenyewaan as $detail)
-                                        <div>
-                                            {{ $detail->barang->nama_barang ?? 'Barang tidak ditemukan' }}
-                                            ({{ $detail->jumlah ?? 1 }} unit)
-                                        </div>
-                                    @empty
-                                        -
-                                    @endforelse
-                                </td>
-
-                                <td>
-                                    @if ($item->tanggal_sewa)
-                                        {{ \Carbon\Carbon::parse($item->tanggal_sewa)->format('d-m-Y') }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-
-                                <td>
-                                    @if ($item->tanggal_rencana_kembali)
-                                        {{ \Carbon\Carbon::parse($item->tanggal_rencana_kembali)->format('d-m-Y') }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-
-                                <td>
-                                    <span class="price">
-                                        Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <span class="price">
-                                        @if ($dataPengembalian)
-                                            Rp {{ number_format($dataPengembalian->denda ?? 0, 0, ',', '.') }}
-                                        @else
+                                <tr>
+                                    <td class="number">{{ $penyewaan->firstItem() + $loop->index }}</td>
+                                    <td>
+                                        <span class="code">
+                                            {{ $item->kode_penyewaan ?? ('SEWA-' . $item->id_penyewaan) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="item-name">{{ $item->user->nama ?? '-' }}</span>
+                                    </td>
+                                    <td>
+                                        @forelse ($item->detailPenyewaan as $detail)
+                                            <div>
+                                                {{ $detail->barang->nama_barang ?? 'Barang tidak ditemukan' }}
+                                                ({{ $detail->jumlah ?? 1 }} unit)
+                                            </div>
+                                        @empty
                                             -
-                                        @endif
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <span class="status {{ $statusClass }}">
-                                        {{ $statusLabel }}
-                                    </span>
-                                </td>
-                            </tr>
-
-                        @empty
-
-                            <tr>
-                                <td colspan="9" class="empty-state">
-                                    Belum ada data penyewaan.
-                                </td>
-                            </tr>
-
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="pagination-wrap">
-
-                <div class="pagination-info">
-                    Menampilkan
-                    {{ $penyewaan->firstItem() ?? 0 }}-{{ $penyewaan->lastItem() ?? 0 }}
-                    dari {{ $penyewaan->total() }} data
+                                        @endforelse
+                                    </td>
+                                    <td>
+                                        {{ $item->tanggal_sewa ? \Carbon\Carbon::parse($item->tanggal_sewa)->format('d-m-Y') : '-' }}
+                                    </td>
+                                    <td>
+                                        {{ $item->tanggal_rencana_kembali ? \Carbon\Carbon::parse($item->tanggal_rencana_kembali)->format('d-m-Y') : '-' }}
+                                    </td>
+                                    <td>
+                                        <span class="price">
+                                            Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="price">
+                                            {{ $dataPengembalian ? 'Rp ' . number_format($dataPengembalian->denda ?? 0, 0, ',', '.') : '-' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status {{ $statusClass }}">{{ $statusLabel }}</span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="empty-state">Belum ada data penyewaan.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="pagination">
-                    {{ $penyewaan->appends(request()->query())->links() }}
+                <div class="pagination-area">
+                    <div class="pagination-info">
+                        @if ($penyewaan->total() > 0)
+                            Menampilkan {{ $penyewaan->firstItem() }}-{{ $penyewaan->lastItem() }}
+                            dari {{ $penyewaan->total() }} data
+                        @else
+                            Belum ada data penyewaan.
+                        @endif
+                    </div>
+
+                    <div class="pagination">
+                        {{ $penyewaan->links() }}
+                    </div>
                 </div>
-
             </div>
-
         </section>
 
         <footer class="footer">
             CampRent — Sistem Informasi Persewaan Alat Camping
         </footer>
-
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('laporan-ajax');
+            let controller = null;
+
+            if (!container) return;
+
+            async function muatHalaman(url, ubahRiwayat = true) {
+                if (controller) {
+                    controller.abort();
+                }
+
+                controller = new AbortController();
+                container.classList.add('loading');
+
+                try {
+                    const response = await fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'text/html'
+                        },
+                        signal: controller.signal
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Gagal memuat laporan.');
+                    }
+
+                    const html = await response.text();
+                    const dokumen = new DOMParser().parseFromString(html, 'text/html');
+                    const bagianBaru = dokumen.querySelector('#laporan-ajax');
+
+                    if (!bagianBaru) {
+                        throw new Error('Bagian laporan tidak ditemukan.');
+                    }
+
+                    container.innerHTML = bagianBaru.innerHTML;
+
+                    if (ubahRiwayat) {
+                        history.pushState({}, '', url);
+                    }
+                } catch (error) {
+                    if (error.name === 'AbortError') return;
+
+                    window.location.href = url;
+                } finally {
+                    container.classList.remove('loading');
+                }
+            }
+
+            container.addEventListener('click', function (event) {
+                const link = event.target.closest('.pagination a');
+
+                if (!link) return;
+
+                event.preventDefault();
+                muatHalaman(link.href);
+            });
+
+            window.addEventListener('popstate', function () {
+                muatHalaman(window.location.href, false);
+            });
+        });
+    </script>
 </body>
 </html>

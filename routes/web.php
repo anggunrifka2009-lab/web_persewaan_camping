@@ -40,7 +40,7 @@ Route::middleware(['auth', 'admin'])
         Route::get('/', [LaporanController::class, 'dashboard'])
             ->name('dashboard');
 
-        Route::resource('/kategori', KategoriController::class)
+        Route::resource('kategori', KategoriController::class)
             ->except(['create', 'edit', 'show'])
             ->names([
                 'index' => 'kategori.index',
@@ -49,7 +49,7 @@ Route::middleware(['auth', 'admin'])
                 'destroy' => 'kategori.destroy',
             ]);
 
-        Route::resource('/barang', BarangController::class)
+        Route::resource('barang', BarangController::class)
             ->except(['show']);
 
         Route::get('/penyewaan', [PenyewaanController::class, 'index'])
@@ -72,6 +72,9 @@ Route::middleware(['auth', 'admin'])
 
         Route::get('/laporan', [LaporanController::class, 'index'])
             ->name('laporan.index');
+
+        Route::get('/laporan/pdf', [LaporanController::class, 'cetakPdf'])
+            ->name('laporan.pdf');
     });
 
 Route::middleware('auth')->group(function () {
@@ -99,4 +102,5 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/riwayat-penyewaan', [PenyewaanPelangganController::class, 'riwayat'])
         ->name('penyewaan.riwayat');
+
 });
