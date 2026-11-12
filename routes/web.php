@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PenyewaanPelangganController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\InformasiAkunController;
+use App\Http\Controllers\KelolaUserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])
@@ -37,9 +38,11 @@ Route::middleware(['auth', 'admin'])
     ->name('admin.')
     ->group(function () {
 
+        // Dashboard
         Route::get('/', [LaporanController::class, 'dashboard'])
             ->name('dashboard');
 
+        // Kategori
         Route::resource('kategori', KategoriController::class)
             ->except(['create', 'edit', 'show'])
             ->names([
@@ -49,9 +52,11 @@ Route::middleware(['auth', 'admin'])
                 'destroy' => 'kategori.destroy',
             ]);
 
+        // Barang
         Route::resource('barang', BarangController::class)
             ->except(['show']);
 
+        // Penyewaan
         Route::get('/penyewaan', [PenyewaanController::class, 'index'])
             ->name('penyewaan.index');
 
@@ -70,6 +75,17 @@ Route::middleware(['auth', 'admin'])
         Route::patch('/penyewaan/{id}/dikembalikan', [PenyewaanController::class, 'dikembalikan'])
             ->name('penyewaan.dikembalikan');
 
+        // Kelola User
+        Route::get('/user', [KelolaUserController::class, 'index'])
+            ->name('user.index');
+
+        Route::get('/user/{id}', [KelolaUserController::class, 'show'])
+            ->name('user.show');
+
+        Route::patch('/user/{id}/status', [KelolaUserController::class, 'updateStatus'])
+            ->name('user.updateStatus');
+
+        // Laporan
         Route::get('/laporan', [LaporanController::class, 'index'])
             ->name('laporan.index');
 
@@ -77,6 +93,7 @@ Route::middleware(['auth', 'admin'])
             ->name('laporan.pdf');
     });
 
+// Informasi Akun dan Penyewaan Pelanggan
 Route::middleware('auth')->group(function () {
 
     Route::get('/informasi-akun', [InformasiAkunController::class, 'index'])
@@ -102,5 +119,4 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/riwayat-penyewaan', [PenyewaanPelangganController::class, 'riwayat'])
         ->name('penyewaan.riwayat');
-
 });

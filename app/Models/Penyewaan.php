@@ -35,13 +35,4 @@ class Penyewaan extends Model
         return $this->hasMany(DetailPenyewaan::class, 'id_penyewaan', 'id_penyewaan');
     }
 
-    public function pembayaran()
-    {
-        return $this->hasOne(Pembayaran::class, 'id_penyewaan', 'id_penyewaan');
-    }
-
-    public function pengembalian()
-    {
-        return $this->hasOne(Pengembalian::class, 'id_penyewaan', 'id_penyewaan');
-    }
 }

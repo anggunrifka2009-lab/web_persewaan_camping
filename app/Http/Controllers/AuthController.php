@@ -23,15 +23,25 @@ class AuthController extends Controller
 
         $remember = $request->boolean('remember');
 
-        if (! Auth::attempt($credentials, $remember)) {
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return back()->withErrors([
                 'email' => 'Email atau password salah.',
             ])->onlyInput('email');
         }
 
+        if ($user->role === 'pelanggan' && $user->status !== 'aktif') {
+            return back()->withErrors([
+                'email' => 'Akun kamu sedang dinonaktifkan. Silakan hubungi admin.',
+            ])->onlyInput('email');
+        }
+
+        Auth::login($user, $remember);
+
         $request->session()->regenerate();
 
-        if (Auth::user()->role === 'admin') {
+        if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
 
@@ -57,6 +67,7 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => 'pelanggan',
+            'status' => 'aktif',
             'no_hp' => $data['no_hp'],
             'alamat' => $data['alamat'] ?? null,
         ]);
