@@ -60,6 +60,17 @@ class AuthController extends Controller
             'email' => 'required|email|max:100|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'no_hp' => 'required|string|max:20',
+            'alamat' => 'required|string|max:255',
+        ], [
+            'nama.required' => 'Nama wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 6 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'no_hp.required' => 'Nomor HP wajib diisi.',
+            'alamat.required' => 'Alamat wajib diisi.',
         ]);
 
         $user = User::create([
@@ -69,10 +80,12 @@ class AuthController extends Controller
             'role' => 'pelanggan',
             'status' => 'aktif',
             'no_hp' => $data['no_hp'],
-            'alamat' => $data['alamat'] ?? null,
+            'alamat' => $data['alamat'],
         ]);
 
         Auth::login($user);
+
+        $request->session()->regenerate();
 
         return redirect()->route('home');
     }

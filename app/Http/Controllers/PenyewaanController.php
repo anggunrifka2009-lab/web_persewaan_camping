@@ -16,6 +16,8 @@ class PenyewaanController extends Controller
     private $namaPemilikRekening = 'ANGGUN';
     private $tarifDendaPerHari = 1500;
 
+    private $linkQris = 'https://img.sanishtech.com/u/6f6f3e9e9146ddec88bc5e63fca91756.jpeg';
+
     private $daftarStatus = [
         'menunggu',
         'disetujui',
@@ -25,8 +27,67 @@ class PenyewaanController extends Controller
         'dikembalikan',
     ];
 
+    private function tolakPenyewaanKedaluwarsa()
+    {
+        $penyewaan = Penyewaan::where('status', 'menunggu')
+            ->whereDate('tanggal_sewa', '<', Carbon::today())
+            ->pluck('id_penyewaan');
+
+        foreach ($penyewaan as $id) {
+            DB::transaction(function () use ($id) {
+                $data = Penyewaan::where('id_penyewaan', $id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$data || $data->status !== 'menunggu') {
+                    return;
+                }
+
+                $tanggalSewa = Carbon::parse(
+                    $data->tanggal_sewa
+                )->startOfDay();
+
+                if (Carbon::today()->lessThanOrEqualTo($tanggalSewa)) {
+                    return;
+                }
+
+                $details = DetailPenyewaan::where(
+                    'id_penyewaan',
+                    $data->id_penyewaan
+                )->get();
+
+                if ($details->isEmpty()) {
+                    return;
+                }
+
+                foreach ($details as $detail) {
+                    $barang = Barang::where(
+                        'id_barang',
+                        $detail->id_barang
+                    )
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (!$barang) {
+                        throw new \RuntimeException(
+                            'Barang penyewaan tidak ditemukan.'
+                        );
+                    }
+
+                    $barang->stok += (int) $detail->jumlah;
+                    $barang->save();
+                }
+
+                $data->status = 'ditolak';
+                $data->save();
+            });
+        }
+    }
+
     public function index(Request $request)
     {
+        $this->tolakPenyewaanKedaluwarsa();
+
         $cari = $request->input('cari');
         $status = $request->input('status');
 
@@ -114,6 +175,16 @@ class PenyewaanController extends Controller
                 return ['error' => 'Penyewaan ini sudah diproses.'];
             }
 
+            $tanggalSewa = Carbon::parse(
+                $penyewaan->tanggal_sewa
+            )->startOfDay();
+
+            if (Carbon::today()->greaterThan($tanggalSewa)) {
+                return [
+                    'error' => 'Penyewaan sudah melewati tanggal sewa dan tidak bisa disetujui.',
+                ];
+            }
+
             $details = $penyewaan->detailPenyewaan;
 
             if ($details->isEmpty()) {
@@ -166,7 +237,11 @@ class PenyewaanController extends Controller
                 . "Bank: {$this->namaBank}\n"
                 . "Nomor rekening: {$this->nomorRekening}\n"
                 . "Atas nama: {$this->namaPemilikRekening}\n\n"
-                . "Silakan lakukan pembayaran dan kirim bukti pembayaran melalui WhatsApp ini. Pembayaran akan dikonfirmasi oleh admin. Terima kasih.";
+                . "PEMBAYARAN QRIS\n"
+                . "Silakan buka link QRIS berikut untuk melihat kode QR dan melakukan pembayaran:\n"
+                . "{$this->linkQris}\n\n"
+                . "Silakan lakukan pembayaran sesuai total tagihan dan kirim bukti pembayaran melalui WhatsApp ini. Pembayaran akan dikonfirmasi oleh admin.\n\n"
+                . "Terima kasih telah menggunakan CampRent.";
 
             return [
                 'nomor' => $nomor,
@@ -282,7 +357,7 @@ class PenyewaanController extends Controller
             )->format('d-m-Y');
 
             $pesan = "Halo {$penyewaan->user->nama},\n\n"
-                . "Kami informasikan bahwa penyewaan alat camping kamu telah dibatalkan oleh admin CamRent.\n\n"
+                . "Kami informasikan bahwa penyewaan alat camping kamu telah dibatalkan oleh admin CampRent.\n\n"
                 . "Kode penyewaan: {$penyewaan->kode_penyewaan}\n"
                 . "Tanggal sewa: {$tanggalSewaFormat}\n"
                 . "Total pembayaran: Rp "

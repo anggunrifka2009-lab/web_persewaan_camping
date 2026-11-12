@@ -475,6 +475,7 @@
             border-radius: 10px;
             font-size: 12px;
             line-height: 1.7;
+            transition: opacity .4s ease, transform .4s ease;
         }
 
         .alert-success {
@@ -487,6 +488,12 @@
             border-color: #ead0cb;
             background: #f8eeeb;
             color: #984c43;
+        }
+
+        .alert.hide {
+            opacity: 0;
+            transform: translateY(-8px);
+            pointer-events: none;
         }
 
         @media (max-width: 1200px) {
@@ -874,6 +881,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const notifikasi = document.querySelectorAll('.alert');
+
+            notifikasi.forEach(function (alert) {
+                setTimeout(function () {
+                    alert.classList.add('hide');
+
+                    setTimeout(function () {
+                        alert.remove();
+                    }, 400);
+                }, 5000);
+            });
+
             const form = document.getElementById('form-pencarian');
             const input = document.getElementById('cari-penyewaan');
             const filterStatus = document.getElementById('filter-status');

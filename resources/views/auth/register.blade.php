@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -157,7 +158,8 @@
             font-weight: 600;
         }
 
-        .field input {
+        .field input,
+        .field textarea {
             display: block;
             width: 100%;
             min-width: 0;
@@ -173,13 +175,63 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .field input::placeholder {
+        .field textarea {
+            min-height: 85px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder {
             color: #a0a39c;
         }
 
-        .field input:focus {
+        .field input:focus,
+        .field textarea:focus {
             border-color: var(--forest);
             box-shadow: 0 0 0 3px rgba(36, 75, 56, 0.10);
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            padding-right: 48px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        .toggle-password:hover {
+            color: var(--forest);
+        }
+
+        .toggle-password:focus-visible {
+            outline: 2px solid var(--forest);
+            outline-offset: 2px;
+        }
+
+        .toggle-password svg {
+            display: block;
+            width: 20px;
+            height: 20px;
         }
 
         .submit-btn {
@@ -352,6 +404,7 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -450,27 +503,86 @@
             </div>
 
             <div class="field">
-                <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Buat password"
-                    autocomplete="new-password"
+                <label for="alamat">Alamat lengkap</label>
+                <textarea
+                    id="alamat"
+                    name="alamat"
+                    placeholder="Masukkan alamat lengkap"
+                    autocomplete="street-address"
                     required
-                >
+                >{{ old('alamat') }}</textarea>
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Buat password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        aria-label="Tampilkan password"
+                        aria-pressed="false"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div class="field">
                 <label for="password_confirmation">Konfirmasi password</label>
-                <input
-                    type="password"
-                    id="password_confirmation"
-                    name="password_confirmation"
-                    placeholder="Ulangi password"
-                    autocomplete="new-password"
-                    required
-                >
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        placeholder="Ulangi password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        aria-label="Tampilkan konfirmasi password"
+                        aria-pressed="false"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <button type="submit" class="submit-btn">
@@ -485,6 +597,38 @@
 
     </main>
 </div>
+
+<script>
+    document.querySelectorAll('.toggle-password').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const input = this.parentElement.querySelector('input');
+            const svg = this.querySelector('svg');
+
+            const isHidden = input.type === 'password';
+
+            input.type = isHidden ? 'text' : 'password';
+
+            this.setAttribute(
+                'aria-label',
+                isHidden ? 'Sembunyikan password' : 'Tampilkan password'
+            );
+
+            this.setAttribute('aria-pressed', String(isHidden));
+
+            svg.innerHTML = isHidden
+                ? `
+                    <path d="M3 3l18 18"/>
+                    <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+                    <path d="M9.9 5.2A11 11 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-4 4.7"/>
+                    <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.6 7 10 7a10.7 10.7 0 0 0 3.4-.6"/>
+                `
+                : `
+                    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                `;
+        });
+    });
+</script>
 
 </body>
 </html>
