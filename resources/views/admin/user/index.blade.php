@@ -447,7 +447,7 @@
             <div>
                 <h1 class="page-title">Kelola User</h1>
                 <p class="page-subtitle">
-                    Lihat dan kelola akun pelanggan yang terdaftar di CampRent.
+                    Lihat dan kelola seluruh akun yang terdaftar di CampRent.
                 </p>
             </div>
         </header>
@@ -455,8 +455,7 @@
         <section class="panel">
             <div class="panel-heading">
                 <div>
-                    <h2>Daftar Pelanggan</h2>
-                    <p>Informasi akun pelanggan yang telah terdaftar di website.</p>
+                    <h2>Daftar Akun</h2>
                 </div>
             </div>
 
@@ -577,7 +576,7 @@
                         @empty
                             <tr>
                                 <td colspan="7" class="empty-state">
-                                    Data pelanggan tidak ditemukan.
+                                    Data tidak ditemukan.
                                 </td>
                             </tr>
                         @endforelse
