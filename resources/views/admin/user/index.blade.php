@@ -545,31 +545,33 @@
                                             Detail
                                         </a>
 
-                                        <form
-                                            action="{{ route('admin.user.updateStatus', $user->id_user) }}"
-                                            method="POST"
-                                            class="status-form"
-                                            onsubmit="return confirm('Yakin ingin {{ $user->status === 'aktif' ? 'menonaktifkan' : 'mengaktifkan' }} akun ini?')"
-                                        >
-                                            @csrf
-                                            @method('PATCH')
-
-                                            <input
-                                                type="hidden"
-                                                name="status"
-                                                value="{{ $user->status === 'aktif' ? 'nonaktif' : 'aktif' }}"
+                                        @if ($user->id_user !== auth()->id())
+                                            <form
+                                                action="{{ route('admin.user.updateStatus', $user->id_user) }}"
+                                                method="POST"
+                                                class="status-form"
+                                                onsubmit="return confirm('Yakin ingin {{ $user->status === 'aktif' ? 'menonaktifkan' : 'mengaktifkan' }} akun ini?')"
                                             >
+                                                @csrf
+                                                @method('PATCH')
 
-                                            @if ($user->status === 'aktif')
-                                                <button type="submit" class="btn btn-active">
-                                                    Nonaktifkan
-                                                </button>
-                                            @else
-                                                <button type="submit" class="btn btn-inactive">
-                                                    Aktifkan
-                                                </button>
-                                            @endif
-                                        </form>
+                                                <input
+                                                    type="hidden"
+                                                    name="status"
+                                                    value="{{ $user->status === 'aktif' ? 'nonaktif' : 'aktif' }}"
+                                                >
+
+                                                @if ($user->status === 'aktif')
+                                                    <button type="submit" class="btn btn-active">
+                                                        Nonaktifkan
+                                                    </button>
+                                                @else
+                                                    <button type="submit" class="btn btn-inactive">
+                                                        Aktifkan
+                                                    </button>
+                                                @endif
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
