@@ -192,6 +192,10 @@
             box-shadow: 0 0 0 3px rgba(36, 75, 56, 0.10);
         }
 
+        .field input.invalid {
+            border-color: #d64545;
+        }
+
         .password-wrapper {
             position: relative;
             width: 100%;
@@ -232,6 +236,25 @@
             display: block;
             width: 20px;
             height: 20px;
+        }
+
+        .password-hint {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .password-warning {
+            display: none;
+            margin-top: 6px;
+            color: #d64545;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .password-warning.show {
+            display: block;
         }
 
         .submit-btn {
@@ -457,7 +480,7 @@
             </div>
         @endif
 
-        <form action="{{ route('register.process') }}" method="POST">
+        <form action="{{ route('register.process') }}" method="POST" id="registerForm">
             @csrf
 
             <div class="field">
@@ -523,6 +546,7 @@
                         name="password"
                         placeholder="Buat password"
                         autocomplete="new-password"
+                        minlength="8"
                         required
                     >
 
@@ -547,6 +571,10 @@
                         </svg>
                     </button>
                 </div>
+
+                <p class="password-warning" id="password-warning" aria-live="polite">
+                    Password masih kurang dari 8 karakter.
+                </p>
             </div>
 
             <div class="field">
@@ -559,6 +587,7 @@
                         name="password_confirmation"
                         placeholder="Ulangi password"
                         autocomplete="new-password"
+                        minlength="8"
                         required
                     >
 
@@ -583,6 +612,10 @@
                         </svg>
                     </button>
                 </div>
+
+                <p class="password-warning" id="confirmation-warning" aria-live="polite">
+                    Konfirmasi password tidak sama.
+                </p>
             </div>
 
             <button type="submit" class="submit-btn">
@@ -627,6 +660,48 @@
                     <circle cx="12" cy="12" r="3"/>
                 `;
         });
+    });
+
+    const passwordInput = document.getElementById('password');
+    const confirmationInput = document.getElementById('password_confirmation');
+
+    const passwordWarning = document.getElementById('password-warning');
+    const confirmationWarning = document.getElementById('confirmation-warning');
+
+    function validatePassword() {
+        const password = passwordInput.value;
+        const confirmation = confirmationInput.value;
+
+        const isPasswordInvalid = password.length > 0 && password.length < 8;
+
+        passwordWarning.classList.toggle('show', isPasswordInvalid);
+        passwordInput.classList.toggle('invalid', isPasswordInvalid);
+
+        const isConfirmationInvalid =
+            confirmation.length > 0 && confirmation !== password;
+
+        confirmationWarning.classList.toggle('show', isConfirmationInvalid);
+        confirmationInput.classList.toggle('invalid', isConfirmationInvalid);
+    }
+
+    passwordInput.addEventListener('input', validatePassword);
+    confirmationInput.addEventListener('input', validatePassword);
+
+    document.getElementById('registerForm').addEventListener('submit', function (event) {
+        validatePassword();
+
+        if (
+            passwordInput.value.length < 8 ||
+            passwordInput.value !== confirmationInput.value
+        ) {
+            event.preventDefault();
+
+            if (passwordInput.value.length < 8) {
+                passwordInput.focus();
+            } else {
+                confirmationInput.focus();
+            }
+        }
     });
 </script>
 
