@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Penyewaan - CamRent</title>
+    <title>Data Penyewaan - CampRent</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -132,6 +132,11 @@
             cursor: pointer;
             transition: .2s;
             text-align: center;
+        }
+
+        .btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
         }
 
         .btn-approve {
@@ -620,6 +625,8 @@
                 </div>
             </div>
 
+            <div id="notifikasi-ajax"></div>
+
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
@@ -765,7 +772,8 @@
                                         @if ($item->status === 'menunggu')
                                             <form action="{{ route('admin.penyewaan.setujui', $item->id_penyewaan) }}"
                                                   method="POST"
-                                                  class="action-form">
+                                                  class="action-form whatsapp-action"
+                                                  data-confirm="Setujui penyewaan ini dan buka WhatsApp pelanggan?">
                                                 @csrf
                                                 @method('PATCH')
 
@@ -803,8 +811,8 @@
                                             @if (!$bolehDikembalikan)
                                                 <form action="{{ route('admin.penyewaan.batalkan', $item->id_penyewaan) }}"
                                                       method="POST"
-                                                      class="action-form"
-                                                      onsubmit="return confirm('Yakin ingin membatalkan penyewaan ini? Pastikan pelanggan sudah diberi informasi.')">
+                                                      class="action-form whatsapp-action"
+                                                      data-confirm="Yakin ingin membatalkan penyewaan ini dan membuka WhatsApp pelanggan?">
                                                     @csrf
                                                     @method('PATCH')
 
@@ -875,7 +883,7 @@
         </section>
 
         <footer class="footer">
-            CamRent — Sistem Informasi Persewaan Alat Camping
+            CampRent — Sistem Informasi Persewaan Alat Camping
         </footer>
     </main>
 
@@ -898,9 +906,30 @@
             const filterStatus = document.getElementById('filter-status');
             const hasil = document.getElementById('hasil-penyewaan');
             const pagination = document.getElementById('pagination-penyewaan');
+            const notifikasiAjax = document.getElementById('notifikasi-ajax');
 
             let timer;
             let controller;
+
+            function tampilkanNotifikasi(pesan, tipe = 'success') {
+                notifikasiAjax.innerHTML = '';
+
+                const alert = document.createElement('div');
+                alert.className = tipe === 'success'
+                    ? 'alert alert-success'
+                    : 'alert alert-error';
+
+                alert.textContent = pesan;
+                notifikasiAjax.appendChild(alert);
+
+                setTimeout(function () {
+                    alert.classList.add('hide');
+
+                    setTimeout(function () {
+                        alert.remove();
+                    }, 400);
+                }, 5000);
+            }
 
             async function cariPenyewaan(url = new URL(form.action, window.location.origin)) {
                 if (controller) {
@@ -956,7 +985,7 @@
             input.addEventListener('input', function () {
                 clearTimeout(timer);
 
-                timer = setTimeout(() => {
+                timer = setTimeout(function () {
                     cariPenyewaan();
                 }, 300);
             });
@@ -981,6 +1010,83 @@
 
                 event.preventDefault();
                 cariPenyewaan(new URL(link.href));
+            });
+
+            document.addEventListener('submit', async function (event) {
+                const actionForm = event.target.closest('.whatsapp-action');
+
+                if (!actionForm) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                if (actionForm.dataset.processing === 'true') {
+                    return;
+                }
+
+                const pesanKonfirmasi = actionForm.dataset.confirm;
+
+                if (pesanKonfirmasi && !confirm(pesanKonfirmasi)) {
+                    return;
+                }
+
+                const tabWhatsApp = window.open('about:blank', '_blank');
+
+                if (!tabWhatsApp) {
+                    tampilkanNotifikasi(
+                        'Tab WhatsApp diblokir browser. Izinkan pop-up untuk situs ini, lalu coba lagi.',
+                        'error'
+                    );
+                    return;
+                }
+
+                actionForm.dataset.processing = 'true';
+
+                const tombol = actionForm.querySelector('button[type="submit"]');
+                const teksTombol = tombol.textContent;
+
+                tombol.disabled = true;
+                tombol.textContent = 'Memproses...';
+
+                try {
+                    const response = await fetch(actionForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        },
+                        body: new FormData(actionForm)
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success || !data.whatsapp_url) {
+                        throw new Error(
+                            data.message || 'Permintaan gagal diproses.'
+                        );
+                    }
+
+                    tabWhatsApp.location.href = data.whatsapp_url;
+
+                    tampilkanNotifikasi(data.message, 'success');
+
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 800);
+
+                } catch (error) {
+                    tabWhatsApp.close();
+
+                    tampilkanNotifikasi(
+                        error.message || 'Terjadi kesalahan saat memproses penyewaan.',
+                        'error'
+                    );
+
+                    actionForm.dataset.processing = 'false';
+                    tombol.disabled = false;
+                    tombol.textContent = teksTombol;
+                }
             });
         });
     </script>

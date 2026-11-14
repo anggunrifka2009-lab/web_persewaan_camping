@@ -43,9 +43,8 @@ class PenyewaanController extends Controller
                     return;
                 }
 
-                $tanggalSewa = Carbon::parse(
-                    $data->tanggal_sewa
-                )->startOfDay();
+                $tanggalSewa = Carbon::parse($data->tanggal_sewa)
+                    ->startOfDay();
 
                 if (Carbon::today()->lessThanOrEqualTo($tanggalSewa)) {
                     return;
@@ -152,15 +151,40 @@ class PenyewaanController extends Controller
         return $nomor;
     }
 
-    private function bukaWhatsApp($nomor, $pesan)
+    private function buatUrlWhatsApp($nomor, $pesan)
     {
-        $url = 'https://wa.me/' . $nomor
+        return 'https://wa.me/' . $nomor
             . '?text=' . urlencode($pesan);
+    }
+
+    private function responsWhatsApp(Request $request, $nomor, $pesan, $success)
+    {
+        $url = $this->buatUrlWhatsApp($nomor, $pesan);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $success,
+                'whatsapp_url' => $url,
+            ]);
+        }
 
         return redirect()->away($url);
     }
 
-    public function setujui($id)
+    private function responsError(Request $request, $pesan)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => $pesan,
+            ], 422);
+        }
+
+        return back()->with('error', $pesan);
+    }
+
+    public function setujui(Request $request, $id)
     {
         $hasil = DB::transaction(function () use ($id) {
             $penyewaan = Penyewaan::with([
@@ -172,12 +196,13 @@ class PenyewaanController extends Controller
                 ->firstOrFail();
 
             if ($penyewaan->status !== 'menunggu') {
-                return ['error' => 'Penyewaan ini sudah diproses.'];
+                return [
+                    'error' => 'Penyewaan ini sudah diproses.',
+                ];
             }
 
-            $tanggalSewa = Carbon::parse(
-                $penyewaan->tanggal_sewa
-            )->startOfDay();
+            $tanggalSewa = Carbon::parse($penyewaan->tanggal_sewa)
+                ->startOfDay();
 
             if (Carbon::today()->greaterThan($tanggalSewa)) {
                 return [
@@ -188,7 +213,9 @@ class PenyewaanController extends Controller
             $details = $penyewaan->detailPenyewaan;
 
             if ($details->isEmpty()) {
-                return ['error' => 'Detail barang penyewaan tidak ditemukan.'];
+                return [
+                    'error' => 'Detail barang penyewaan tidak ditemukan.',
+                ];
             }
 
             $nomor = $this->normalisasiNomorWhatsApp(
@@ -201,17 +228,15 @@ class PenyewaanController extends Controller
                 ];
             }
 
-            $penyewaan->status = 'disetujui';
-            $penyewaan->save();
-
             $daftarBarang = '';
 
             foreach ($details as $detail) {
                 $namaBarang = $detail->barang->nama_barang ?? 'Barang';
+
                 $daftarBarang .= "- {$namaBarang} ({$detail->jumlah} unit)\n";
             }
 
-            $tanggalSewa = Carbon::parse(
+            $tanggalSewaFormat = Carbon::parse(
                 $penyewaan->tanggal_sewa
             )->format('d-m-Y');
 
@@ -227,21 +252,21 @@ class PenyewaanController extends Controller
             );
 
             $pesan = "Halo {$penyewaan->user->nama}, penyewaan alat camping kamu telah disetujui.\n\n"
-                . "RINCIAN PENYEWAAN\n"
+                . "▸ RINCIAN PENYEWAAN\n"
                 . "Kode: {$penyewaan->kode_penyewaan}\n"
                 . "Barang:\n{$daftarBarang}"
-                . "Tanggal sewa: {$tanggalSewa}\n"
+                . "Tanggal sewa: {$tanggalSewaFormat}\n"
                 . "Tanggal kembali: {$tanggalKembali}\n"
                 . "Total pembayaran: {$totalHarga}\n\n"
-                . "INFORMASI PEMBAYARAN\n"
+                . "▸ INFORMASI PEMBAYARAN\n"
                 . "Bank: {$this->namaBank}\n"
                 . "Nomor rekening: {$this->nomorRekening}\n"
                 . "Atas nama: {$this->namaPemilikRekening}\n\n"
-                . "PEMBAYARAN QRIS\n"
-                . "Silakan buka link QRIS berikut untuk melihat kode QR dan melakukan pembayaran:\n"
-                . "{$this->linkQris}\n\n"
                 . "Silakan lakukan pembayaran sesuai total tagihan dan kirim bukti pembayaran melalui WhatsApp ini. Pembayaran akan dikonfirmasi oleh admin.\n\n"
                 . "Terima kasih telah menggunakan CampRent.";
+
+            $penyewaan->status = 'disetujui';
+            $penyewaan->save();
 
             return [
                 'nomor' => $nomor,
@@ -250,16 +275,21 @@ class PenyewaanController extends Controller
         });
 
         if (isset($hasil['error'])) {
-            return back()->with('error', $hasil['error']);
+            return $this->responsError(
+                $request,
+                $hasil['error']
+            );
         }
 
-        return $this->bukaWhatsApp(
+        return $this->responsWhatsApp(
+            $request,
             $hasil['nomor'],
-            $hasil['pesan']
+            $hasil['pesan'],
+            'Penyewaan berhasil disetujui.'
         );
     }
 
-    public function konfirmasiPembayaran($id)
+    public function konfirmasiPembayaran(Request $request, $id)
     {
         $hasil = DB::transaction(function () use ($id) {
             $penyewaan = Penyewaan::where('id_penyewaan', $id)
@@ -289,7 +319,7 @@ class PenyewaanController extends Controller
         );
     }
 
-    public function batalkan($id)
+    public function batalkan(Request $request, $id)
     {
         $hasil = DB::transaction(function () use ($id) {
             $penyewaan = Penyewaan::with('user')
@@ -303,9 +333,8 @@ class PenyewaanController extends Controller
                 ];
             }
 
-            $tanggalSewa = Carbon::parse(
-                $penyewaan->tanggal_sewa
-            )->startOfDay();
+            $tanggalSewa = Carbon::parse($penyewaan->tanggal_sewa)
+                ->startOfDay();
 
             if (Carbon::today()->greaterThanOrEqualTo($tanggalSewa)) {
                 return [
@@ -373,12 +402,17 @@ class PenyewaanController extends Controller
         });
 
         if (isset($hasil['error'])) {
-            return back()->with('error', $hasil['error']);
+            return $this->responsError(
+                $request,
+                $hasil['error']
+            );
         }
 
-        return $this->bukaWhatsApp(
+        return $this->responsWhatsApp(
+            $request,
             $hasil['nomor'],
-            $hasil['pesan']
+            $hasil['pesan'],
+            'Penyewaan berhasil dibatalkan.'
         );
     }
 
@@ -395,9 +429,8 @@ class PenyewaanController extends Controller
                 ];
             }
 
-            $tanggalSewa = Carbon::parse(
-                $penyewaan->tanggal_sewa
-            )->startOfDay();
+            $tanggalSewa = Carbon::parse($penyewaan->tanggal_sewa)
+                ->startOfDay();
 
             if (Carbon::today()->lt($tanggalSewa)) {
                 return [
