@@ -40,45 +40,90 @@ CampRent memiliki dua jenis pengguna, yaitu **Admin** dan **Pelanggan**, dengan 
 | CSS | Styling tampilan |
 | JavaScript | Interaksi halaman |
 
-## Akses Website
-
-Website CampRent dapat diakses melalui tautan berikut:
-
-**https://camprent.web.id**
-
-## Screenshot Aplikasi
-
 ## Screenshot Aplikasi
 
 ### Halaman Login dan Register
 
-| Halaman | Screenshot |
-|---|---|
-| Login | <img src="screenshots/login.png" width="400"> |
-| Register | <img src="screenshots/register.png" width="400"> |
+<table width="100%">
+  <tr>
+    <th width="50%">Login</th>
+    <th width="50%">Register</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/login.png" width="100%">
+    </td>
+    <td align="center">
+      <img src="screenshots/register.png" width="100%">
+    </td>
+  </tr>
+</table>
 
 ### 1. Tampilan Pelanggan (User)
 
-| Halaman | Screenshot |
-|---|---|
-| Beranda | <img src="screenshots/user-beranda.png" width="400"> |
-| Daftar Barang | <img src="screenshots/user-barang.png" width="400"> |
-| Detail Barang | <img src="screenshots/user-detail-barang.png" width="400"> |
-| Penyewaan | <img src="screenshots/user-penyewaan.png" width="400"> |
-| Riwayat Penyewaan | <img src="screenshots/user-riwayat.png" width="400"> |
-| Informasi Akun | <img src="screenshots/user-akun.png" width="400"> |
+<table width="100%">
+  <tr>
+    <th width="50%">Beranda</th>
+    <th width="50%">Daftar Barang</th>
+  </tr>
+  <tr>
+    <td><img src="screenshots/user-beranda.png" width="100%"></td>
+    <td><img src="screenshots/user-barang.png" width="100%"></td>
+  </tr>
+  <tr>
+    <th>Detail Barang</th>
+    <th>Penyewaan</th>
+  </tr>
+  <tr>
+    <td><img src="screenshots/user-detail-barang.png" width="100%"></td>
+    <td><img src="screenshots/user-penyewaan.png" width="100%"></td>
+  </tr>
+  <tr>
+    <th>Riwayat Penyewaan</th>
+    <th>Informasi Akun</th>
+  </tr>
+  <tr>
+    <td><img src="screenshots/user-riwayat.png" width="100%"></td>
+    <td><img src="screenshots/user-akun.png" width="100%"></td>
+  </tr>
+</table>
 
 ### 2. Tampilan Admin
 
-| Halaman | Screenshot |
-|---|---|
-| Dashboard Admin | <img src="screenshots/admin-dashboard.png" width="400"> |
-| Kelola Kategori | <img src="screenshots/admin-kategori.png" width="400"> |
-| Kelola Barang | <img src="screenshots/admin-barang.png" width="400"> |
-| Data Penyewaan | <img src="screenshots/admin-penyewaan.png" width="400"> |
-| Kelola Akun | <img src="screenshots/admin-user.png" width="400"> |
-| Laporan Penyewaan | <img src="screenshots/admin-laporan.png" width="400"> |
-| Informasi Akun | <img src="screenshots/admin-akun.png" width="400"> |
+<table width="100%">
+  <tr>
+    <th width="50%">Dashboard Admin</th>
+    <th width="50%">Kelola Kategori</th>
+  </tr>
+  <tr>
+    <td><img src="screenshots/admin-dashboard.png" width="100%"></td>
+    <td><img src="screenshots/admin-kategori.png" width="100%"></td>
+  </tr>
+  <tr>
+    <th>Kelola Barang</th>
+    <th>Data Penyewaan</th>
+  </tr>
+  <tr>
+    <td><img src="screenshots/admin-barang.png" width="100%"></td>
+    <td><img src="screenshots/admin-penyewaan.png" width="100%"></td>
+  </tr>
+  <tr>
+    <th>Kelola Akun</th>
+    <th>Laporan Penyewaan</th>
+  </tr>
+  <tr>
+    <td><img src="screenshots/admin-user.png" width="100%"></td>
+    <td><img src="screenshots/admin-laporan.png" width="100%"></td>
+  </tr>
+  <tr>
+    <th colspan="2">Informasi Akun Admin</th>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <img src="screenshots/admin-akun.png" width="100%">
+    </td>
+  </tr>
+</table>
 
 ## Entity Relationship Diagram (ERD)
 
@@ -191,7 +236,7 @@ Gunakan akun berikut untuk mencoba aplikasi.
 | Role | Email | Password |
 |---|---|---|
 | Admin | admin@sewa.com | 12345678 |
-| Pelanggan | rifka@sewa.com | 12345678 |
+| Pelanggan | user@sewa.com | 12345678 |
 
 ---
 
