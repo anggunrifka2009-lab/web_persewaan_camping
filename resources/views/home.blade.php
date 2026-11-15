@@ -12,19 +12,19 @@
 
     <style>
         :root {
-            --cream: #f5f1e8;
-            --white: #fffefa;
+            --cream: #f2f6f1;
+            --white: #ffffff;
             --forest: #244b38;
             --forest-dark: #193a2b;
-            --forest-soft: #edf1e8;
+            --forest-deep: #122b20;
+            --forest-soft: #e9f0e8;
+            --sage: #d5dfc8;
             --text: #26392e;
-            --muted: #7b817a;
-            --border: #e4e2d9;
+            --muted: #6f7f74;
+            --border: #e0e7de;
         }
 
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -32,6 +32,7 @@
 
         html {
             scroll-padding-top: 90px;
+            scroll-behavior: smooth;
         }
 
         body {
@@ -48,30 +49,43 @@
             text-decoration: none;
         }
 
-        button,
-        input,
-        select {
-            font: inherit;
-        }
+        ul { list-style: none; }
+        button, input, select { font: inherit; }
 
         :focus-visible {
             outline: 2px solid var(--forest);
             outline-offset: 2px;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            * { transition: none !important; }
+        }
+
         .navbar {
             position: sticky;
             top: 0;
             z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
             width: 100%;
-            padding: 15px 2%;
-            border-bottom: 1px solid var(--border);
-            background: rgba(255, 254, 250, 0.97);
-            backdrop-filter: blur(12px);
+            border-bottom: 1px solid transparent;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(14px);
+            transition: box-shadow .25s, border-color .25s;
+        }
+
+        .navbar.scrolled {
+            border-color: var(--border);
+            box-shadow: 0 6px 24px rgba(38, 57, 46, .07);
+        }
+
+        .navbar-inner {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 26px;
+            width: 100%;
+            margin: 0;
+            padding: 13px 3%;
         }
 
         .brand {
@@ -85,31 +99,122 @@
             letter-spacing: -.8px;
         }
 
-        .brand-icon {
-            font-size: 29px;
+        .brand-icon { font-size: 29px; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .nav-link {
+            padding: 9px 16px;
+            color: #5d6f63;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: color .2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--forest);
+        }
+
+        .nav-mobile-only,
+        .nav-tiny-only,
+        .nav-mobile-account {
+            display: none;
+        }
+
+        .nav-logout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: #eb533f;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .nav-logout:hover { color: #c93a27; }
+
+        .nav-mobile-account .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-mobile-account svg {
+            width: 19px;
+            height: 19px;
+            flex-shrink: 0;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .nav-menu {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 14px;
-            min-width: 0;
-            margin-left: auto;
+            gap: 10px;
         }
 
-        .nav-link {
-            padding: 10px 12px;
-            color: var(--text);
+        .nav-login {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
             font-size: 13px;
             font-weight: 600;
-            white-space: nowrap;
-            transition: color .2s;
+            transition: background .2s, border-color .2s;
         }
 
-        .nav-link:hover {
-            color: var(--forest);
+        .nav-login:hover {
+            border-color: #c9cfc2;
+            background: var(--forest-soft);
         }
+
+        .nav-name {
+            max-width: 110px;
+            overflow: hidden;
+            font-size: 13px;
+            font-weight: 600;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .nav-toggle {
+            display: none;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--white);
+            color: var(--forest);
+            cursor: pointer;
+        }
+
+        .nav-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        .nav-toggle .icon-close { display: none; }
+        .navbar.open .nav-toggle .icon-open { display: none; }
+        .navbar.open .nav-toggle .icon-close { display: block; }
 
         .account-dropdown-wrapper {
             position: relative;
@@ -135,8 +240,8 @@
 
         .nav-account {
             display: grid;
-            flex-shrink: 0;
             place-items: center;
+            flex-shrink: 0;
             width: 38px;
             height: 38px;
             border-radius: 50%;
@@ -197,9 +302,7 @@
             transition: background .2s;
         }
 
-        .dropdown-item:hover {
-            background: #f2f3ed;
-        }
+        .dropdown-item:hover { background: #eef3ec; }
 
         .dropdown-item svg {
             width: 17px;
@@ -214,34 +317,20 @@
             background: var(--border);
         }
 
-        .nav-form {
-            margin: 0;
-        }
+        .nav-form { margin: 0; }
 
         .dropdown-logout {
-            display: flex;
-            align-items: center;
             gap: 12px;
-            width: 100%;
             padding: 12px 14px;
-            border: 0;
             border-radius: 10px;
-            background: transparent;
             color: #eb533f;
             font-size: 13px;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
-            transition: background .2s;
         }
 
-        .dropdown-logout:hover {
-            background: #f8eeeb;
-        }
+        .dropdown-logout:hover { background: #f8eeeb; }
 
         .dropdown-logout svg {
             display: block;
-            flex-shrink: 0;
             width: 20px;
             height: 20px;
             color: #eb533f;
@@ -266,151 +355,153 @@
             transition: background .2s;
         }
 
-        .nav-cta:hover {
-            background: var(--forest-dark);
-        }
+        .nav-cta:hover { background: var(--forest-dark); }
 
         .hero {
             position: relative;
-            overflow: hidden;
-            padding: 78px 6%;
+            padding: 110px 6% 150px;
             background:
-                linear-gradient(
-                    90deg,
-                    rgba(19, 49, 35, .94),
-                    rgba(26, 61, 43, .76)
-                ),
-                url('https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=1800&q=85')
-                center 55% / cover;
+                linear-gradient(95deg, rgba(18, 43, 32, .95) 0%, rgba(25, 58, 43, .8) 55%, rgba(25, 58, 43, .45) 100%),
+                url('https://images.unsplash.com/photo-1631635589499-afd87d52bf64?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D') center 55% / cover;
             color: white;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 720px;
-        }
+        .hero-content { max-width: 700px; }
 
         .hero-label {
-            display: inline-block;
-            margin-bottom: 22px;
-            padding: 8px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 8px 14px;
             border: 1px solid rgba(255, 255, 255, .28);
             border-radius: 30px;
+            background: rgba(255, 255, 255, .06);
             color: #e2eadf;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 1.3px;
+        }
+
+        .hero-label::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #9fd3a8;
         }
 
         .hero h1 {
-            max-width: 650px;
-            margin-bottom: 20px;
-            font-size: clamp(34px, 5.2vw, 58px);
-            line-height: 1.14;
-            letter-spacing: -2px;
+            margin-bottom: 22px;
+            font-size: clamp(36px, 5.6vw, 64px);
+            line-height: 1.1;
+            letter-spacing: -2.2px;
         }
 
         .hero h1 span {
-            color: #d5dfc8;
+            display: block;
+            color: var(--sage);
         }
 
         .hero p {
-            max-width: 530px;
-            margin-bottom: 29px;
+            max-width: 540px;
+            margin-bottom: 34px;
             color: #e3e9df;
-            font-size: 15px;
-            line-height: 1.9;
+            font-size: 16px;
+            line-height: 1.85;
         }
 
         .hero-actions {
             display: flex;
             flex-wrap: wrap;
-            align-items: center;
             gap: 13px;
         }
 
-        .hero-primary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 20px;
-            border-radius: 10px;
-            background: var(--white);
-            color: var(--forest);
-            font-size: 13px;
-            font-weight: 700;
-            transition: transform .2s;
-        }
-
-        .hero-primary:hover {
-            transform: translateY(-2px);
-        }
-
+        .hero-primary,
         .hero-secondary {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 13px 19px;
-            border: 1px solid rgba(255, 255, 255, .4);
             border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: transform .2s, background .2s;
+        }
+
+        .hero-primary {
+            padding: 15px 24px;
+            background: var(--white);
+            color: var(--forest);
+        }
+
+        .hero-primary:hover { transform: translateY(-2px); }
+
+        .hero-secondary {
+            padding: 14px 23px;
+            border: 1px solid rgba(255, 255, 255, .4);
             color: white;
-            font-size: 13px;
             font-weight: 600;
         }
 
-        .hero-secondary:hover {
-            background: rgba(255, 255, 255, .1);
+        .hero-secondary:hover { background: rgba(255, 255, 255, .1); }
+
+        .benefits-wrap {
+            position: relative;
+            z-index: 2;
+            padding: 0 6%;
+            margin-top: -76px;
         }
 
         .benefits {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 22px;
-            padding: 27px 6%;
-            border-bottom: 1px solid var(--border);
+            max-width: 1240px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            border-radius: 18px;
             background: var(--white);
+            box-shadow: 0 18px 44px rgba(18, 43, 32, .14);
         }
 
         .benefit {
             display: flex;
-            align-items: center;
-            gap: 13px;
-            min-width: 0;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 28px 26px;
         }
+
+        .benefit + .benefit { border-left: 1px solid var(--border); }
 
         .benefit-icon {
-            display: flex;
+            display: grid;
+            place-items: center;
             flex-shrink: 0;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: #edf1e8;
+            width: 48px;
+            height: 48px;
+            border-radius: 13px;
+            background: var(--forest-soft);
             color: var(--forest);
-            font-size: 20px;
         }
 
-        .benefit h3 {
-            margin-bottom: 5px;
-            font-size: 13px;
-            line-height: 1.5;
+        .benefit-icon svg,
+        .step-icon svg,
+        .contact-list svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
-        .benefit p {
-            color: var(--muted);
-            font-size: 11px;
-            line-height: 1.7;
-        }
+        .benefit h3 { margin-bottom: 6px; font-size: 15px; }
+        .benefit p { color: var(--muted); font-size: 13px; line-height: 1.7; }
 
-        .container {
-            flex: 1;
+        .section {
             width: 100%;
             max-width: 1240px;
             margin: 0 auto;
-            padding: 60px 28px 70px;
+            padding: 90px 28px 0;
         }
 
         .section-header {
@@ -418,26 +509,25 @@
             align-items: flex-end;
             justify-content: space-between;
             gap: 18px;
-            margin-bottom: 27px;
+            margin-bottom: 32px;
         }
 
-        .section-label {
-            margin-bottom: 9px;
-            color: var(--forest);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.8px;
+        .section-header.center {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
         .section-header h2 {
-            margin-bottom: 9px;
-            font-size: clamp(24px, 3vw, 32px);
-            letter-spacing: -1px;
+            margin-bottom: 10px;
+            font-size: clamp(26px, 3.2vw, 36px);
+            letter-spacing: -1.2px;
         }
 
         .section-header p {
+            max-width: 520px;
             color: var(--muted);
-            font-size: 13px;
+            font-size: 14px;
             line-height: 1.8;
         }
 
@@ -451,20 +541,57 @@
             font-size: 12px;
         }
 
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            counter-reset: step;
+        }
+
+        .step {
+            position: relative;
+            padding: 26px 22px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--cream);
+        }
+
+        .step-icon {
+            display: grid;
+            place-items: center;
+            width: 46px;
+            height: 46px;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            background: var(--forest);
+            color: white;
+        }
+
+        .step::after {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            top: 20px;
+            right: 22px;
+            color: #cbd9c8;
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .step h3 { margin-bottom: 8px; font-size: 15px; }
+        .step p { color: var(--muted); font-size: 13px; line-height: 1.75; }
+
         .toolbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
             flex-wrap: wrap;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
-        .toolbar-title {
-            color: var(--text);
-            font-size: 13px;
-            font-weight: 600;
-        }
+        .toolbar-title { font-size: 13px; font-weight: 600; }
 
         .filter-form {
             display: flex;
@@ -476,31 +603,26 @@
 
         .search-form {
             display: flex;
-            align-items: center;
-            gap: 9px;
             flex: 1 1 280px;
             min-width: 0;
         }
 
         .search-form input,
         .filter-form select {
-            height: 40px;
-            padding: 0 13px;
+            height: 42px;
+            padding: 0 14px;
             border: 1px solid var(--border);
             border-radius: 10px;
             outline: none;
             background: var(--white);
             color: var(--text);
-            font-size: 12px;
+            font-size: 13px;
         }
 
-        .search-form input {
-            width: 100%;
-            min-width: 0;
-        }
+        .search-form input { width: 100%; min-width: 0; }
 
         .filter-form select {
-            flex: 0 1 170px;
+            flex: 0 1 180px;
             min-width: 150px;
             cursor: pointer;
         }
@@ -512,54 +634,39 @@
         }
 
         .btn-reset {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 40px;
-            padding: 10px 13px;
+            min-height: 42px;
+            padding: 10px 14px;
             border: 1px solid var(--border);
-            border-radius: 9px;
+            border-radius: 10px;
             background: var(--white);
             color: var(--muted);
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             transition: .2s;
         }
 
         .btn-reset:hover {
-            background: #f4f2eb;
+            background: #eff4ee;
             color: var(--forest);
         }
 
         .empty-state {
-            padding: 48px 20px;
+            padding: 52px 20px;
             border: 1px dashed #cbd2c5;
             border-radius: 16px;
             background: var(--cream);
             text-align: center;
         }
 
-        .empty-icon {
-            margin-bottom: 14px;
-            font-size: 34px;
-        }
-
-        .empty-state h3 {
-            margin-bottom: 8px;
-            font-size: 18px;
-        }
-
-        .empty-state p {
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.8;
-        }
+        .empty-icon { margin-bottom: 14px; font-size: 34px; }
+        .empty-state h3 { margin-bottom: 8px; font-size: 18px; }
+        .empty-state p { color: var(--muted); font-size: 13px; line-height: 1.8; }
 
         .product-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 20px;
+            gap: 22px;
         }
 
         .product-card {
@@ -582,27 +689,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 200px;
+            height: 210px;
             margin: 15px 18px;
             overflow: hidden;
             border: 1px solid var(--border);
             border-radius: 12px;
-            background: #ffffff;
+            background: #fff;
         }
 
         .product-illustration img {
-            display: block;
             width: 100%;
             height: 100%;
             padding: 8px;
             object-fit: contain;
         }
 
-        .no-image {
-            color: var(--muted);
-            font-size: 12px;
-            text-align: center;
-        }
+        .no-image { color: var(--muted); font-size: 12px; text-align: center; }
 
         .product-info {
             display: flex;
@@ -618,19 +720,9 @@
             overflow-wrap: anywhere;
         }
 
-        .stock {
-            margin-bottom: 17px;
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        .stock.available {
-            color: var(--forest);
-        }
-
-        .stock.empty {
-            color: #a52f2f;
-        }
+        .stock { margin-bottom: 17px; color: var(--muted); font-size: 12px; }
+        .stock.available { color: var(--forest); }
+        .stock.empty { color: #a52f2f; }
 
         .product-bottom {
             display: flex;
@@ -642,11 +734,7 @@
             border-top: 1px solid var(--border);
         }
 
-        .price-label {
-            margin-bottom: 6px;
-            color: var(--muted);
-            font-size: 10px;
-        }
+        .price-label { margin-bottom: 6px; color: var(--muted); font-size: 10px; }
 
         .price {
             color: var(--forest);
@@ -656,240 +744,324 @@
             overflow-wrap: anywhere;
         }
 
-        .price span {
-            font-size: 10px;
-            font-weight: 500;
-        }
+        .price span { font-size: 10px; font-weight: 500; }
 
         .rent-btn {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             flex-shrink: 0;
-            padding: 10px 12px;
+            padding: 10px 13px;
             border-radius: 8px;
             background: var(--forest);
             color: white;
             font-size: 11px;
             font-weight: 700;
-            text-align: center;
         }
 
-        .rent-btn:hover {
-            background: var(--forest-dark);
-        }
+        .rent-btn:hover { background: var(--forest-dark); }
 
-        .footer {
-            padding: 30px 6%;
-            background: var(--forest-dark);
-            color: #e4e9df;
-            text-align: center;
-        }
+        .cta-wrap { padding: 90px 28px 90px; }
 
-        .footer strong {
-            display: block;
-            margin-bottom: 8px;
+        .cta {
+            position: relative;
+            overflow: hidden;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 64px 6%;
+            border-radius: 24px;
             color: white;
-            font-size: 17px;
+            text-align: center;
+            background:
+                linear-gradient(rgba(25, 58, 43, .92), rgba(18, 43, 32, .95)),
+                url('https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1600&q=80') center / cover;
         }
 
-        .footer p {
-            font-size: 12px;
+        .cta h2 {
+            max-width: 620px;
+            margin: 0 auto 14px;
+            font-size: clamp(26px, 3.6vw, 40px);
+            line-height: 1.2;
+            letter-spacing: -1.2px;
+        }
+
+        .cta p {
+            max-width: 500px;
+            margin: 0 auto 28px;
+            color: #dbe3d6;
+            font-size: 15px;
             line-height: 1.8;
         }
 
+        .cta .hero-actions { justify-content: center; }
+
+        .footer { background: var(--forest-deep); color: #c9d3c5; }
+
+        .footer-inner {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
+            gap: 48px;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 68px 28px 48px;
+        }
+
+        .footer .brand { margin-bottom: 18px; color: white; }
+        .footer-about { max-width: 320px; font-size: 13px; line-height: 1.85; }
+        .footer h4 { margin-bottom: 18px; color: white; font-size: 14px; }
+        .footer-links { display: grid; gap: 12px; font-size: 13px; }
+
+        .footer-links a { transition: color .2s, padding .2s; }
+
+        .footer-links a:hover {
+            padding-left: 4px;
+            color: white;
+        }
+
+        .contact-list {
+            display: grid;
+            gap: 14px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .contact-list li { display: flex; align-items: flex-start; gap: 11px; }
+        .contact-list a { transition: color .2s; }
+
+        .contact-list a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .contact-list svg {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            color: var(--sage);
+        }
+
+        .footer-bottom { border-top: 1px solid rgba(255, 255, 255, .1); }
+
+        .footer-bottom-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 22px 28px;
+            color: #93a28f;
+            font-size: 12px;
+        }
+
+        @media (max-width: 1000px) {
+            .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+        }
+
         @media (max-width: 900px) {
-            .navbar {
-                padding-right: 3%;
-                padding-left: 3%;
+            .navbar-inner {
+                display: flex;
+                justify-content: space-between;
+                gap: 14px;
+                padding: 12px 20px;
             }
 
-            .hero {
-                padding: 65px 5%;
+            .nav-toggle { display: grid; }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 2px;
+                margin: 0;
+                padding: 10px 20px 18px;
+                border-bottom: 1px solid var(--border);
+                background: var(--white);
+                box-shadow: 0 16px 30px rgba(38, 57, 46, .1);
             }
 
-            .benefits {
-                padding-right: 5%;
-                padding-left: 5%;
-                grid-template-columns: 1fr;
+            .navbar.open .nav-links { display: flex; }
+
+            .nav-mobile-account {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                margin-top: 8px;
+                padding-top: 8px;
+                border-top: 1px solid var(--border);
             }
 
-            .product-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+            .account-dropdown-wrapper { display: none; }
+
+            .nav-link {
+                padding: 13px 4px;
+                text-align: left;
             }
 
-            .filter-form {
-                width: 100%;
-                max-width: none;
+            .nav-logout { justify-content: flex-start; }
+            .hero { padding: 80px 5% 130px; }
+            .benefits-wrap { padding: 0 5%; }
+            .benefits { grid-template-columns: 1fr; }
+
+            .benefit + .benefit {
+                border-top: 1px solid var(--border);
+                border-left: 0;
             }
+
+            .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .filter-form { width: 100%; max-width: none; }
         }
 
         @media (max-width: 650px) {
-            .navbar {
-                align-items: center;
-                flex-wrap: nowrap;
-                gap: 13px;
-                padding: 14px 5%;
-            }
-
-            .brand {
-                font-size: 21px;
-            }
-
-            .brand-icon {
-                font-size: 26px;
-            }
-
-            .nav-menu {
-                width: auto;
-                flex-shrink: 0;
-                justify-content: flex-end;
-                margin-left: auto;
-            }
-
-            .nav-account {
-                width: 38px;
-                height: 38px;
-            }
-
-            .account-dropdown {
-                width: 210px;
-            }
-
-            .hero {
-                padding: 53px 6%;
-            }
-
-            .hero h1 {
-                font-size: 37px;
-            }
-
-            .product-grid {
-                grid-template-columns: minmax(0, 1fr);
-                gap: 15px;
-            }
+            .brand { font-size: 21px; }
+            .brand-icon { font-size: 26px; }
+            .nav-menu { gap: 8px; flex-shrink: 0; }
+            .nav-name, .nav-login { display: none; }
+            .nav-mobile-only { display: block; }
+            .nav-menu .nav-cta { display: none; }
+            .nav-tiny-only { display: block; }
+            .navbar-inner { padding: 11px 16px; }
+            .hero { padding: 64px 6% 120px; }
+            .hero h1 { font-size: 38px; letter-spacing: -1.5px; }
+            .section { padding: 64px 20px 0; }
 
             .section-header {
                 align-items: flex-start;
                 flex-direction: column;
             }
 
-            .filter-form {
-                align-items: stretch;
+            .section-header.center { align-items: center; }
+
+            .steps, .product-grid {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 15px;
             }
 
-            .filter-form select {
+            .filter-form { align-items: stretch; }
+
+            .filter-form select,
+            .search-form {
                 flex: 1 1 100%;
                 width: 100%;
             }
 
-            .search-form {
-                flex: 1 1 100%;
-            }
+            .cta-wrap { padding: 64px 20px; }
+            .cta { padding: 48px 6%; border-radius: 18px; }
+            .footer-inner { grid-template-columns: 1fr; gap: 34px; padding: 52px 20px 36px; }
+            .footer-bottom-inner { padding: 20px; }
         }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar">
-        <a href="{{ url('/') }}" class="brand">
-            <span class="brand-icon">⌁</span>
-            CampRent
-        </a>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="{{ url('/') }}" class="brand">
+                <span class="brand-icon">⌁</span>
+                CampRent
+            </a>
 
-        <div class="nav-menu">
-            @auth
-                <div class="account-dropdown-wrapper" id="accountDropdown">
+            <div class="nav-links" id="nav-links">
+                <a href="#beranda" class="nav-link active" id="nav-home">Beranda</a>
+                <a href="#cara-sewa" class="nav-link">Cara Sewa</a>
+                <a href="#daftar-barang" class="nav-link">Perlengkapan</a>
+                <a href="#kontak" class="nav-link">Kontak</a>
 
-                    <button
-                        type="button"
-                        class="account-dropdown-toggle"
-                        id="account-toggle"
-                        aria-label="Menu akun"
-                        aria-expanded="false"
-                        aria-controls="account-menu"
-                    >
-                        <span class="nav-account">
-                            {{ strtoupper(mb_substr(Auth::user()->nama, 0, 1)) }}
-                        </span>
+                @guest
+                    <a href="{{ route('login') }}" class="nav-link nav-mobile-only">Login</a>
+                    <a href="{{ route('register') }}" class="nav-link nav-tiny-only">Daftar</a>
+                @endguest
 
-                        <svg class="dropdown-arrow"
-                             xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2"
-                             stroke-linecap="round"
-                             stroke-linejoin="round"
-                             aria-hidden="true">
-                            <path d="m6 9 6 6 6-6"/>
-                        </svg>
-                    </button>
-
-                    <div class="account-dropdown" id="account-menu">
-
-                        <a href="{{ route('akun.index') }}" class="dropdown-item">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="1.8"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 aria-hidden="true">
-                                <circle cx="12" cy="8" r="4"/>
-                                <path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
-                            </svg>
+                @auth
+                    <div class="nav-mobile-account">
+                        <a href="{{ route('akun.index') }}" class="nav-link">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M5 21v-2a7 7 0 0 1 14 0v2" /></svg>
                             <span>Informasi Akun</span>
                         </a>
 
                         @if (Auth::user()->role === 'pelanggan')
-                            <a href="{{ route('penyewaan.riwayat') }}" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     stroke-width="1.8"
-                                     stroke-linecap="round"
-                                     stroke-linejoin="round"
-                                     aria-hidden="true">
-                                    <path d="M3 3v5h5"/>
-                                    <path d="M3.5 13a9 9 0 1 0 2.1-6.2L3 8"/>
-                                    <path d="M12 7v5l3 2"/>
-                                </svg>
+                            <a href="{{ route('penyewaan.riwayat') }}" class="nav-link">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v5h5" /><path d="M3.5 13a9 9 0 1 0 2.1-6.2L3 8" /><path d="M12 7v5l3 2" /></svg>
                                 <span>Riwayat Penyewaan</span>
                             </a>
                         @endif
 
-                        <div class="dropdown-divider"></div>
-
                         <form action="{{ route('logout') }}" method="POST" class="nav-form">
                             @csrf
-
-                            <button type="submit" class="dropdown-item dropdown-logout">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    aria-hidden="true"
-                                >
-                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
-                                </svg>
+                            <button type="submit" class="nav-link nav-logout">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /></svg>
                                 <span>Logout</span>
                             </button>
                         </form>
-
                     </div>
-                </div>
-            @else
-                <a href="{{ route('login') }}" class="nav-link">
-                    Login
-                </a>
+                @endauth
+            </div>
 
-                <a href="{{ route('register') }}" class="nav-cta">
-                    Daftar Sekarang
-                </a>
-            @endauth
+            <div class="nav-menu">
+                @auth
+                    <div class="account-dropdown-wrapper" id="accountDropdown">
+                        <button type="button" class="account-dropdown-toggle" id="account-toggle"
+                            aria-label="Menu akun" aria-expanded="false" aria-controls="account-menu">
+                            <span class="nav-account">{{ strtoupper(mb_substr(Auth::user()->nama, 0, 1)) }}</span>
+                            <span class="nav-name">{{ \Illuminate\Support\Str::limit(Auth::user()->nama, 14) }}</span>
+                            <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="m6 9 6 6 6-6" />
+                            </svg>
+                        </button>
+
+                        <div class="account-dropdown" id="account-menu">
+                            <a href="{{ route('akun.index') }}" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="8" r="4" />
+                                    <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
+                                </svg>
+                                <span>Informasi Akun</span>
+                            </a>
+
+                            @if (Auth::user()->role === 'pelanggan')
+                                <a href="{{ route('penyewaan.riwayat') }}" class="dropdown-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M3 3v5h5" />
+                                        <path d="M3.5 13a9 9 0 1 0 2.1-6.2L3 8" />
+                                        <path d="M12 7v5l3 2" />
+                                    </svg>
+                                    <span>Riwayat Penyewaan</span>
+                                </a>
+                            @endif
+
+                            <div class="dropdown-divider"></div>
+
+                            <form action="{{ route('logout') }}" method="POST" class="nav-form">
+                                @csrf
+                                <button type="submit" class="dropdown-item dropdown-logout">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+                                    </svg>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="nav-login">Login</a>
+                    <a href="{{ route('register') }}" class="nav-cta">Daftar</a>
+                @endauth
+
+                <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Buka menu"
+                    aria-expanded="false" aria-controls="nav-links">
+                    <svg class="icon-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+                    <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -897,15 +1069,14 @@
         <div id="toast" style="position:fixed;top:84px;right:24px;z-index:200;max-width:380px;padding:14px 18px;border:1px solid #c8dccb;border-radius:12px;background:#f1f8f2;color:#244b38;font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(38,57,46,.15);">
             ✓ {{ session('success') }}
         </div>
-
         <script>
             setTimeout(() => document.getElementById('toast')?.remove(), 5000);
         </script>
     @endif
 
-    <section class="hero">
+    <section class="hero" id="beranda">
         <div class="hero-content">
-            <div class="hero-label">YOUR CAMPING ADVENTURE STARTS HERE</div>
+            <div class="hero-label">Persewaan alat camping online</div>
 
             <h1>
                 Petualangan seru dimulai dari
@@ -913,55 +1084,90 @@
             </h1>
 
             <p>
-                Temukan dan sewa perlengkapan camping sesuai kebutuhanmu.
-                Lebih praktis untuk mempersiapkan perjalanan dan menikmati alam.
+                Sewa tenda, carrier, kompor, dan perlengkapan camping lainnya tanpa harus membeli.
+                Lihat stok dan harga langsung, lalu pilih yang kamu butuhkan.
             </p>
 
             <div class="hero-actions">
-                <a href="#daftar-barang" class="hero-primary">
-                    Jelajahi Perlengkapan →
-                </a>
+                <a href="#daftar-barang" class="hero-primary">Lihat perlengkapan → </a>
 
                 @guest
-                    <a href="{{ route('register') }}" class="hero-secondary">
-                        Buat Akun
-                    </a>
+                    <a href="{{ route('register') }}" class="hero-secondary">Buat akun</a>
                 @endguest
             </div>
         </div>
     </section>
 
-    <section class="benefits">
-        <div class="benefit">
-            <div class="benefit-icon">⌂</div>
+    <div class="benefits-wrap">
+        <section class="benefits">
+            <div class="benefit">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 12 4l9 16H3Z" /><path d="M12 20v-6" /></svg>
+                </div>
+                <div>
+                    <h3>Perlengkapan lengkap</h3>
+                    <p>Dari tenda sampai alat masak, semua ada untuk menemani perjalananmu.</p>
+                </div>
+            </div>
+
+            <div class="benefit">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20" /><path d="M17 6.5c-.8-1.4-2.6-2-5-2-2.8 0-4.5 1.1-4.5 3s1.7 2.6 4.5 3 4.5 1.1 4.5 3-1.7 3-4.5 3c-2.4 0-4.2-.6-5-2" /></svg>
+                </div>
+                <div>
+                    <h3>Harga jelas per hari</h3>
+                    <p>Tarif sewa dan stok terlihat langsung, tanpa perlu bertanya satu per satu.</p>
+                </div>
+            </div>
+
+            <div class="benefit">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>
+                </div>
+                <div>
+                    <h3>Proses praktis</h3>
+                    <p>Pilih barang, cek detail, dan siapkan perjalananmu dalam beberapa langkah.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="section" id="cara-sewa">
+        <div class="section-header center">
             <div>
-                <h3>Perlengkapan Camping</h3>
-                <p>Pilihan alat untuk menemani perjalananmu.</p>
+                <h2>Menyewa itu mudah</h2>
+                <p>Empat langkah singkat dari memilih alat sampai siap berangkat.</p>
             </div>
         </div>
 
-        <div class="benefit">
-            <div class="benefit-icon">✓</div>
-            <div>
-                <h3>Proses Praktis</h3>
-                <p>Lihat barang dan harga sewa dalam satu halaman.</p>
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg></div>
+                <h3>Cari perlengkapan</h3>
+                <p>Telusuri daftar alat atau saring berdasarkan kategori.</p>
             </div>
-        </div>
-
-        <div class="benefit">
-            <div class="benefit-icon">♧</div>
-            <div>
-                <h3>Siap Berpetualang</h3>
-                <p>Persiapkan kebutuhan sebelum berangkat.</p>
+            <div class="step">
+                <div class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" /></svg></div>
+                <h3>Cek detail barang</h3>
+                <p>Lihat foto, stok, dan harga sewa per hari.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /></svg></div>
+                <h3>Ajukan sewa</h3>
+                <p>Masuk ke akunmu, pilih tanggal, lalu kirim pesanan.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 12 4l9 16H3Z" /><path d="M12 20v-6" /></svg></div>
+                <h3>Berangkat camping</h3>
+                <p>Ambil perlengkapanmu dan nikmati alam.</p>
             </div>
         </div>
     </section>
 
-    <main class="container" id="daftar-barang">
+    <main class="section" id="daftar-barang" style="flex:1;">
 
         <div class="section-header">
             <div>
-                <div class="section-label">CAMPING ESSENTIALS</div>
                 <h2>Daftar Alat Camping</h2>
                 <p>Temukan perlengkapan yang kamu butuhkan untuk petualangan berikutnya.</p>
             </div>
@@ -972,36 +1178,26 @@
         </div>
 
         <div class="toolbar">
-            <div class="toolbar-title">Daftar perlengkapan camping</div>
+            <div class="toolbar-title"></div>
 
             <form action="{{ url('/') }}" method="GET" id="form-pencarian" class="filter-form">
                 <select name="kategori" id="filter-kategori" aria-label="Pilih kategori">
                     <option value="">Semua Kategori</option>
 
                     @foreach ($kategori as $itemKategori)
-                        <option
-                            value="{{ $itemKategori->id_kategori }}"
-                            @selected((string) ($kategoriDipilih ?? '') === (string) $itemKategori->id_kategori)
-                        >
+                        <option value="{{ $itemKategori->id_kategori }}"
+                            @selected((string) ($kategoriDipilih ?? '') === (string) $itemKategori->id_kategori)>
                             {{ $itemKategori->nama_kategori }}
                         </option>
                     @endforeach
                 </select>
 
                 <div class="search-form">
-                    <input
-                        type="text"
-                        name="cari"
-                        id="cari-barang"
-                        placeholder="Cari nama barang..."
-                        value="{{ $cari ?? request('cari') }}"
-                        autocomplete="off"
-                    >
+                    <input type="text" name="cari" id="cari-barang" placeholder="Cari nama barang..."
+                        value="{{ $cari ?? request('cari') }}" autocomplete="off">
                 </div>
 
-                <button type="button" class="btn-reset" id="btn-reset">
-                    Reset
-                </button>
+                <button type="button" class="btn-reset" id="btn-reset">Reset</button>
             </form>
         </div>
 
@@ -1018,11 +1214,7 @@
                         <article class="product-card">
                             <div class="product-illustration">
                                 @if ($item->foto)
-                                    <img
-                                        src="{{ asset('storage/' . $item->foto) }}"
-                                        alt="Foto {{ $item->nama_barang }}"
-                                        loading="lazy"
-                                    >
+                                    <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto {{ $item->nama_barang }}" loading="lazy">
                                 @else
                                     <span class="no-image">Foto belum tersedia</span>
                                 @endif
@@ -1032,9 +1224,7 @@
                                 <h3>{{ $item->nama_barang }}</h3>
 
                                 @if ($item->stok > 0)
-                                    <p class="stock available">
-                                        ✓ Stok tersedia: {{ $item->stok }}
-                                    </p>
+                                    <p class="stock available">✓ Stok tersedia: {{ $item->stok }}</p>
                                 @else
                                     <p class="stock empty">Stok sedang habis</p>
                                 @endif
@@ -1048,9 +1238,7 @@
                                         </p>
                                     </div>
 
-                                    <a href="{{ route('barang.detail', $item->id_barang) }}" class="rent-btn">
-                                        Lihat Detail →
-                                    </a>
+                                    <a href="{{ route('barang.detail', $item->id_barang) }}" class="rent-btn">Lihat Detail</a>
                                 </div>
                             </div>
                         </article>
@@ -1058,13 +1246,85 @@
                 </div>
             @endif
         </div>
-
     </main>
 
-    <footer class="footer">
-        <strong>⌁ CampRent</strong>
-        <p>Sistem Informasi Persewaan Alat Camping</p>
-        <p>Siapkan perlengkapanmu, nikmati petualanganmu.</p>
+    <!-- CTA -->
+    <div class="cta-wrap">
+        <section class="cta">
+            <h2>Siap naik gunung akhir pekan ini?</h2>
+            <p>Pilih perlengkapanmu sekarang, biar kamu bisa fokus menikmati perjalanan.</p>
+
+            <div class="hero-actions">
+                <a href="#daftar-barang" class="hero-primary">Pilih perlengkapan</a>
+
+                @guest
+                    <a href="{{ route('register') }}" class="hero-secondary">Daftar</a>
+                @endguest
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer" id="kontak">
+        <div class="footer-inner">
+            <div>
+                <a href="{{ url('/') }}" class="brand"><span class="brand-icon">⌁</span>CampRent</a>
+                <p class="footer-about">
+                    Sistem informasi persewaan alat camping. Siapkan perlengkapanmu, nikmati petualanganmu.
+                </p>
+            </div>
+
+            <div>
+                <h4>Jelajahi</h4>
+                <ul class="footer-links">
+                    <li><a href="#cara-sewa">Cara menyewa</a></li>
+                    <li><a href="#daftar-barang">Daftar perlengkapan</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>Akun</h4>
+                <ul class="footer-links">
+                    @auth
+                        <li><a href="{{ route('akun.index') }}">Informasi akun</a></li>
+                        @if (Auth::user()->role === 'pelanggan')
+                            <li><a href="{{ route('penyewaan.riwayat') }}">Riwayat penyewaan</a></li>
+                        @endif
+                    @else
+                        <li><a href="{{ route('login') }}">Login</a></li>
+                        <li><a href="{{ route('register') }}">Daftar</a></li>
+                    @endauth
+                </ul>
+            </div>
+
+            <div>
+                <h4>Hubungi kami</h4>
+                <ul class="contact-list">
+                    <li>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+                        <span>Surakarta, Indonesia</span>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+                        <span>sewa@camprent.id</span>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.3L3 21Z" /><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.8.8c-.9-.4-1.7-1.2-2.1-2.1l.8-.8-1-2L9 9.5Z" /></svg>
+                        <a href="https://wa.me/6281234567890?text=Halo%20CampRent%2C%20saya%20ingin%20menyewa%20perlengkapan%20camping"
+                            target="_blank" rel="noopener">WhatsApp: 0812-3456-7890</a>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+                        <span>Setiap hari, 08.00 – 20.00</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-bottom-inner">
+                <span>© {{ date('Y') }} CampRent. Hak cipta dilindungi.</span>
+            </div>
+        </div>
     </footer>
 
     <script>
@@ -1073,7 +1333,7 @@
         }
 
         if (window.location.hash === '#daftar-barang') {
-            setTimeout(function() {
+            setTimeout(function () {
                 history.replaceState(null, null, window.location.pathname + window.location.search);
             }, 100);
         } else {
@@ -1109,6 +1369,121 @@
                 });
             }
 
+            const navbar = document.getElementById('navbar');
+            const navToggle = document.getElementById('nav-toggle');
+
+            const navHome = document.getElementById('nav-home');
+
+            const navLinks = document.querySelectorAll(
+                '#nav-links > .nav-link[href^="#"]:not(#nav-home)'
+            );
+
+            const allMainNavLinks = document.querySelectorAll(
+                '#nav-links > .nav-link[href^="#"]'
+            );
+
+            function setActiveLink(id) {
+                allMainNavLinks.forEach(function (link) {
+                    link.classList.toggle(
+                        'active',
+                        link.getAttribute('href') === '#' + id
+                    );
+                });
+            }
+
+            const onScroll = function () {
+                navbar.classList.toggle('scrolled', window.scrollY > 8);
+
+                if (window.scrollY < 100) {
+                    setActiveLink('beranda');
+                }
+            };
+
+            onScroll();
+            window.addEventListener('scroll', onScroll, { passive: true });
+
+            if (navToggle) {
+                navToggle.addEventListener('click', function () {
+                    const isOpen = navbar.classList.toggle('open');
+                    navToggle.setAttribute('aria-expanded', isOpen);
+                });
+            }
+
+            document.addEventListener('click', function (event) {
+                if (!navbar.contains(event.target)) {
+                    navbar.classList.remove('open');
+
+                    if (navToggle) {
+                        navToggle.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && navbar.classList.contains('open')) {
+                    navbar.classList.remove('open');
+
+                    if (navToggle) {
+                        navToggle.setAttribute('aria-expanded', 'false');
+                        navToggle.focus();
+                    }
+                }
+            });
+
+            if (navHome) {
+                navHome.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    setActiveLink('beranda');
+
+                    navbar.classList.remove('open');
+
+                    if (navToggle) {
+                        navToggle.setAttribute('aria-expanded', 'false');
+                    }
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            navLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    navbar.classList.remove('open');
+
+                    if (navToggle) {
+                        navToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
+
+            if ('IntersectionObserver' in window) {
+                const spy = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (!entry.isIntersecting) return;
+
+                        if (window.scrollY < 100) {
+                            setActiveLink('beranda');
+                            return;
+                        }
+
+                        setActiveLink(entry.target.id);
+                    });
+                }, {
+                    rootMargin: '-40% 0px -55% 0px'
+                });
+
+                ['cara-sewa', 'daftar-barang', 'kontak'].forEach(function (id) {
+                    const el = document.getElementById(id);
+
+                    if (el) {
+                        spy.observe(el);
+                    }
+                });
+            }
+
             const form = document.getElementById('form-pencarian');
             const input = document.getElementById('cari-barang');
             const filterKategori = document.getElementById('filter-kategori');
@@ -1116,95 +1491,95 @@
             const hasil = document.getElementById('hasil-barang');
             const jumlahBarang = document.getElementById('jumlah-barang');
 
-            const hasilAwal = hasil.innerHTML;
-            const jumlahAwal = jumlahBarang.innerHTML;
+            if (form && input && filterKategori && tombolReset && hasil && jumlahBarang) {
+                const hasilAwal = hasil.innerHTML;
+                const jumlahAwal = jumlahBarang.innerHTML;
 
-            let timer = null;
-            let controller = null;
+                let timer = null;
+                let controller = null;
 
-            async function cariBarang() {
-                if (controller) {
-                    controller.abort();
-                }
+                async function cariBarang() {
+                    if (controller) controller.abort();
 
-                controller = new AbortController();
+                    controller = new AbortController();
 
-                const url = new URL(form.action, window.location.origin);
+                    const url = new URL(form.action, window.location.origin);
 
-                if (input.value.trim() !== '') {
-                    url.searchParams.set('cari', input.value.trim());
-                }
-
-                if (filterKategori.value !== '') {
-                    url.searchParams.set('kategori', filterKategori.value);
-                }
-
-                try {
-                    const response = await fetch(url.toString(), {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'text/html'
-                        },
-                        signal: controller.signal
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Gagal memuat');
+                    if (input.value.trim() !== '') {
+                        url.searchParams.set('cari', input.value.trim());
                     }
 
-                    const html = await response.text();
-                    const dokumen = new DOMParser().parseFromString(html, 'text/html');
-
-                    const hasilBaru = dokumen.querySelector('#hasil-barang');
-                    const jumlahBaru = dokumen.querySelector('#jumlah-barang');
-
-                    if (!hasilBaru || !jumlahBaru) {
-                        throw new Error('Struktur hasil pencarian tidak ditemukan');
+                    if (filterKategori.value !== '') {
+                        url.searchParams.set('kategori', filterKategori.value);
                     }
 
-                    hasil.innerHTML = hasilBaru.innerHTML;
-                    jumlahBarang.innerHTML = jumlahBaru.innerHTML;
+                    try {
+                        const response = await fetch(url.toString(), {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'text/html'
+                            },
+                            signal: controller.signal
+                        });
 
-                    window.history.replaceState({}, '', url.toString());
+                        if (!response.ok) {
+                            throw new Error('Gagal memuat');
+                        }
 
-                } catch (error) {
-                    if (error.name !== 'AbortError') {
-                        console.error(error);
+                        const html = await response.text();
+                        const dokumen = new DOMParser().parseFromString(html, 'text/html');
+
+                        const hasilBaru = dokumen.querySelector('#hasil-barang');
+                        const jumlahBaru = dokumen.querySelector('#jumlah-barang');
+
+                        if (!hasilBaru || !jumlahBaru) {
+                            throw new Error('Struktur hasil pencarian tidak ditemukan');
+                        }
+
+                        hasil.innerHTML = hasilBaru.innerHTML;
+                        jumlahBarang.innerHTML = jumlahBaru.innerHTML;
+
+                        window.history.replaceState({}, '', url.toString());
+
+                    } catch (error) {
+                        if (error.name !== 'AbortError') {
+                            console.error(error);
+                        }
                     }
                 }
+
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    clearTimeout(timer);
+                    cariBarang();
+                });
+
+                input.addEventListener('input', function () {
+                    clearTimeout(timer);
+                    timer = setTimeout(cariBarang, 300);
+                });
+
+                filterKategori.addEventListener('change', function () {
+                    clearTimeout(timer);
+                    cariBarang();
+                });
+
+                tombolReset.addEventListener('click', function () {
+                    clearTimeout(timer);
+
+                    if (controller) {
+                        controller.abort();
+                    }
+
+                    input.value = '';
+                    filterKategori.value = '';
+
+                    hasil.innerHTML = hasilAwal;
+                    jumlahBarang.innerHTML = jumlahAwal;
+
+                    window.history.replaceState({}, '', form.action);
+                });
             }
-
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                clearTimeout(timer);
-                cariBarang();
-            });
-
-            input.addEventListener('input', function() {
-                clearTimeout(timer);
-                timer = setTimeout(cariBarang, 300);
-            });
-
-            filterKategori.addEventListener('change', function() {
-                clearTimeout(timer);
-                cariBarang();
-            });
-
-            tombolReset.addEventListener('click', function() {
-                clearTimeout(timer);
-
-                if (controller) {
-                    controller.abort();
-                }
-
-                input.value = '';
-                filterKategori.value = '';
-
-                hasil.innerHTML = hasilAwal;
-                jumlahBarang.innerHTML = jumlahAwal;
-
-                window.history.replaceState({}, '', form.action);
-            });
         });
     </script>
 

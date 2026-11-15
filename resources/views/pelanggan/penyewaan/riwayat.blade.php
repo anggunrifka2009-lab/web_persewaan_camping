@@ -12,14 +12,16 @@
 
     <style>
         :root {
-            --cream: #f5f1e8;
-            --white: #fffefa;
+            --cream: #f2f6f1;
+            --white: #ffffff;
             --forest: #244b38;
             --forest-dark: #193a2b;
-            --forest-soft: #edf1e8;
+            --forest-deep: #122b20;
+            --forest-soft: #e9f0e8;
+            --sage: #d5dfc8;
             --text: #26392e;
-            --muted: #6f766e;
-            --border: #e4e2d9;
+            --muted: #6f7f74;
+            --border: #e0e7de;
             --red: #984c43;
             --red-bg: #f8eeeb;
             --green-bg: #eaf2e7;
@@ -34,6 +36,11 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        html {
+            scroll-padding-top: 90px;
+            scroll-behavior: smooth;
         }
 
         body {
@@ -66,15 +73,26 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
             width: 100%;
-            padding: 15px 2%;
-            border-bottom: 1px solid var(--border);
-            background: rgba(255, 254, 250, 0.97);
-            backdrop-filter: blur(12px);
+            border-bottom: 1px solid transparent;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(14px);
+            transition: box-shadow .25s, border-color .25s;
+        }
+
+        .navbar.scrolled {
+            border-color: var(--border);
+            box-shadow: 0 6px 24px rgba(38, 57, 46, .07);
+        }
+
+        .navbar-inner {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 26px;
+            width: 100%;
+            margin: 0;
+            padding: 13px 3%;
         }
 
         .brand {
@@ -92,30 +110,134 @@
             font-size: 29px;
         }
 
-        .nav-menu {
+        .nav-links {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 14px;
-            min-width: 0;
-            margin-left: auto;
+            justify-content: center;
+            gap: 6px;
         }
 
         .nav-link {
-            padding: 10px 12px;
-            color: var(--text);
-            font-size: 13px;
+            padding: 9px 16px;
+            color: #5d6f63;
+            font-size: 14px;
             font-weight: 600;
             white-space: nowrap;
             transition: color .2s;
         }
 
-        .nav-link:hover {
+        .nav-link:hover,
+        .nav-link.active {
             color: var(--forest);
+        }
+
+        .nav-mobile-only,
+        .nav-tiny-only,
+        .nav-mobile-account {
+            display: none;
+        }
+
+        .nav-logout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: #eb533f;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .nav-logout:hover {
+            color: #c93a27;
+        }
+
+        .nav-mobile-account .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-mobile-account svg {
+            width: 19px;
+            height: 19px;
+            flex-shrink: 0;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .nav-login {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background .2s, border-color .2s;
+        }
+
+        .nav-login:hover {
+            border-color: #c9cfc2;
+            background: var(--forest-soft);
+        }
+
+        .nav-name {
+            max-width: 110px;
+            overflow: hidden;
+            font-size: 13px;
+            font-weight: 600;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .nav-toggle {
+            display: none;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--white);
+            color: var(--forest);
+            cursor: pointer;
+        }
+
+        .nav-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        .nav-toggle .icon-close {
+            display: none;
+        }
+
+        .navbar.open .nav-toggle .icon-open {
+            display: none;
+        }
+
+        .navbar.open .nav-toggle .icon-close {
+            display: block;
         }
 
         .account-dropdown-wrapper {
             position: relative;
+            flex-shrink: 0;
         }
 
         .account-dropdown-toggle {
@@ -137,8 +259,8 @@
 
         .nav-account {
             display: grid;
-            flex-shrink: 0;
             place-items: center;
+            flex-shrink: 0;
             width: 38px;
             height: 38px;
             border-radius: 50%;
@@ -200,7 +322,7 @@
         }
 
         .dropdown-item:hover {
-            background: #f2f3ed;
+            background: #eef3ec;
         }
 
         .dropdown-item svg {
@@ -221,20 +343,11 @@
         }
 
         .dropdown-logout {
-            display: flex;
-            align-items: center;
             gap: 12px;
-            width: 100%;
             padding: 12px 14px;
-            border: 0;
             border-radius: 10px;
-            background: transparent;
             color: #eb533f;
             font-size: 13px;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
-            transition: background .2s;
         }
 
         .dropdown-logout:hover {
@@ -243,7 +356,6 @@
 
         .dropdown-logout svg {
             display: block;
-            flex-shrink: 0;
             width: 20px;
             height: 20px;
             color: #eb533f;
@@ -315,14 +427,6 @@
             height: 20px;
         }
 
-        .section-label {
-            margin-bottom: 9px;
-            color: var(--forest);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.8px;
-        }
-
         .page-head h1 {
             font-size: clamp(24px, 3vw, 32px);
             font-weight: 800;
@@ -341,23 +445,6 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             background: var(--white);
-        }
-
-        .panel-heading {
-            margin-bottom: 22px;
-            padding-bottom: 18px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .panel-heading h2 {
-            font-size: 17px;
-            font-weight: 700;
-        }
-
-        .panel-heading p {
-            margin-top: 4px;
-            color: var(--muted);
-            font-size: 13px;
         }
 
         .alert {
@@ -395,7 +482,7 @@
         }
 
         thead {
-            background: #f9f8f2;
+            background: var(--cream);
         }
 
         th {
@@ -414,7 +501,7 @@
         }
 
         tbody tr:hover {
-            background: #fcfbf7;
+            background: #f8fbf7;
         }
 
         .col-no {
@@ -549,7 +636,7 @@
         }
 
         .pagination span[aria-disabled="true"] span {
-            color: #aaa;
+            color: #aab5ad;
         }
 
         .pagination svg {
@@ -557,21 +644,69 @@
             height: 16px;
         }
 
+        @media (max-width: 1000px) {
+            .footer-inner {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+        }
+
         @media (max-width: 900px) {
-            .navbar {
-                padding-right: 3%;
-                padding-left: 3%;
+            .navbar-inner {
+                display: flex;
+                justify-content: space-between;
+                gap: 14px;
+                padding: 12px 20px;
+            }
+
+            .nav-toggle {
+                display: grid;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 2px;
+                margin: 0;
+                padding: 10px 20px 18px;
+                border-bottom: 1px solid var(--border);
+                background: var(--white);
+                box-shadow: 0 16px 30px rgba(38, 57, 46, .1);
+            }
+
+            .navbar.open .nav-links {
+                display: flex;
+            }
+
+            .nav-mobile-account {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                margin-top: 8px;
+                padding-top: 8px;
+                border-top: 1px solid var(--border);
+            }
+
+            .account-dropdown-wrapper {
+                display: none;
+            }
+
+            .nav-link {
+                padding: 13px 4px;
+                text-align: left;
+            }
+
+            .nav-logout {
+                justify-content: flex-start;
             }
         }
 
         @media (max-width: 650px) {
-            .navbar {
-                align-items: center;
-                flex-wrap: nowrap;
-                gap: 13px;
-                padding: 14px 5%;
-            }
-
             .brand {
                 font-size: 21px;
             }
@@ -581,19 +716,39 @@
             }
 
             .nav-menu {
-                width: auto;
+                gap: 8px;
                 flex-shrink: 0;
-                justify-content: flex-end;
-                margin-left: auto;
             }
 
-            .nav-account {
-                width: 38px;
-                height: 38px;
+            .nav-name,
+            .nav-login {
+                display: none;
             }
 
-            .account-dropdown {
-                width: 210px;
+            .nav-mobile-only {
+                display: block;
+            }
+
+            .nav-menu .nav-cta {
+                display: none;
+            }
+
+            .nav-tiny-only {
+                display: block;
+            }
+
+            .navbar-inner {
+                padding: 11px 16px;
+            }
+
+            .footer-inner {
+                grid-template-columns: 1fr;
+                gap: 34px;
+                padding: 52px 20px 36px;
+            }
+
+            .footer-bottom-inner {
+                padding: 20px;
             }
 
             .container {
@@ -618,122 +773,138 @@
 
 <body>
 
-    <nav class="navbar">
-        <a href="{{ url('/') }}" class="brand">
-            <span class="brand-icon">⌁</span>
-            CampRent
-        </a>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="{{ url('/') }}" class="brand">
+                <span class="brand-icon">⌁</span>
+                CampRent
+            </a>
 
-        <div class="nav-menu">
-            @auth
-                <div class="account-dropdown-wrapper" id="accountDropdown">
+            <div class="nav-links" id="nav-links">
+                <a href="{{ url('/') }}" class="nav-link">Beranda</a>
+                <a href="{{ url('/') }}#cara-sewa" class="nav-link">Cara Sewa</a>
+                <a href="{{ url('/') }}#daftar-barang" class="nav-link">Perlengkapan</a>
+                <a href="{{ url('/') }}#kontak" class="nav-link">Kontak</a>
 
-                    <button
-                        type="button"
-                        class="account-dropdown-toggle"
-                        id="account-toggle"
-                        aria-label="Menu akun"
-                        aria-expanded="false"
-                        aria-controls="account-menu"
-                    >
-                        <span class="nav-account">
-                            {{ strtoupper(mb_substr(Auth::user()->nama, 0, 1)) }}
-                        </span>
+                @guest
+                    <a href="{{ route('login') }}" class="nav-link nav-mobile-only">Login</a>
+                    <a href="{{ route('register') }}" class="nav-link nav-tiny-only">Daftar</a>
+                @endguest
 
-                        <svg class="dropdown-arrow"
-                             xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2"
-                             stroke-linecap="round"
-                             stroke-linejoin="round"
-                             aria-hidden="true">
-                            <path d="m6 9 6 6 6-6"/>
-                        </svg>
-                    </button>
-
-                    <div class="account-dropdown" id="account-menu">
-
-                        <a href="{{ route('akun.index') }}" class="dropdown-item">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="1.8"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 aria-hidden="true">
-                                <circle cx="12" cy="8" r="4"/>
-                                <path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
+                @auth
+                    <div class="nav-mobile-account">
+                        <a href="{{ route('akun.index') }}" class="nav-link">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="8" r="4" />
+                                <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
                             </svg>
                             <span>Informasi Akun</span>
                         </a>
 
                         @if (Auth::user()->role === 'pelanggan')
-                            <a href="{{ route('penyewaan.riwayat') }}" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     stroke-width="1.8"
-                                     stroke-linecap="round"
-                                     stroke-linejoin="round"
-                                     aria-hidden="true">
-                                    <path d="M3 3v5h5"/>
-                                    <path d="M3.5 13a9 9 0 1 0 2.1-6.2L3 8"/>
-                                    <path d="M12 7v5l3 2"/>
+                            <a href="{{ route('penyewaan.riwayat') }}" class="nav-link">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M3 3v5h5" />
+                                    <path d="M3.5 13a9 9 0 1 0 2.1-6.2L3 8" />
+                                    <path d="M12 7v5l3 2" />
                                 </svg>
                                 <span>Riwayat Penyewaan</span>
                             </a>
                         @endif
 
-                        <div class="dropdown-divider"></div>
-
                         <form action="{{ route('logout') }}" method="POST" class="nav-form">
                             @csrf
-
-                            <button type="submit" class="dropdown-item dropdown-logout">
+                            <button type="submit" class="nav-link nav-logout">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
                                 </svg>
                                 <span>Logout</span>
                             </button>
                         </form>
-
                     </div>
-                </div>
-            @else
-                <a href="{{ route('login') }}" class="nav-link">
-                    Login
-                </a>
+                @endauth
+            </div>
 
-                <a href="{{ route('register') }}" class="nav-cta">
-                    Daftar Sekarang
-                </a>
-            @endauth
+            <div class="nav-menu">
+                @auth
+                    <div class="account-dropdown-wrapper" id="accountDropdown">
+                        <button type="button" class="account-dropdown-toggle" id="account-toggle"
+                            aria-label="Menu akun" aria-expanded="false" aria-controls="account-menu">
+                            <span class="nav-account">{{ strtoupper(mb_substr(Auth::user()->nama, 0, 1)) }}</span>
+                            <span class="nav-name">{{ \Illuminate\Support\Str::limit(Auth::user()->nama, 14) }}</span>
+                            <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" aria-hidden="true">
+                                <path d="m6 9 6 6 6-6" />
+                            </svg>
+                        </button>
+
+                        <div class="account-dropdown" id="account-menu">
+                            <a href="{{ route('akun.index') }}" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="8" r="4" />
+                                    <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
+                                </svg>
+                                <span>Informasi Akun</span>
+                            </a>
+
+                            @if (Auth::user()->role === 'pelanggan')
+                                <a href="{{ route('penyewaan.riwayat') }}" class="dropdown-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                        stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M3 3v5h5" />
+                                        <path d="M3.5 13a9 9 0 1 0 2.1-6.2L3 8" />
+                                        <path d="M12 7v5l3 2" />
+                                    </svg>
+                                    <span>Riwayat Penyewaan</span>
+                                </a>
+                            @endif
+
+                            <div class="dropdown-divider"></div>
+
+                            <form action="{{ route('logout') }}" method="POST" class="nav-form">
+                                @csrf
+                                <button type="submit" class="dropdown-item dropdown-logout">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+                                    </svg>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="nav-login">Login</a>
+                    <a href="{{ route('register') }}" class="nav-cta">Daftar</a>
+                @endauth
+
+                <button type="button" class="nav-toggle" id="nav-toggle"
+                    aria-label="Buka menu" aria-expanded="false" aria-controls="nav-links">
+                    <svg class="icon-open" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 7h16M4 12h16M4 17h16" />
+                    </svg>
+                    <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 6l12 12M18 6 6 18" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </nav>
 
     <main class="container">
 
         <div class="page-head">
-
             <div class="page-heading">
-                <a href="{{ route('home') }}"
-                   class="btn-back"
-                   aria-label="Kembali ke Beranda"
-                   title="Kembali ke Beranda">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         aria-hidden="true">
-                        <path d="m12 19-7-7 7-7"/>
-                        <path d="M19 12H5"/>
+                <a href="{{ route('home') }}" class="btn-back"
+                    aria-label="Kembali ke Beranda" title="Kembali ke Beranda">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="m12 19-7-7 7-7" />
+                        <path d="M19 12H5" />
                     </svg>
                 </a>
 
@@ -807,13 +978,9 @@
                             @endphp
 
                             <tr>
-                                <td class="col-no">
-                                    {{ $penyewaan->firstItem() + $loop->index }}
-                                </td>
+                                <td class="col-no">{{ $penyewaan->firstItem() + $loop->index }}</td>
 
-                                <td class="code">
-                                    {{ $item->kode_penyewaan }}
-                                </td>
+                                <td class="code">{{ $item->kode_penyewaan }}</td>
 
                                 <td>
                                     @forelse ($item->detailPenyewaan as $detail)
@@ -826,9 +993,7 @@
                                     @endforelse
                                 </td>
 
-                                <td>
-                                    {{ $tanggalSewa->format('d-m-Y') }}
-                                </td>
+                                <td>{{ $tanggalSewa->format('d-m-Y') }}</td>
 
                                 <td>
                                     {{ \Carbon\Carbon::parse($item->tanggal_rencana_kembali)->format('d-m-Y') }}
@@ -839,9 +1004,7 @@
                                 </td>
 
                                 <td>
-                                    <span class="status {{ $statusClass }}">
-                                        {{ $statusLabel }}
-                                    </span>
+                                    <span class="status {{ $statusClass }}">{{ $statusLabel }}</span>
                                 </td>
 
                                 <td>
@@ -897,28 +1060,68 @@
             const dropdown = document.getElementById('accountDropdown');
             const toggle = document.getElementById('account-toggle');
 
-            if (!dropdown || !toggle) return;
+            if (dropdown && toggle) {
+                toggle.addEventListener('click', function (e) {
+                    e.stopPropagation();
 
-            toggle.addEventListener('click', function (e) {
-                e.stopPropagation();
+                    const isOpen = dropdown.classList.toggle('show');
+                    toggle.setAttribute('aria-expanded', isOpen);
+                });
 
-                const isOpen = dropdown.classList.toggle('show');
-                toggle.setAttribute('aria-expanded', isOpen);
-            });
+                document.addEventListener('click', function (e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                        toggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
 
-            document.addEventListener('click', function (e) {
-                if (!dropdown.contains(e.target)) {
-                    dropdown.classList.remove('show');
-                    toggle.setAttribute('aria-expanded', 'false');
-                }
-            });
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        dropdown.classList.remove('show');
+                        toggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
 
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    dropdown.classList.remove('show');
-                    toggle.setAttribute('aria-expanded', 'false');
-                }
-            });
+            const navbar = document.getElementById('navbar');
+            const navToggle = document.getElementById('nav-toggle');
+            const navLinks = document.querySelectorAll('.nav-links .nav-link');
+
+            const onScroll = () => {
+                navbar.classList.toggle('scrolled', window.scrollY > 8);
+            };
+
+            onScroll();
+            window.addEventListener('scroll', onScroll, { passive: true });
+
+            if (navToggle) {
+                navToggle.addEventListener('click', function () {
+                    const isOpen = navbar.classList.toggle('open');
+                    navToggle.setAttribute('aria-expanded', isOpen);
+                });
+
+                document.addEventListener('click', function (event) {
+                    if (!navbar.contains(event.target)) {
+                        navbar.classList.remove('open');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape' && navbar.classList.contains('open')) {
+                        navbar.classList.remove('open');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                        navToggle.focus();
+                    }
+                });
+
+                navLinks.forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        navbar.classList.remove('open');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
         });
     </script>
 
