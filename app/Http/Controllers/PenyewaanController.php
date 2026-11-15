@@ -16,8 +16,6 @@ class PenyewaanController extends Controller
     private $namaPemilikRekening = 'ANGGUN';
     private $tarifDendaPerHari = 1500;
 
-    private $linkQris = 'https://img.sanishtech.com/u/6f6f3e9e9146ddec88bc5e63fca91756.jpeg';
-
     private $daftarStatus = [
         'menunggu',
         'disetujui',
@@ -27,66 +25,8 @@ class PenyewaanController extends Controller
         'dikembalikan',
     ];
 
-    private function tolakPenyewaanKedaluwarsa()
-    {
-        $penyewaan = Penyewaan::where('status', 'menunggu')
-            ->whereDate('tanggal_sewa', '<', Carbon::today())
-            ->pluck('id_penyewaan');
-
-        foreach ($penyewaan as $id) {
-            DB::transaction(function () use ($id) {
-                $data = Penyewaan::where('id_penyewaan', $id)
-                    ->lockForUpdate()
-                    ->first();
-
-                if (!$data || $data->status !== 'menunggu') {
-                    return;
-                }
-
-                $tanggalSewa = Carbon::parse($data->tanggal_sewa)
-                    ->startOfDay();
-
-                if (Carbon::today()->lessThanOrEqualTo($tanggalSewa)) {
-                    return;
-                }
-
-                $details = DetailPenyewaan::where(
-                    'id_penyewaan',
-                    $data->id_penyewaan
-                )->get();
-
-                if ($details->isEmpty()) {
-                    return;
-                }
-
-                foreach ($details as $detail) {
-                    $barang = Barang::where(
-                        'id_barang',
-                        $detail->id_barang
-                    )
-                        ->lockForUpdate()
-                        ->first();
-
-                    if (!$barang) {
-                        throw new \RuntimeException(
-                            'Barang penyewaan tidak ditemukan.'
-                        );
-                    }
-
-                    $barang->stok += (int) $detail->jumlah;
-                    $barang->save();
-                }
-
-                $data->status = 'ditolak';
-                $data->save();
-            });
-        }
-    }
-
     public function index(Request $request)
     {
-        $this->tolakPenyewaanKedaluwarsa();
-
         $cari = $request->input('cari');
         $status = $request->input('status');
 
@@ -259,11 +199,11 @@ class PenyewaanController extends Controller
                 . "Tanggal sewa: {$tanggalSewaFormat}\n"
                 . "Tanggal kembali: {$tanggalKembali}\n"
                 . "Total pembayaran: {$totalHarga}\n\n"
-                
+
                 . "▸ INFORMASI PEMBAYARAN\n"
                 . "Bank: {$this->namaBank}\n"
                 . "Nomor rekening: {$this->nomorRekening}\n"
-                . "Atas nama: {$this->namaPemilikRekening}\n\n" 
+                . "Atas nama: {$this->namaPemilikRekening}\n\n"
 
                 . "▸ KONFIRMASI PENYEWAAN\n"
                 . "Mohon perhatikan ketentuan berikut:\n"

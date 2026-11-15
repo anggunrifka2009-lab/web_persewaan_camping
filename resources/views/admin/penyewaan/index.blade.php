@@ -928,7 +928,7 @@
                     setTimeout(function () {
                         alert.remove();
                     }, 400);
-                }, 5000);
+                }, 3000);
             }
 
             async function cariPenyewaan(url = new URL(form.action, window.location.origin)) {

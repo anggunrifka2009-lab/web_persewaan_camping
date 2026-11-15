@@ -72,6 +72,21 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
+        .notif {
+            transition: opacity .4s ease, transform .4s ease, margin .4s ease, padding .4s ease, max-height .4s ease;
+            max-height: 100px;
+            overflow: hidden;
+        }
+
+        .notif.is-hiding {
+            opacity: 0;
+            transform: translateY(-5px);
+            max-height: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
         .akun-layout {
             display: grid;
             grid-template-columns: 290px minmax(0, 1fr);
@@ -357,6 +372,14 @@
                 button.querySelector('svg').innerHTML = hidden ? iconSembunyi : iconTampil;
             });
         });
+
+        const notif = document.querySelector('.notif');
+        if (notif) {
+            setTimeout(() => {
+                notif.classList.add('is-hiding');
+                setTimeout(() => notif.remove(), 400);
+            }, 3000);
+        }
     </script>
 </body>
 </html>

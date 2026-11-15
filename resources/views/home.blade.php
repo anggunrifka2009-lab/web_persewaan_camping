@@ -1076,7 +1076,7 @@
 
     <section class="hero" id="beranda">
         <div class="hero-content">
-            <div class="hero-label">Persewaan alat camping online</div>
+            <div class="hero-label">Persewaan Alat Camping Online</div>
 
             <h1>
                 Petualangan seru dimulai dari
@@ -1309,8 +1309,8 @@
                     </li>
                     <li>
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.3L3 21Z" /><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.8.8c-.9-.4-1.7-1.2-2.1-2.1l.8-.8-1-2L9 9.5Z" /></svg>
-                        <a href="https://wa.me/6281234567890?text=Halo%20CampRent%2C%20saya%20ingin%20menyewa%20perlengkapan%20camping"
-                            target="_blank" rel="noopener">WhatsApp: 0812-3456-7890</a>
+                        <a href="https://wa.me/6281567906262?text=Halo%20CampRent%2C%20saya%20ingin%20menyewa%20perlengkapan%20camping"
+                            target="_blank" rel="noopener">WhatsApp: 0815-6790-6262</a>
                     </li>
                     <li>
                         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>

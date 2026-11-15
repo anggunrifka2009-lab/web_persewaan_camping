@@ -134,6 +134,21 @@
             color: #984c43;
         }
 
+        .notif {
+            max-height: 100px;
+            overflow: hidden;
+            transition: opacity .4s ease, transform .4s ease, margin .4s ease, padding .4s ease, max-height .4s ease;
+        }
+
+        .notif.is-hiding {
+            opacity: 0;
+            transform: translateY(-5px);
+            max-height: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
         .notif-icon {
             display: inline-flex;
             align-items: center;
@@ -697,6 +712,13 @@
 
                 muatUser(url);
             });
+        });
+
+        document.querySelectorAll('.notif').forEach(function (notif) {
+            setTimeout(function () {
+                notif.classList.add('is-hiding');
+                setTimeout(function () { notif.remove(); }, 400);
+            }, 3000);
         });
     </script>
 </body>
