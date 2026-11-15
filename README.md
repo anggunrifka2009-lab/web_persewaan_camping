@@ -16,6 +16,7 @@ CampRent memiliki dua jenis pengguna, yaitu **Admin** dan **Pelanggan**, dengan 
 - Mengelola data barang
 - Mengelola data penyewaan
 - Konfirmasi pembayaran
+- Konfirmasi pengambian barang
 - Mengelola pengembalian barang
 - Mengelola laporan penyewaan
 - Mengelola akun pengguna
