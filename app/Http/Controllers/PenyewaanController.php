@@ -251,19 +251,32 @@ class PenyewaanController extends Controller
                 '.'
             );
 
-            $pesan = "Halo {$penyewaan->user->nama}, penyewaan alat camping kamu telah disetujui.\n\n"
+            $pesan = "Halo {$penyewaan->user->nama}, penyewaan alat camping kamu telah disetujui!\n\n"
+
                 . "▸ RINCIAN PENYEWAAN\n"
                 . "Kode: {$penyewaan->kode_penyewaan}\n"
                 . "Barang:\n{$daftarBarang}"
                 . "Tanggal sewa: {$tanggalSewaFormat}\n"
                 . "Tanggal kembali: {$tanggalKembali}\n"
                 . "Total pembayaran: {$totalHarga}\n\n"
+                
                 . "▸ INFORMASI PEMBAYARAN\n"
                 . "Bank: {$this->namaBank}\n"
                 . "Nomor rekening: {$this->nomorRekening}\n"
-                . "Atas nama: {$this->namaPemilikRekening}\n\n"
+                . "Atas nama: {$this->namaPemilikRekening}\n\n" 
+
+                . "▸ KONFIRMASI PENYEWAAN\n"
+                . "Mohon perhatikan ketentuan berikut:\n"
+                . "1. Wajib membawa KTP asli sebagai identitas penyewa saat pengambilan barang.\n"
+                . "2. Pastikan data penyewa sesuai dengan identitas yang dibawa.\n"
+                . "3. Tunjukkan bukti pembayaran kepada admin.\n"
+                . "4. Periksa barang dan jumlahnya sebelum meninggalkan tempat pengambilan.\n\n"
+
                 . "Silakan lakukan pembayaran sesuai total tagihan dan kirim bukti pembayaran melalui WhatsApp ini. Pembayaran akan dikonfirmasi oleh admin.\n\n"
-                . "Terima kasih telah menggunakan CampRent.";
+
+                . "Jika ada pertanyaan terkait penyewaan, silakan hubungi admin CampRent melalui WhatsApp ini.\n\n"
+
+                . "Terima kasih telah menggunakan CampRent!";
 
             $penyewaan->status = 'disetujui';
             $penyewaan->save();
@@ -386,13 +399,17 @@ class PenyewaanController extends Controller
             )->format('d-m-Y');
 
             $pesan = "Halo {$penyewaan->user->nama},\n\n"
+
                 . "Kami informasikan bahwa penyewaan alat camping kamu telah dibatalkan oleh admin CampRent.\n\n"
+
                 . "Kode penyewaan: {$penyewaan->kode_penyewaan}\n"
                 . "Tanggal sewa: {$tanggalSewaFormat}\n"
                 . "Total pembayaran: Rp "
                 . number_format($penyewaan->total_harga, 0, ',', '.')
                 . "\n\n"
+
                 . "Jika kamu sudah melakukan pembayaran, silakan hubungi admin untuk informasi pengembalian dana.\n\n"
+
                 . "Mohon maaf atas ketidaknyamanannya. Terima kasih.";
 
             return [
