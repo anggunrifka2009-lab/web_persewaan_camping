@@ -15,7 +15,6 @@ return new class extends Migration
             $table->date('tanggal_sewa');
             $table->date('tanggal_rencana_kembali');
             $table->decimal('total_harga', 12, 2);
-            $table->enum('jenis_pengambilan', ['diambil', 'dikirim']);
             $table->enum('status', [
                 'menunggu',
                 'disetujui',

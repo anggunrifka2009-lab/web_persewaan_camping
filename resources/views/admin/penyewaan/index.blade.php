@@ -168,6 +168,15 @@
             background: #dfe5f5;
         }
 
+        .btn-pickup {
+            background: #fbeedd;
+            color: #a0612a;
+        }
+
+        .btn-pickup:hover {
+            background: #f5e0c6;
+        }
+
         .btn-return {
             background: #eaf0e8;
             color: var(--forest);
@@ -350,6 +359,11 @@
         .status-dibayar {
             background: #eaf2e7;
             color: #347246;
+        }
+
+        .status-diambil {
+            background: #fbeedd;
+            color: #a0612a;
         }
 
         .status-dikembalikan {
@@ -621,7 +635,7 @@
             <div class="panel-heading">
                 <div>
                     <h2>Daftar Penyewaan</h2>
-                    <p>Pantau status penyewaan, pembayaran, dan pengembalian barang pelanggan.</p>
+                    <p>Pantau status penyewaan, pembayaran, pengambilan, dan pengembalian barang pelanggan.</p>
                 </div>
             </div>
 
@@ -649,6 +663,7 @@
                         <option value="disetujui" @selected(($status ?? request('status')) === 'disetujui')>Disetujui</option>
                         <option value="ditolak" @selected(($status ?? request('status')) === 'ditolak')>Ditolak</option>
                         <option value="dibayar" @selected(($status ?? request('status')) === 'dibayar')>Dibayar</option>
+                        <option value="diambil" @selected(($status ?? request('status')) === 'diambil')>Diambil</option>
                         <option value="dibatalkan" @selected(($status ?? request('status')) === 'dibatalkan')>Dibatalkan</option>
                         <option value="dikembalikan" @selected(($status ?? request('status')) === 'dikembalikan')>Dikembalikan</option>
                     </select>
@@ -694,12 +709,13 @@
 
                                 $tanggalSewa = \Carbon\Carbon::parse($item->tanggal_sewa)->startOfDay();
                                 $hariIni = \Carbon\Carbon::today();
-                                $bolehDikembalikan = $hariIni->greaterThanOrEqualTo($tanggalSewa);
+                                $bolehDiambil = $hariIni->greaterThanOrEqualTo($tanggalSewa);
 
                                 $statusLabel = match ($item->status) {
                                     'menunggu' => 'Menunggu',
                                     'disetujui' => 'Disetujui',
                                     'dibayar' => 'Dibayar',
+                                    'diambil' => 'Diambil',
                                     'dikembalikan' => 'Dikembalikan',
                                     'ditolak' => 'Ditolak',
                                     'dibatalkan' => 'Dibatalkan',
@@ -710,6 +726,7 @@
                                     'menunggu' => 'status-menunggu',
                                     'disetujui' => 'status-disetujui',
                                     'dibayar' => 'status-dibayar',
+                                    'diambil' => 'status-diambil',
                                     'dikembalikan' => 'status-dikembalikan',
                                     'ditolak' => 'status-ditolak',
                                     'dibatalkan' => 'status-dibatalkan',
@@ -808,7 +825,7 @@
                                             </form>
 
                                         @elseif ($item->status === 'dibayar')
-                                            @if (!$bolehDikembalikan)
+                                            @if (!$bolehDiambil)
                                                 <form action="{{ route('admin.penyewaan.batalkan', $item->id_penyewaan) }}"
                                                       method="POST"
                                                       class="action-form whatsapp-action"
@@ -821,22 +838,39 @@
                                                     </button>
                                                 </form>
                                             @else
-                                                <form action="{{ route('admin.penyewaan.dikembalikan', $item->id_penyewaan) }}"
+                                                <form action="{{ route('admin.penyewaan.diambil', $item->id_penyewaan) }}"
                                                       method="POST"
                                                       class="action-form"
-                                                      onsubmit="return confirm('Pastikan barang benar-benar sudah diterima kembali. Konfirmasi pengembalian ini?')">
+                                                      onsubmit="return confirm('Konfirmasi barang sudah diambil pelanggan?')">
                                                     @csrf
                                                     @method('PATCH')
 
-                                                    <button type="submit" class="btn btn-return">
-                                                        Kembalikan
+                                                    <button type="submit" class="btn btn-pickup">
+                                                        Tandai Diambil
                                                     </button>
                                                 </form>
 
                                                 <span class="action-note">
-                                                    Konfirmasi setelah barang diterima dari pelanggan.
+                                                    Klik saat pelanggan mengambil barang.
                                                 </span>
                                             @endif
+
+                                        @elseif ($item->status === 'diambil')
+                                            <form action="{{ route('admin.penyewaan.dikembalikan', $item->id_penyewaan) }}"
+                                                  method="POST"
+                                                  class="action-form"
+                                                  onsubmit="return confirm('Pastikan barang benar-benar sudah diterima kembali. Konfirmasi pengembalian ini?')">
+                                                @csrf
+                                                @method('PATCH')
+
+                                                <button type="submit" class="btn btn-return">
+                                                    Kembalikan
+                                                </button>
+                                            </form>
+
+                                            <span class="action-note">
+                                                Konfirmasi setelah barang diterima dari pelanggan.
+                                            </span>
 
                                         @elseif ($item->status === 'dikembalikan')
                                             <span class="status-badge status-dikembalikan">

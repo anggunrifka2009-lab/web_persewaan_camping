@@ -1076,8 +1076,7 @@
 
     <section class="hero" id="beranda">
         <div class="hero-content">
-            <div class="hero-label">Persewaan Alat Camping Online</div>
-
+            
             <h1>
                 Petualangan seru dimulai dari
                 <span>perlengkapan yang tepat.</span>

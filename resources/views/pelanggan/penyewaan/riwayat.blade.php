@@ -544,6 +544,11 @@
             color: #347246;
         }
 
+        .status-diambil {
+            background: #fbeedd;
+            color: #a0612a;
+        }
+
         .status-dikembalikan {
             background: #e5eee7;
             color: var(--forest);
@@ -955,11 +960,13 @@
                         @forelse ($penyewaan as $item)
                             @php
                                 $tanggalSewa = \Carbon\Carbon::parse($item->tanggal_sewa)->startOfDay();
+                                $tanggalKembali = \Carbon\Carbon::parse($item->tanggal_rencana_kembali)->startOfDay();
 
                                 $statusLabel = match ($item->status) {
                                     'menunggu' => 'Menunggu Persetujuan',
                                     'disetujui' => 'Menunggu Pembayaran',
                                     'dibayar' => 'Sudah Dibayar',
+                                    'diambil' => 'Sedang Disewa',
                                     'dikembalikan' => 'Selesai',
                                     'ditolak' => 'Ditolak',
                                     'dibatalkan' => 'Dibatalkan',
@@ -970,6 +977,7 @@
                                     'menunggu' => 'status-menunggu',
                                     'disetujui' => 'status-disetujui',
                                     'dibayar' => 'status-dibayar',
+                                    'diambil' => 'status-diambil',
                                     'dikembalikan' => 'status-dikembalikan',
                                     'ditolak' => 'status-ditolak',
                                     'dibatalkan' => 'status-dibatalkan',
@@ -995,9 +1003,7 @@
 
                                 <td>{{ $tanggalSewa->format('d-m-Y') }}</td>
 
-                                <td>
-                                    {{ \Carbon\Carbon::parse($item->tanggal_rencana_kembali)->format('d-m-Y') }}
-                                </td>
+                                <td>{{ $tanggalKembali->format('d-m-Y') }}</td>
 
                                 <td class="price">
                                     Rp {{ number_format($item->total_harga, 0, ',', '.') }}
@@ -1017,7 +1023,10 @@
                                             Pembayaran dikonfirmasi. Jadwal sewa dimulai
                                             {{ $tanggalSewa->format('d-m-Y') }}.
                                         @elseif ($item->status === 'dibayar')
-                                            Jadwal sewa telah tiba. Pengembalian menunggu konfirmasi admin.
+                                            Jadwal sewa telah tiba. Silakan ambil barang di tempat.
+                                        @elseif ($item->status === 'diambil')
+                                            Barang sedang kamu sewa. Kembalikan paling lambat
+                                            {{ $tanggalKembali->format('d-m-Y') }}.
                                         @elseif ($item->status === 'dikembalikan')
                                             Barang telah dikembalikan dan penyewaan selesai.
                                         @elseif ($item->status === 'ditolak')

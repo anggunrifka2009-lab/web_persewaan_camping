@@ -75,6 +75,9 @@ Route::middleware(['auth', 'admin'])
         Route::patch('/penyewaan/{id}/dikembalikan', [PenyewaanController::class, 'dikembalikan'])
             ->name('penyewaan.dikembalikan');
 
+        Route::patch('/penyewaan/{id}/diambil', [PenyewaanController::class, 'diambil'])
+            ->name('penyewaan.diambil');
+
         // Kelola User
         Route::get('/user', [KelolaUserController::class, 'index'])
             ->name('user.index');

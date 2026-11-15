@@ -22,6 +22,7 @@ class PenyewaanController extends Controller
         'ditolak',
         'dibayar',
         'dibatalkan',
+        'diambil',
         'dikembalikan',
     ];
 
@@ -380,9 +381,8 @@ class PenyewaanController extends Controller
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            if ($penyewaan->status !== 'dibayar') {
-                return [
-                    'error' => 'Penyewaan ini belum dibayar atau sudah diproses.',
+            if ($penyewaan->status !== 'diambil') {
+                return ['error' => 'Barang belum diambil atau penyewaan sudah diproses.'
                 ];
             }
 
@@ -472,6 +472,36 @@ class PenyewaanController extends Controller
 
         return back()->with('success', $pesan);
     }
+
+    public function diambil($id)
+    {
+        $hasil = DB::transaction(function () use ($id) {
+            $penyewaan = Penyewaan::where('id_penyewaan', $id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($penyewaan->status !== 'dibayar') {
+                return ['error' => 'Hanya penyewaan berstatus dibayar yang bisa ditandai diambil.'];
+            }
+
+            $tanggalSewa = Carbon::parse($penyewaan->tanggal_sewa)->startOfDay();
+
+            if (Carbon::today()->lt($tanggalSewa)) {
+                return ['error' => 'Barang baru bisa diambil saat tanggal sewa tiba.'];
+            }
+
+            $penyewaan->status = 'diambil';
+            $penyewaan->save();
+
+            return ['success' => true];
+        });
+
+    if (isset($hasil['error'])) {
+        return back()->with('error', $hasil['error']);
+    }
+
+    return back()->with('success', 'Barang berhasil ditandai sudah diambil.');
+}
 
     public function tolak($id)
     {

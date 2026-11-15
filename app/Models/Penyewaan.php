@@ -15,7 +15,6 @@ class Penyewaan extends Model
         'tanggal_sewa',
         'tanggal_rencana_kembali',
         'total_harga',
-        'jenis_pengambilan',
         'status',
     ];
 
