@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,7 +58,6 @@
                 opacity: 0;
                 transform: translateY(6px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -128,7 +128,6 @@
             font-size: 12px;
             line-height: 1.7;
             overflow-wrap: anywhere;
-            animation: notifEnter .25s ease-out;
         }
 
         .notif-success {
@@ -163,18 +162,6 @@
         .notif-error .notif-icon {
             background: #f0d8d3;
             color: #984c43;
-        }
-
-        @keyframes notifEnter {
-            from {
-                opacity: 0;
-                transform: translateY(-5px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .btn {
@@ -338,7 +325,6 @@
                 opacity: 0;
                 transform: translateY(10px) scale(.98);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -464,11 +450,57 @@
         .modal-actions .btn-primary {
             border-color: var(--forest);
             background: var(--forest);
-            box-shadow: none;
         }
 
         .modal-actions .btn-primary:hover {
             background: var(--forest-dark);
+        }
+
+        .warning-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 55px;
+            height: 55px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: #fff1e6;
+            color: #c47732;
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .warning-message {
+            margin-bottom: 22px;
+            color: #667085;
+            font-size: 13px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .warning-message strong {
+            color: #263449;
+        }
+
+        .warning-note {
+            margin-bottom: 22px;
+            padding: 12px 14px;
+            border: 1px solid #f0d9c3;
+            border-radius: 10px;
+            background: #fff8f0;
+            color: #96602d;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .btn-danger {
+            border-color: #a94e43 !important;
+            background: #a94e43 !important;
+            color: white !important;
+        }
+
+        .btn-danger:hover {
+            background: #8e3d34 !important;
         }
 
         @media (max-width: 900px) {
@@ -561,9 +593,11 @@
 </head>
 
 <body>
+
     @include('admin.sidebar')
 
     <main class="main" id="kategori-content">
+
         <header class="topbar">
             <div>
                 <h1 class="page-title">Data Kategori</h1>
@@ -574,6 +608,7 @@
         </header>
 
         <section class="panel">
+
             <div class="panel-heading">
                 <div>
                     <h2>Daftar Kategori</h2>
@@ -620,6 +655,7 @@
 
                                 <td>
                                     <div class="actions">
+
                                         <button
                                             type="button"
                                             class="btn btn-edit open-edit-modal"
@@ -633,7 +669,7 @@
                                             action="{{ route('admin.kategori.destroy', $item->id_kategori) }}"
                                             method="POST"
                                             class="delete-form"
-                                            onsubmit="return confirm('Yakin ingin menghapus kategori ini?')"
+                                            data-jumlah="{{ $item->barang()->count() }}"
                                         >
                                             @csrf
                                             @method('DELETE')
@@ -642,9 +678,11 @@
                                                 Hapus
                                             </button>
                                         </form>
+
                                     </div>
                                 </td>
                             </tr>
+
                         @empty
                             <tr>
                                 <td colspan="3" class="empty-state">
@@ -655,12 +693,15 @@
                     </tbody>
                 </table>
             </div>
+
         </section>
 
         <footer class="footer">
             CampRent — Sistem Informasi Persewaan Alat Camping
         </footer>
+
     </main>
+
 
     <div
         class="modal-overlay {{ $errors->any() && old('_form_type') === 'create' ? 'show' : '' }}"
@@ -670,17 +711,21 @@
         aria-labelledby="createModalTitle"
     >
         <div class="modal">
+
             <div class="modal-header">
                 <h2 class="modal-title" id="createModalTitle">Tambah Kategori</h2>
-                <button type="button" class="modal-close" data-close-modal aria-label="Tutup">
+
+                <button type="button" class="modal-close" data-close-modal>
                     &times;
                 </button>
             </div>
 
             <div class="modal-body">
+
                 @if ($errors->any() && old('_form_type') === 'create')
                     <div class="alert-error">
                         <strong>Periksa kembali data yang dimasukkan:</strong>
+
                         <ul style="padding-left:18px;margin-top:6px;">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -691,6 +736,7 @@
 
                 <form action="{{ route('admin.kategori.store') }}" method="POST">
                     @csrf
+
                     <input type="hidden" name="_form_type" value="create">
 
                     <div class="form-group">
@@ -726,6 +772,7 @@
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -738,17 +785,21 @@
         aria-labelledby="editModalTitle"
     >
         <div class="modal">
+
             <div class="modal-header">
                 <h2 class="modal-title" id="editModalTitle">Edit Kategori</h2>
-                <button type="button" class="modal-close" data-close-modal aria-label="Tutup">
+
+                <button type="button" class="modal-close" data-close-modal>
                     &times;
                 </button>
             </div>
 
             <div class="modal-body">
+
                 @if ($errors->any() && old('_form_type') === 'edit')
                     <div class="alert-error">
                         <strong>Periksa kembali data yang dimasukkan:</strong>
+
                         <ul style="padding-left:18px;margin-top:6px;">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -807,22 +858,118 @@
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
 
+
+    @if (session('warning'))
+        @php
+            $warning = session('warning');
+        @endphp
+
+        <div
+            class="modal-overlay show"
+            id="deleteWarningModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="deleteWarningTitle"
+        >
+            <div class="modal">
+
+                <div class="modal-header">
+                    <h2 class="modal-title" id="deleteWarningTitle">
+                        Peringatan Penghapusan
+                    </h2>
+
+                    <button type="button" class="modal-close" data-close-modal>
+                        &times;
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="warning-icon">
+                        !
+                    </div>
+
+                    <div class="warning-message">
+                        Kategori <strong>{{ $warning['nama_kategori'] }}</strong>
+                        masih digunakan oleh
+                        <strong>{{ $warning['jumlah_barang'] }} barang</strong>.
+
+                        <br><br>
+
+                        Jika kategori ini dihapus, seluruh barang yang berada
+                        dalam kategori tersebut juga akan ikut dihapus.
+
+                        <br><br>
+
+                        Apakah kamu yakin ingin melanjutkan?
+                    </div>
+
+                    <div class="warning-note">
+                        <strong>Perhatian:</strong>
+                        Penghapusan ini akan menghilangkan data barang dari
+                        daftar perlengkapan CampRent dan tidak dapat dibatalkan.
+                    </div>
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-light"
+                            data-close-modal
+                        >
+                            Batal
+                        </button>
+
+                        <form
+                            action="{{ route('admin.kategori.destroy', $warning['id_kategori']) }}"
+                            method="POST"
+                            style="flex:1;display:flex;"
+                        >
+                            @csrf
+                            @method('DELETE')
+
+                            <input
+                                type="hidden"
+                                name="konfirmasi"
+                                value="1"
+                            >
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                                style="width:100%;"
+                            >
+                                Ya, Hapus
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endif
+
     <script>
         const createModal = document.getElementById('createModal');
         const editModal = document.getElementById('editModal');
+
         const createInput = document.getElementById('createNamaKategori');
         const editInput = document.getElementById('editNamaKategori');
+
         const editForm = document.getElementById('editCategoryForm');
         const editIdInput = document.getElementById('editKategoriId');
 
         const kategoriBaseUrl = @json(url('/admin/kategori'));
 
-        function openModal(modal, input) {
+        function openModal(modal, input = null) {
             closeAllModals();
+
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
 
@@ -849,10 +996,32 @@
                 const name = button.dataset.name;
 
                 editIdInput.value = id;
+
                 editForm.action = kategoriBaseUrl + '/' + encodeURIComponent(id);
+
                 editInput.value = name;
 
                 openModal(editModal, editInput);
+            });
+        });
+
+        document.querySelectorAll('.delete-form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+
+                const jumlahBarang = parseInt(this.dataset.jumlah, 10);
+
+                if (jumlahBarang === 0) {
+                    const yakin = confirm(
+                        'Yakin ingin menghapus kategori ini?'
+                    );
+
+                    if (!yakin) {
+                        event.preventDefault();
+                    }
+
+                    return;
+                }
+
             });
         });
 
@@ -874,19 +1043,33 @@
             }
         });
 
+
         @if ($errors->any() && old('_form_type') === 'create')
             openModal(createModal, createInput);
+
         @elseif ($errors->any() && old('_form_type') === 'edit')
+
             const previousEditId = @json(old('_edit_id'));
 
             if (previousEditId) {
                 editIdInput.value = previousEditId;
-                editForm.action = kategoriBaseUrl + '/' + encodeURIComponent(previousEditId);
+
+                editForm.action =
+                    kategoriBaseUrl + '/' + encodeURIComponent(previousEditId);
             }
 
             editInput.value = @json(old('nama_kategori', ''));
+
             openModal(editModal, editInput);
+
         @endif
+
+        const warningModal = document.getElementById('deleteWarningModal');
+
+        if (warningModal) {
+            document.body.style.overflow = 'hidden';
+        }
     </script>
+
 </body>
 </html>
