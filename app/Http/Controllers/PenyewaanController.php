@@ -202,15 +202,18 @@ class PenyewaanController extends Controller
                 . "Total pembayaran: {$totalHarga}\n\n"
 
                 . "▸ INFORMASI PEMBAYARAN\n"
-                . "Bank: {$this->namaBank}\n"
-                . "Nomor rekening: {$this->nomorRekening}\n"
-                . "Atas nama: {$this->namaPemilikRekening}\n\n"
+                . "Metode pembayaran:\n"
+                . "1. Transfer bank\n"
+                . "   Bank: {$this->namaBank}\n"
+                . "   Nomor rekening: {$this->nomorRekening}\n"
+                . "   Atas nama: {$this->namaPemilikRekening}\n"
+                . "2. Tunai saat pengambilan barang (Cash on Pickup).\n\n"
 
                 . "▸ KONFIRMASI PENYEWAAN\n"
                 . "Mohon perhatikan ketentuan berikut:\n"
                 . "1. Wajib membawa KTP asli sebagai identitas penyewa saat pengambilan barang.\n"
                 . "2. Pastikan data penyewa sesuai dengan identitas yang dibawa.\n"
-                . "3. Tunjukkan bukti pembayaran kepada admin.\n"
+                . "3. Jika pembayaran transfer, tunjukkan bukti pembayaran. Jika tunai, lakukan pembayaran langsung saat pengambilan barang.\n"
                 . "4. Periksa barang dan jumlahnya sebelum meninggalkan tempat pengambilan.\n\n"
 
                 . "Silakan lakukan pembayaran sesuai total tagihan dan kirim bukti pembayaran melalui WhatsApp ini. Pembayaran akan dikonfirmasi oleh admin.\n\n"

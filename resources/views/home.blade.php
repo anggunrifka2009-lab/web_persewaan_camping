@@ -42,13 +42,10 @@
             background: var(--white);
             color: var(--text);
             font-family: 'Inter', sans-serif;
+            overflow-x: clip;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
+        a { color: inherit; text-decoration: none; }
         ul { list-style: none; }
         button, input, select { font: inherit; }
 
@@ -62,6 +59,7 @@
             * { transition: none !important; }
         }
 
+        /*Navbar*/
         .navbar {
             position: sticky;
             top: 0;
@@ -118,15 +116,11 @@
         }
 
         .nav-link:hover,
-        .nav-link.active {
-            color: var(--forest);
-        }
+        .nav-link.active { color: var(--forest); }
 
         .nav-mobile-only,
         .nav-tiny-only,
-        .nav-mobile-account {
-            display: none;
-        }
+        .nav-mobile-account { display: none; }
 
         .nav-logout {
             display: flex;
@@ -258,9 +252,7 @@
             transition: transform .2s;
         }
 
-        .account-dropdown-wrapper.show .dropdown-arrow {
-            transform: rotate(180deg);
-        }
+        .account-dropdown-wrapper.show .dropdown-arrow { transform: rotate(180deg); }
 
         .account-dropdown {
             position: absolute;
@@ -357,6 +349,24 @@
 
         .nav-cta:hover { background: var(--forest-dark); }
 
+        /*Toast*/
+        .toast {
+            position: fixed;
+            top: 84px;
+            right: 24px;
+            z-index: 200;
+            max-width: 380px;
+            padding: 14px 18px;
+            border: 1px solid #c8dccb;
+            border-radius: 12px;
+            background: #f1f8f2;
+            color: #244b38;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(38, 57, 46, .15);
+        }
+
+        /*Hero*/
         .hero {
             position: relative;
             padding: 110px 6% 150px;
@@ -367,28 +377,6 @@
         }
 
         .hero-content { max-width: 700px; }
-
-        .hero-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 24px;
-            padding: 8px 14px;
-            border: 1px solid rgba(255, 255, 255, .28);
-            border-radius: 30px;
-            background: rgba(255, 255, 255, .06);
-            color: #e2eadf;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .hero-label::before {
-            content: "";
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #9fd3a8;
-        }
 
         .hero h1 {
             margin-bottom: 22px;
@@ -444,6 +432,7 @@
 
         .hero-secondary:hover { background: rgba(255, 255, 255, .1); }
 
+        /*Benefits*/
         .benefits-wrap {
             position: relative;
             z-index: 2;
@@ -497,6 +486,7 @@
         .benefit h3 { margin-bottom: 6px; font-size: 15px; }
         .benefit p { color: var(--muted); font-size: 13px; line-height: 1.7; }
 
+        /*Sections*/
         .section {
             width: 100%;
             max-width: 1240px;
@@ -582,6 +572,7 @@
         .step h3 { margin-bottom: 8px; font-size: 15px; }
         .step p { color: var(--muted); font-size: 13px; line-height: 1.75; }
 
+        /*Toolbar & produk*/
         .toolbar {
             display: flex;
             align-items: center;
@@ -760,6 +751,7 @@
 
         .rent-btn:hover { background: var(--forest-dark); }
 
+        /*CTA*/
         .cta-wrap { padding: 90px 28px 90px; }
 
         .cta {
@@ -794,6 +786,7 @@
 
         .cta .hero-actions { justify-content: center; }
 
+        /*Footer*/
         .footer { background: var(--forest-deep); color: #c9d3c5; }
 
         .footer-inner {
@@ -832,9 +825,13 @@
             text-decoration: underline;
         }
 
+        .contact-list span,
+        .contact-list a { min-width: 0; overflow-wrap: anywhere; }
+
         .contact-list svg {
             width: 18px;
             height: 18px;
+            flex-shrink: 0;
             margin-top: 2px;
             color: var(--sage);
         }
@@ -852,6 +849,13 @@
             padding: 22px 28px;
             color: #93a28f;
             font-size: 12px;
+        }
+
+        /*Responsif*/
+        @media (max-width: 1100px) {
+            .section { padding: 80px 24px 0; }
+            .benefit { padding: 24px 20px; gap: 12px; }
+            .product-grid { gap: 18px; }
         }
 
         @media (max-width: 1000px) {
@@ -904,7 +908,11 @@
             }
 
             .nav-logout { justify-content: flex-start; }
+
             .hero { padding: 80px 5% 130px; }
+            .hero-content { max-width: 100%; }
+            .hero p { font-size: 15px; }
+
             .benefits-wrap { padding: 0 5%; }
             .benefits { grid-template-columns: 1fr; }
 
@@ -913,8 +921,13 @@
                 border-left: 0;
             }
 
+            .section-header h2 { letter-spacing: -.8px; }
             .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .toolbar { align-items: stretch; }
             .filter-form { width: 100%; max-width: none; }
+            .cta-wrap { padding: 72px 24px; }
+            .footer-inner { padding: 56px 24px 40px; }
+            .footer-bottom-inner { padding: 20px 24px; }
         }
 
         @media (max-width: 650px) {
@@ -926,8 +939,22 @@
             .nav-menu .nav-cta { display: none; }
             .nav-tiny-only { display: block; }
             .navbar-inner { padding: 11px 16px; }
+
+            .toast {
+                top: 76px;
+                left: 16px;
+                right: 16px;
+                max-width: none;
+            }
+
             .hero { padding: 64px 6% 120px; }
             .hero h1 { font-size: 38px; letter-spacing: -1.5px; }
+            .hero-actions { flex-direction: column; }
+            .hero-primary, .hero-secondary { width: 100%; }
+
+            .benefits-wrap { margin-top: -64px; }
+            .benefit { padding: 20px 18px; }
+
             .section { padding: 64px 20px 0; }
 
             .section-header {
@@ -942,6 +969,9 @@
                 gap: 15px;
             }
 
+            .step { padding: 22px 18px; }
+            .step::after { font-size: 28px; }
+
             .filter-form { align-items: stretch; }
 
             .filter-form select,
@@ -950,10 +980,32 @@
                 width: 100%;
             }
 
+            .btn-reset { width: 100%; }
+            .product-count { align-self: flex-start; }
+
+            .product-illustration { height: 190px; margin: 12px 14px; }
+            .product-info { padding: 0 14px 16px; }
+            .product-bottom { flex-wrap: wrap; align-items: stretch; }
+            .product-bottom > div { flex: 1 1 100%; }
+            .rent-btn { width: 100%; justify-content: center; padding: 12px 13px; }
+
             .cta-wrap { padding: 64px 20px; }
             .cta { padding: 48px 6%; border-radius: 18px; }
             .footer-inner { grid-template-columns: 1fr; gap: 34px; padding: 52px 20px 36px; }
-            .footer-bottom-inner { padding: 20px; }
+            .footer-bottom-inner { padding: 20px; justify-content: center; text-align: center; }
+        }
+
+        @media (max-width: 380px) {
+            .navbar-inner { padding: 10px 12px; gap: 8px; }
+            .brand { font-size: 19px; gap: 6px; }
+            .brand-icon { font-size: 23px; }
+            .hero { padding: 52px 5% 110px; }
+            .hero h1 { font-size: 32px; letter-spacing: -1.2px; }
+            .hero p { font-size: 14px; }
+            .section { padding: 56px 14px 0; }
+            .cta-wrap { padding: 56px 14px; }
+            .cta h2 { font-size: 24px; }
+            .footer-inner { padding: 44px 14px 30px; }
         }
     </style>
 </head>
@@ -1066,7 +1118,7 @@
     </nav>
 
     @if (session('success'))
-        <div id="toast" style="position:fixed;top:84px;right:24px;z-index:200;max-width:380px;padding:14px 18px;border:1px solid #c8dccb;border-radius:12px;background:#f1f8f2;color:#244b38;font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(38,57,46,.15);">
+        <div id="toast" class="toast">
             ✓ {{ session('success') }}
         </div>
         <script>
@@ -1076,7 +1128,7 @@
 
     <section class="hero" id="beranda">
         <div class="hero-content">
-            
+
             <h1>
                 Petualangan seru dimulai dari
                 <span>perlengkapan yang tepat.</span>
@@ -1370,7 +1422,6 @@
 
             const navbar = document.getElementById('navbar');
             const navToggle = document.getElementById('nav-toggle');
-
             const navHome = document.getElementById('nav-home');
 
             const navLinks = document.querySelectorAll(
@@ -1429,22 +1480,28 @@
                 }
             });
 
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 900) {
+                    navbar.classList.remove('open');
+
+                    if (navToggle) {
+                        navToggle.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+
             if (navHome) {
                 navHome.addEventListener('click', function (event) {
                     event.preventDefault();
 
                     setActiveLink('beranda');
-
                     navbar.classList.remove('open');
 
                     if (navToggle) {
                         navToggle.setAttribute('aria-expanded', 'false');
                     }
 
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             }
 

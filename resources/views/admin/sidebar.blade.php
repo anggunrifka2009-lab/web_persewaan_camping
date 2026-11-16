@@ -1,21 +1,102 @@
 <style>
+    .main {
+        margin-left: 250px !important;
+    }
+
+    .admin-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 900;
+        display: none;
+        align-items: center;
+        gap: 12px;
+        height: 60px;
+        padding: 0 18px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 254, 250, .92);
+        backdrop-filter: blur(12px);
+    }
+
+    .admin-bar-brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--forest);
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -.5px;
+    }
+
+    .admin-bar-brand .brand-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        font-size: 19px;
+    }
+
+    .sidebar-toggle,
+    .sidebar-close {
+        display: grid;
+        place-items: center;
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--white);
+        color: var(--forest);
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+    .sidebar-close {
+        display: none;
+    }
+
+        .sidebar-toggle:hover,
+    .sidebar-close:hover {
+        background: #eaf0e8;
+    }
+
+    .sidebar-toggle svg,
+    .sidebar-close svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+    }
+
+    .sidebar-overlay {
+        display: none;
+    }
+
     .sidebar {
         position: fixed;
-        inset: 0 auto 0 0;
+        top: 0;
+        bottom: 0;
+        left: 0;
         z-index: 10;
         display: flex;
         flex-direction: column;
         width: 250px;
         padding: 28px 18px 20px;
+        overflow-y: auto;
         background: var(--white);
         border-right: 1px solid var(--border);
+    }
+
+    .sidebar-head {
+        padding: 0 12px 30px;
     }
 
     .brand {
         display: flex;
         align-items: center;
         gap: 11px;
-        padding: 0 12px 30px;
         color: var(--forest);
         font-size: 23px;
         font-weight: 800;
@@ -158,34 +239,37 @@
         background: #f8eeeb;
     }
 
-    .sidebar-toggle,
-    .sidebar-overlay {
-        display: none;
-    }
-
     @media (max-width: 900px) {
-        .sidebar {
-            width: 215px;
-            padding-right: 13px;
-            padding-left: 13px;
-        }
-    }
-
-    @media (max-width: 620px) {
         body {
-            padding-left: 64px;
+            padding-top: 60px !important;
         }
 
-        body.no-scroll {
-            overflow: hidden;
+        .main {
+            margin-left: 0 !important;
+        }
+
+        .admin-bar {
+            display: flex;
+        }
+
+        .sidebar-close {
+            display: grid;
+        }
+
+        .sidebar-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 0 4px 24px 12px;
         }
 
         .sidebar-overlay {
             display: block;
             position: fixed;
             inset: 0;
-            z-index: 9;
-            background: rgba(25, 58, 43, .4);
+            z-index: 1000;
+            background: rgba(25, 58, 43, .45);
             opacity: 0;
             visibility: hidden;
             transition: opacity .25s ease, visibility .25s;
@@ -196,141 +280,74 @@
             visibility: visible;
         }
 
+        body.no-scroll {
+            overflow: hidden;
+        }
+
         .sidebar {
-            width: 64px;
+            z-index: 1001;
+            width: 260px;
+            max-width: 84vw;
             height: 100vh;
             height: 100dvh;
-            padding: 14px 10px;
-            overflow-x: hidden;
-            overflow-y: auto;
-            transition: width .25s ease, box-shadow .25s ease;
+            padding: 20px 16px 18px;
+            transform: translateX(-100%);
+            visibility: hidden;
+            transition: transform .28s ease, visibility .28s;
         }
 
         .sidebar.expanded {
-            width: 250px;
-            max-width: 82vw;
-            padding: 14px 14px 16px;
+            transform: translateX(0);
+            visibility: visible;
             box-shadow: 10px 0 40px rgba(25, 58, 43, .2);
         }
+    }
 
-        .sidebar-toggle {
-            display: grid;
-            place-items: center;
-            flex: 0 0 44px;
-            width: 44px;
-            height: 44px;
-            margin-bottom: 14px;
-            border: 0;
-            border-radius: 11px;
-            background: transparent;
-            color: var(--forest);
-            cursor: pointer;
-        }
+    @media (max-width: 380px) {
+        .admin-bar { padding: 0 12px; }
+    }
 
-        .sidebar-toggle:hover {
-            background: #eaf0e8;
-        }
-
-        .sidebar-toggle svg {
-            width: 22px;
-            height: 22px;
-        }
-
-        .brand,
-        .sidebar-label {
-            display: none;
-        }
-
-        .nav-menu {
-            justify-items: center;
-        }
-
-        .nav-link,
-        .admin-info,
-        .logout-btn {
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            min-height: 44px;
-            padding: 0;
-            gap: 0;
-        }
-
-        .nav-link > span:last-child,
-        .admin-info > span:last-child,
-        .logout-btn > span:last-child {
-            display: none;
-        }
-
-        .sidebar-bottom {
-            display: grid;
-            justify-items: center;
-            gap: 6px;
-        }
-
-        .admin-info {
-            margin-bottom: 0;
-        }
-
-        .sidebar.expanded .brand {
-            display: flex;
-            padding-bottom: 22px;
-        }
-
-        .sidebar.expanded .sidebar-label {
-            display: block;
-        }
-
-        .sidebar.expanded .nav-menu,
-        .sidebar.expanded .sidebar-bottom {
-            justify-items: stretch;
-        }
-
-        .sidebar.expanded .nav-link,
-        .sidebar.expanded .admin-info,
-        .sidebar.expanded .logout-btn {
-            justify-content: flex-start;
-            width: 100%;
-            height: auto;
-            padding: 12px 14px;
-            gap: 13px;
-        }
-
-        .sidebar.expanded .admin-info {
-            padding: 10px 9px;
-            gap: 11px;
-        }
-
-        .sidebar.expanded .nav-link > span:last-child,
-        .sidebar.expanded .admin-info > span:last-child,
-        .sidebar.expanded .logout-btn > span:last-child {
-            display: block;
+    @media (prefers-reduced-motion: reduce) {
+        .sidebar,
+        .sidebar-overlay {
+            transition: none;
         }
     }
 </style>
 
-<div class="sidebar-overlay" data-sidebar-close></div>
-
-<aside class="sidebar" id="sidebar">
+<header class="admin-bar">
     <button type="button"
             class="sidebar-toggle"
             data-sidebar-toggle
-            aria-label="Buka atau tutup menu"
+            aria-label="Buka menu"
             aria-controls="sidebar"
             aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="4" width="18" height="16" rx="3"/>
-            <path d="M9 4v16"/>
-        </svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
 
     <a href="{{ route('admin.dashboard') }}"
        data-turbo-frame="konten-admin"
-       class="brand">
+       class="admin-bar-brand">
         <span class="brand-icon">⌁</span>
         <span>CampRent</span>
     </a>
+</header>
+
+<div class="sidebar-overlay" data-sidebar-close></div>
+
+<aside class="sidebar" id="sidebar" aria-label="Menu admin">
+    <div class="sidebar-head">
+        <a href="{{ route('admin.dashboard') }}"
+           data-turbo-frame="konten-admin"
+           class="brand">
+            <span class="brand-icon">⌁</span>
+            <span>CampRent</span>
+        </a>
+
+        <button type="button" class="sidebar-close" data-sidebar-close aria-label="Tutup menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+    </div>
 
     <p class="sidebar-label">MENU UTAMA</p>
 
@@ -471,7 +488,7 @@
         });
 
         window.addEventListener('resize', () => {
-            if (window.innerWidth > 620) setSidebar(false);
+            if (window.innerWidth > 900) setSidebar(false);
         });
     }
 </script>
