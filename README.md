@@ -16,7 +16,7 @@ CampRent memiliki dua jenis pengguna, yaitu **Admin** dan **Pelanggan**, dengan 
 - Mengelola data barang
 - Mengelola data penyewaan
 - Konfirmasi pembayaran
-- Konfirmasi pengambian barang
+- Konfirmasi pengambilan barang
 - Mengelola pengembalian barang
 - Mengelola laporan penyewaan
 - Mengelola akun pengguna
@@ -232,7 +232,7 @@ http://127.0.0.1:8000
 
 ## Akun Demo
 
-Gunakan akun berikut untuk mencoba aplikasi.
+Gunakan akun berikut untuk mencoba website.
 
 | Role | Email | Password |
 |---|---|---|
