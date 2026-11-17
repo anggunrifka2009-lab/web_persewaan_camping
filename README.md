@@ -230,6 +230,26 @@ Buka browser melalui:
 http://127.0.0.1:8000
 ```
 
+## Cara Penggunaan Website
+
+### Pelanggan
+1. Buka website CampRent dan lihat daftar barang camping yang tersedia.
+2. Pilih barang untuk melihat detail dan ketentuan penyewaan.
+3. Login atau registrasi jika belum memiliki akun.
+4. Pilih jumlah barang dan tanggal penyewaan.
+5. Periksa total biaya, lalu ajukan penyewaan.
+6. Tunggu persetujuan admin dan lakukan pembayaran jika disetujui.
+7. Ambil barang sesuai jadwal dan kembalikan setelah masa sewa selesai.
+8. Lihat status dan riwayat penyewaan melalui halaman akun.
+
+### Admin
+1. Login menggunakan akun admin.
+2. Kelola data kategori, barang, dan akun pelanggan.
+3. Periksa pengajuan penyewaan, lalu setujui atau tolak.
+4. Konfirmasi pembayaran dan pengambilan barang.
+5. Konfirmasi pengembalian barang.
+6. Lihat laporan penyewaan dan pendapatan melalui menu laporan.
+
 ## Akun Demo
 
 Gunakan akun berikut untuk mencoba website.
